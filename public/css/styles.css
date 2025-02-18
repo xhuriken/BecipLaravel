@@ -1,0 +1,55 @@
+.container-page {
+    background-color: #fff;
+    padding: 1.25rem 1.25rem;
+    border-radius: 0.625rem;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+    margin: 3.125rem;
+}
+.min-width{
+    min-width: 37.5rem;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.information {
+    margin-top: 0.625rem;
+    color: #0c9155;
+}
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 11.25rem;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 0.313rem;
+    padding: 0.313rem;
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.85rem;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -0.313rem;
+    border-width: 0.313rem;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
