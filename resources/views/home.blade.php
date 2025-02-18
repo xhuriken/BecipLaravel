@@ -97,7 +97,7 @@
                 </td>
                 <td>{{ $project->name }}</td>
                 <td>
-                    <a href="" class="btn-return">Voir</a>
+                    <a href="{{route('projects.project', $project->id)}}" class="btn-return">Voir</a>
                     @if (auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
                         <span class="responsiveSpan">|</span>
                         <a href="" class="btn-return">Modifier</a>

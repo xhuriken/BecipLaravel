@@ -8,6 +8,13 @@ use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
+    public function index(int $id) //unsignBigInt ?
+    {
+        return view('project', [
+            'id' => $id,
+        ]);
+    }
+
     public function generate(int $quantity, int $year) {
         $dateTime   = new Carbon();
         $now        = new Carbon();

@@ -14,6 +14,7 @@ class UserController extends Controller
         return view('usermanager', [
             'newPasswordGenerated' => $this->genNewPassword(),
             'companies' => Company::all(),
+            'users' => User::all(),
         ]);
     }
 
@@ -51,6 +52,18 @@ class UserController extends Controller
 
         $companies = Company::all();
         return view('usermanager.adduser', compact('companies'));
+    }
+
+    public function addcompany(Request $request){
+        if ($request->isMethod('post')) {
+            $request->validate(['name' => 'required|string|max:255',]);
+
+            Company::create([
+                'name' => $request['name'],
+            ]);
+            return redirect()->back()->with('success', 'Entreprise ajouté avec succès.');
+        }
+        return view('usermanager.addcompany');
     }
 
 }

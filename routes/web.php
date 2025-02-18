@@ -20,5 +20,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('usermanager/addcompany', [UserController::class, 'addcompany'])->name('usermanager.addcompany');
 
     Route::get('usermanager', [UserController::class, 'index'])->name('usermanager');
+    Route::get('projects/project/{id}', [ProjectController::class, 'index'])->name('projects.project');
 });
 

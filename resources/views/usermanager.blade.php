@@ -11,6 +11,8 @@
     @endif
 
     <a href="{{route("home")}}" class="btn-return"><i class="fa-solid fa-arrow-left"></i> Retour</a>
+
+
     <form action="{{ route('usermanager.adduser') }}" method="POST">
         @csrf
         <h2>Ajouter un utilisateur</h2>
@@ -45,14 +47,68 @@
                 @endforeach
             </select>
         </div>
-        <input type="submit" value="Ajouter" name="add-user">
+        <input type="submit" value="Ajouter">
     </form>
 
     <form action="{{ route('usermanager.addcompany') }}" method="POST">
+        @csrf
         <h2>Ajouter une nouvelle entreprise</h2>
         <label>Nom de l'entreprise</label>
-        <input type="text" name="company_name" required>
-        <input type="submit" value="Ajouter" name="add-entreprise">
+        <input type="text" name="name" required>
+        <input type="submit" value="Ajouter">
     </form>
+
+    <h2>Modifier les entreprises</h2>
+    <table class="table-responsive">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nom de l'entreprise</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach($companies as $company)
+            <tr>
+                <td>{{$company->id}}</td>
+                <td>{{$company->name}}</td>
+                <td>MARCHPA</td>
+            </tr>
+        @endforeach
+        </tbody>
+    </table>
+
+
+    <table class="table-responsive">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nom et Prénom</th>
+            <th>Email</th>
+            <th>Rôle</th>
+            <th>Entreprise</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach($users as $user)
+            <tr>
+                <td>{{$user->id}}</td>
+                <td>{{$user->name}}</td>
+                <td>{{$user->email}}</td>
+                <td>{{$user->role}}</td>
+                <td>
+                    @if($user->company == null)
+                        Aucune
+                    @else
+                        {{$user->company}}
+                    @endif
+                </td>
+                <td>MARCHPA</td>
+            </tr>
+        @endforeach
+        </tbody>
+    </table>
+
 </div>
 @endsection
