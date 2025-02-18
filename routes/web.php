@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CheckProjectAccess;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProjectController;
@@ -20,6 +21,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('usermanager/addcompany', [UserController::class, 'addcompany'])->name('usermanager.addcompany');
 
     Route::get('usermanager', [UserController::class, 'index'])->name('usermanager');
-    Route::get('projects/project/{id}', [ProjectController::class, 'index'])->name('projects.project');
+
+    Route::get('projects/project/{id}', [ProjectController::class, 'index'])->middleware(CheckProjectAccess::class)->name('projects.project');
 });
 
