@@ -38,7 +38,7 @@
         <div class="button logout">
             <a href="{{ route('logout') }}"
                onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                        document.getElementById('logout-form').submit();">
                 {{ __('Logout') }}
             </a>
             <p>Entreprise : <span class='name'>{{auth()->user()->getCompanyName(auth()->user()->company_id)}}</span></p>

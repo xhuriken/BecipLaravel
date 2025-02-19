@@ -18,7 +18,7 @@
                 @if($project->company_id == null)
                     Pas encore définit
                 @else
-                    {{$project->company_id->name}}
+                    {{$company}}
                 @endif
             </p>
 

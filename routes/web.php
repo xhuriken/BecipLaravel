@@ -17,6 +17,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
     Route::get('projects/generate/{quantity}/{year}', [ProjectController::class, 'generate'])->name('projects.generate');
+    Route::post('projects/delete-empty', [ProjectController::class, 'deleteEmptyProject'])->name('projects.delete-empty');
+
 
     Route::post('usermanager/adduser', [UserController::class, 'adduser'])->name('usermanager.adduser');
     Route::post('usermanager/addcompany', [UserController::class, 'addcompany'])->name('usermanager.addcompany');

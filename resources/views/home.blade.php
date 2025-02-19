@@ -77,10 +77,10 @@
         @forelse($projects as $project)
             <tr>
                 <td>
-                    @if($project->company == null)
+                    @if($project->company_id == null)
                         Aucune
                     @else
-                        {{ $project->company }}
+                        {{ $project->getCompanyName($project->company_id) }}
                     @endif
                 </td>
                 <td>{{ $project->name }}</td>
@@ -109,6 +109,10 @@
 
     @if (auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
         <button id="delete-selected" class="btn-filter">Supprimer les affaires sélectionnées</button>
+            <form action="{{ route('projects.delete-empty') }}" method="POST" style="display: inline;">
+                @csrf
+                <button type="submit" class="btn-filter">Supprimer les affaires vides</button>
+            </form>
     @endif
 </div>
 @endsection
