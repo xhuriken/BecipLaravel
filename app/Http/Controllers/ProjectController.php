@@ -10,16 +10,17 @@ use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
-    public function index(int $id)
+    public function index($id)
     {
-        $project = Project::findOrFail($id);
+        $project = Project::find($id);
         return view('project', [
-            'id' => $id,
-            'project' => $project,
-            'company' => Project::getCompanyName($project->company_id),
-            'referent' => Project::getReferentName($project->referent_id),
-            'clients' => Project::getAllClients($id),
-            'files' => Project::getAllFiles($id)
+            'id'            => $id,
+            'project'       => $project,
+            'company'       => Project::getCompanyName($project->company_id),
+            'company_id'    => $project->company_id,
+            'referent'      => Project::getReferentName($project->referent_id),
+            'clients'       => $project->clients,
+            'files'         => $project->files
         ]);
     }
 
@@ -58,6 +59,62 @@ class ProjectController extends Controller
             ->delete();
 
         return redirect()->back()->with('success', 'Les affaires vides ont été supprimées.');
+    }
+
+    /**
+     * @param Project $project
+     * @return RedirectResponse
+     */
+    public function delete(Project $project) {
+        $project->delete();
+
+        return redirect()->back();
+    }
+
+    public function store(Request $request)
+    {
+        \Log::info('Données reçues : ', $request->all());
+
+        $validated = $request->validate([
+            'company_id' => 'required|exists:companies,id',
+            'project_name' => 'required|string|unique:projects,name|max:255',
+            'engineer_id' => 'nullable|exists:users,id',
+            'clients' => 'nullable|array',
+            'clients.*' => 'exists:users,id',
+        ]);
+
+        if (empty($validated['company_id']) || empty($validated['project_name'])) {
+            return redirect()->back()->with('error', 'Erreur dans les données envoyées.');
+        }
+
+        $project = Project::create([
+            'company_id' => $validated['company_id'],
+            'name' => $validated['project_name'],
+            'referent_id' => $validated['engineer_id'] ?? auth()->id(),
+        ]);
+
+        if (!empty($validated['clients'])) {
+            $project->clients()->sync($validated['clients']);
+        }
+
+        \Log::info("Projet créé avec ID : {$project->id}");
+
+        return redirect()->route('home')->with('success', 'Affaire ajoutée avec succès.');
+    }
+
+
+
+
+    public function deleteSelected(Request $request)
+    {
+        $request->validate([
+            'selected_projects' => 'required|array',
+            'selected_projects.*' => 'exists:projects,id'
+        ]);
+
+        Project::whereIn('id', $request->selected_projects)->delete();
+
+        return response()->json(['message' => 'Les affaires sélectionnée ont été supprimées !']);
     }
 
 }

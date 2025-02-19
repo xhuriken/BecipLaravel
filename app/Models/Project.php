@@ -42,31 +42,21 @@ class Project extends Model
     }
 
     /**
-     * Get all clients for a given project
-     */
-    public static function getAllClients(int $id)
-    {
-        return self::findOrFail($id)->clients()->get();
-    }
-
-    /**
-     * Get all files for a given project
-     */
-    public static function getAllFiles(int $id)
-    {
-        return self::findOrFail($id)->files()->get();
-    }
-
-    /**
      * Get referent's name of a project
      */
-    public static function getReferentName(int $id)
+    public static function getReferentName($id)
     {
-        return User::where('id', $id)->value('name') ?? 'Inconnu';
+        $user = User::where('id', $id)->first();
+
+        return $user ? $user->name : 'Inconnu';
     }
-    public static function getCompanyName(int $id)
+
+    public static function getCompanyName($id)
     {
-        return Company::where('id', $id)->value('name') ?? 'Inconnu';
+        $company = Company::where('id', $id)->first();
+
+        return $company ? $company->name : 'Inconnu';
     }
+
 
 }

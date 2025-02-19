@@ -15,11 +15,11 @@
     <header>
         <div class="affinfo">
             <p><strong>Entreprise : </strong>
-                @if($project->company_id == null)
+                @if($company_id == null)
                     Pas encore définit
                 @else
-                    {{$company}}
                 @endif
+                    {{$company}}
             </p>
 
             <p><strong>Nom de l'affaire : </strong>{{$project->name}}</p>
@@ -34,90 +34,92 @@
 
         <table id="files-table" class="table table-striped" style="width:100%">
             <thead>
-                @if(auth()->user()->isBecip())
-                    <th data-label="Delete">
-                        <i class="fa-solid fa-trash"></i>
+                <tr>
+                    @if(auth()->user()->isBecip())
+                        <th data-label="Delete">
+                            <i class="fa-solid fa-trash"></i>
+                        </th>
+                    @endif
+                    <th>
+                        <span class="tooltip">
+                            <button type="button" id="sort-index-btn" class="sort-button">
+                                <!-- Rev -->
+                                <span class="icon-container">
+                                    <i class="fa-solid fa-arrow-up-wide-short icon-visible"></i>
+                                    <i class="fa-solid fa-arrow-down-short-wide icon-hidden"></i>
+                                </span>
+                            </button>
+                            <span class="tooltiptext">Dernière indice de révision</span>
+                        </span>
                     </th>
-                @endif
-                <th>
-                    <span class="tooltip">
-                        <button type="button" id="sort-index-btn" class="sort-button">
-                            <!-- Rev -->
+                    <th>
+                        Nom
+                    </th>
+                    <th>
+                        <div class="flexname">
+                            <button type="button" id="filter-type-btn" class="type-button">
+                                Type
+                                <span class="icon-container">
+                                        <i class="fa-solid fa-filter icon-visible"></i>
+                                        <i class="fa-solid fa-filter-circle-xmark icon-hidden"></i>
+                                    </span>
+                            </button>
+                            <select class="filter-type-select transition-hidden">
+                                <option value="all">Tout</option>
+                                <option value="undefine">Undefine</option>
+                                <option value="coffrage">Coffrage</option>
+                                <option value="ferraillage">Ferraillage</option>
+                                <option value="divers">Divers</option>
+                            </select>
+                        </div>
+                    </th>
+                    <th>Commentaire</th>
+                    <th>Déposé par</th>
+                    <th>
+                        <button type="button" id="sort-date-btn" class="sort-button">
+                            Date
                             <span class="icon-container">
-                                <i class="fa-solid fa-arrow-up-wide-short icon-visible"></i>
-                                <i class="fa-solid fa-arrow-down-short-wide icon-hidden"></i>
-                            </span>
-                        </button>
-                        <span class="tooltiptext">Dernière indice de révision</span>
-                    </span>
-                </th>
-                <th>
-                    Nom
-                </th>
-                <th>
-                    <div class="flexname">
-                        <button type="button" id="filter-type-btn" class="type-button">
-                            Type
-                            <span class="icon-container">
-                                    <i class="fa-solid fa-filter icon-visible"></i>
-                                    <i class="fa-solid fa-filter-circle-xmark icon-hidden"></i>
+                                    <i class="fa-solid fa-arrow-up-wide-short icon-visible"></i>
+                                    <i class="fa-solid fa-arrow-down-short-wide icon-hidden"></i>
                                 </span>
                         </button>
-                        <select class="filter-type-select transition-hidden">
-                            <option value="all">Tout</option>
-                            <option value="undefine">Undefine</option>
-                            <option value="coffrage">Coffrage</option>
-                            <option value="ferraillage">Ferraillage</option>
-                            <option value="divers">Divers</option>
-                        </select>
-                    </div>
-                </th>
-                <th>Commentaire</th>
-                <th>Déposé par</th>
-                <th>
-                    <button type="button" id="sort-date-btn" class="sort-button">
-                        Date
-                        <span class="icon-container">
-                                <i class="fa-solid fa-arrow-up-wide-short icon-visible"></i>
-                                <i class="fa-solid fa-arrow-down-short-wide icon-hidden"></i>
+                    </th>
+                    <th>
+                        <button type="button" id="sort-valide-btn" class="sort-button">
+                            Validé
+                            <span class="icon-container">
+                                    <i class="fa-solid fa-arrow-up-wide-short icon-visible"></i>
+                                    <i class="fa-solid fa-arrow-down-short-wide icon-hidden"></i>
+                                </span>
+                        </button>
+                    </th>
+                    <th data-label="Télécharger">
+                            <span class="tooltip">
+                                <i class="fa-solid fa-download"></i>
+                                <span class="tooltiptext">
+                                    Télécharger: <br>Séléctionner plusieurs document à télécharger
+                                </span>
                             </span>
-                    </button>
-                </th>
-                <th>
-                    <button type="button" id="sort-valide-btn" class="sort-button">
-                        Validé
-                        <span class="icon-container">
-                                <i class="fa-solid fa-arrow-up-wide-short icon-visible"></i>
-                                <i class="fa-solid fa-arrow-down-short-wide icon-hidden"></i>
+                    </th>
+                    <th data-label="Distribuer">
+                            <span class="tooltip">
+                                <i class="fa-solid fa-print"></i>
+                                <span class="tooltiptext">
+                                    Distribuer: <br> Séléctionner plusieurs documents pour faire une demande de distribution
+                                </span>
                             </span>
-                    </button>
-                </th>
-                <th data-label="Télécharger">
+                    </th>
+                    <th data-label="Impressions">
                         <span class="tooltip">
-                            <i class="fa-solid fa-download"></i>
+                            <i class="fa-solid fa-sheet-plastic"></i>
                             <span class="tooltiptext">
-                                Télécharger: <br>Séléctionner plusieurs document à télécharger
+                                Nombre d'impressions: <br> Besoin d'information Florent :)
                             </span>
                         </span>
-                </th>
-                <th data-label="Distribuer">
-                        <span class="tooltip">
-                            <i class="fa-solid fa-print"></i>
-                            <span class="tooltiptext">
-                                Distribuer: <br> Séléctionner plusieurs documents pour faire une demande de distribution
-                            </span>
-                        </span>
-                </th>
-                <th data-label="Impressions">
-                    <span class="tooltip">
-                        <i class="fa-solid fa-sheet-plastic"></i>
-                        <span class="tooltiptext">
-                            Nombre d'impressions: <br> Besoin d'information Florent :)
-                        </span>
-                    </span>
-                </th>
-                </thead>
-                <tbody>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
                 @forelse($files as $file)
                     <tr data-id="{{$file->id}}">
                         @if(auth()->user()->isBecip())
@@ -201,10 +203,10 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="11">Aucun fichier</td>
+                        <td colspan="{{ auth()->user()->isBecip() ? 12 : 11 }}">Aucun fichier</td>
                     </tr>
                 @endforelse
-                </tbody>
+            </tbody>
         </table>
     </header>
 </div>

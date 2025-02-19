@@ -6,72 +6,66 @@
         <a href='{{ route('usermanager') }}' class='btn-return'>Gérer les utilisateurs</a>
     @endif
     @if (auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
-        <p></p>
-
-        -
         <a href="{{ route('projects.generate', [500, date('Y')]) }}" class="btn-mask">Générer 500 affaires cette année</a>
-        <p></p>
-
-        -
         <a href="{{ route('projects.generate', [500, date('Y')+1]) }}" class="btn-mask">Générer 500 affaire l'année suivante</a>
-        <p></p>
-        <p></p>
+        <button id="toggleButton" class="btn-mask">Ajouter une affaire manuellement</button>
 
-        - <button id="toggleButton" class="btn-mask">Ajouter une affaire manuellement</button>
-
-        <form action="" method="POST" id="masquableF">
+        <form method="POST" action="{{ route('projects.store') }}">
+            @csrf
             <label>Entreprise</label>
-            <select class="custom-select" name="company_id">
+            <select class="custom-select" name="company_id" required>
                 @foreach($companies as $company)
-                    <option value="{{ $company->name}}">
+                    <option value="{{ $company->id }}">
                         {{$company->name}}
                     </option>
                 @endforeach
             </select>
 
+            <label>Ingénieur référent</label>
+            <select class="custom-select" name="engineer_id">
+                @foreach($engineers as $engineer)
+                    <option value="{{ $engineer->id}}">
+                        {{$engineer->name}}
+                    </option>
+                @endforeach
+            </select>
             <label>Nom de l'affaire</label>
             <div class="nom-affaire-container">
                 <span class="fixed-prefix">B</span>
-                <input type="text" id="affaire-annee" maxlength="2" pattern="\d{2}" required placeholder="00">
+                <input type="text" id="project_year" maxlength="2" pattern="\d{2}" required placeholder="00">
                 <span class="fixed-dot">.</span>
-                <input type="text" id="affaire-numero" maxlength="3" pattern="\d{3}" required placeholder="000">
-                <input type="hidden" name="nom_dossier" id="nom_dossier">
+                <input type="text" id="project_number" maxlength="3" pattern="\d{3}" required placeholder="000">
+                <input type="hidden" name="project_name" id="project_name">
             </div>
 
-            <label class="topspace">Clients ayant accès</label>
-            <input type="text" id="search-clients" placeholder="Rechercher un client..." class="researchbox">
-            <div class="custom-multi-select">
-                <div class="select-box" onclick="toggleOptions()">Sélectionner des clients</div>
-                <div class="options-container">
-                    @foreach($clients as $client)
-                        <label>
-                            <input type="checkbox" name="clients[]" value="{{$client->name}}" data-value="{{$client->name}}">
-                                {{$client->name}} - {{$client->company}}
-                        </label>
-                    @endforeach
-                </div>
-            </div>
+            <label for="search-clients">Clients ayant accès</label>
+            <select id="search-clients" name="clients[]" multiple="multiple">
+                @foreach($clients as $client)
+                    <option value="{{ $client->id }}">{{ $client->name }} - {{ \App\Models\User::getCompanyName($client->company_id) }}</option>
+                @endforeach
+            </select>
 
-            <input type="submit" value="Ajouter" name="add-dossier">
+            <button type="submit">Ajouter</button>
         </form>
+
     @endif
     <h2>Liste des affaires</h2>
 
     <table id="project-table" class="table table-striped" style="width:100%">
         <thead>
-        <tr>
-            <th>Entreprise</th>
-            <th>Nom de l'affaire</th>
-            <th>Actions</th>
-            @if (auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
-                <th data-label="Delete">
-                    <i class="fa-solid fa-trash"></i>
-                </th>
-                <th>
-                    <input type="checkbox" id="select-all">
-                </th>
-            @endif
-        </tr>
+            <tr>
+                <th>Entreprise</th>
+                <th>Nom de l'affaire</th>
+                <th>Actions</th>
+                @if (auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
+                    <th data-label="Delete">
+                        <i class="fa-solid fa-trash"></i>
+                    </th>
+                    <th>
+                        <input type="checkbox" id="select-all">
+                    </th>
+                @endif
+            </tr>
         </thead>
         <tbody>
         @forelse($projects as $project)
@@ -94,7 +88,9 @@
 
                 @if (auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
                     <td class="icon-cell">
-                        <i class="fa-solid fa-trash delete-icon" data-project-id="{{ $project->id }}"></i>
+                        <a href="{{ route('projects.delete', $project) }}">
+                            <i class="fa-solid fa-trash delete-icon"></i>
+                        </a>
                     </td>
                     <td>
                         <input type="checkbox" class="delete-checkbox" data-project-id="{{ $project->id }}">
@@ -108,11 +104,15 @@
     </table>
 
     @if (auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
-        <button id="delete-selected" class="btn-filter">Supprimer les affaires sélectionnées</button>
-            <form action="{{ route('projects.delete-empty') }}" method="POST" style="display: inline;">
-                @csrf
-                <button type="submit" class="btn-filter">Supprimer les affaires vides</button>
-            </form>
+        <button id="delete-selected" class="btn-filter" data-route="{{ route('projects.delete-selected') }}">
+            Supprimer les affaires sélectionnées
+        </button>
+        <form action="{{ route('projects.delete-empty') }}" method="POST" style="display: inline;">
+            @csrf
+            <button type="submit" class="btn-filter">Supprimer les affaires vides</button>
+        </form>
     @endif
 </div>
+
+
 @endsection

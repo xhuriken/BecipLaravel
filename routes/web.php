@@ -16,9 +16,12 @@ Auth::routes();
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
+    // Projects
     Route::get('projects/generate/{quantity}/{year}', [ProjectController::class, 'generate'])->name('projects.generate');
+    Route::get('projects/delete/{project}', [ProjectController::class, 'delete'])->name('projects.delete');
+    Route::post('projects/delete-selected', [ProjectController::class, 'deleteSelected'])->name('projects.delete-selected');
     Route::post('projects/delete-empty', [ProjectController::class, 'deleteEmptyProject'])->name('projects.delete-empty');
-
+    Route::post('projects/add', [ProjectController::class, 'store'])->name('projects.store');
 
     Route::post('usermanager/adduser', [UserController::class, 'adduser'])->name('usermanager.adduser');
     Route::post('usermanager/addcompany', [UserController::class, 'addcompany'])->name('usermanager.addcompany');

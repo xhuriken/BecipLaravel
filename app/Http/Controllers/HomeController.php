@@ -18,6 +18,7 @@ class HomeController extends Controller
         return view('home', [
             'projects' => auth()->user()->projects(),
             'companies' => Company::all(),
+            'engineers' => User::all()->where('role', 'engineer'),
             'clients' => User::where('role', 'client')->get(),
         ]);
     }
