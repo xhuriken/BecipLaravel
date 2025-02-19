@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\File;
 use App\Models\Project;
 use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
@@ -12,9 +14,18 @@ class ProjectController extends Controller
     {
         return view('project', [
             'id' => $id,
+            'project' => Project::findOrFail($id),
+            'referent' => Project::getReferentName($id),
+            'clients' => Project::getAllClients($id),
+            'files' => Project::getAllFiles($id)
         ]);
     }
 
+    /**
+     * @param int $quantity
+     * @param int $year
+     * @return RedirectResponse
+     */
     public function generate(int $quantity, int $year) {
         $dateTime   = new Carbon();
         $now        = new Carbon();

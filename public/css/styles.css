@@ -1,9 +1,28 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+.container{
+    min-width: 55rem;
+}
+.py-4{
+    display: flex;
+    justify-content: center;
+}
 .container-page {
     background-color: #fff;
     padding: 1.25rem 1.25rem;
     border-radius: 0.625rem;
     box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+}
+.container-profile {
+    background-color: #fff;
+    padding: 1.25rem 1.25rem;
+    border-radius: 0.625rem;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
     margin: 3.125rem;
+    max-width: 37.5rem;
+    min-width: 25rem;
 }
 .min-width{
     min-width: 37.5rem;
@@ -52,4 +71,55 @@
 .tooltip:hover .tooltiptext {
     visibility: visible;
     opacity: 1;
+}
+
+/*field container*/
+
+.field-container {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.field-container span, .field-container input {
+    flex: 1;
+
+}
+.field-container input {
+    font-size: 1rem;
+    font-family: Poppins, sans-serif;
+    padding: 0;
+    border: none;
+    border-bottom: #ccc 2px solid;
+}
+.field-container input:focus {
+    outline: none;
+}
+.field-container button {
+    margin-right: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+
+.logout{
+    display: flex;
+    margin: 0;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.logout input{
+    width: 20rem;
+    background-color: #be1212;
+    transition: 0.4s ease;
+    margin: 0;
+    height: 3rem;
+    margin: auto;
+}
+.logout input:hover{
+    background-color: #eb0f0f;
 }

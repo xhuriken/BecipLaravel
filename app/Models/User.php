@@ -52,6 +52,18 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     *
+     * Get Company Name with Company ID
+     *
+     * @param $id
+     * @return void
+     */
+    public static function getCompanyName($id){
+        $name = Company::from("companies")->where("id", "=", $id)->first();
+        return $name->name;
+    }
+
     public function isBecip() {
         return in_array(auth()->user()->role, ['engineer', 'drawer', 'secretary']);
     }

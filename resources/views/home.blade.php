@@ -2,18 +2,6 @@
 
 @section('content')
 <div class="container-page min-width">
-
-    <a class="dropdown-item" href="{{ route('logout') }}"
-       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-        {{ __('Logout') }}
-    </a>
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-        @csrf
-    </form>
-
-
-    Bonjour {{ auth()->user()->name }}
     @if (auth()->user()->role == 'engineer')
         <a href='{{ route('usermanager') }}' class='btn-return'>Gérer les utilisateurs</a>
     @endif
@@ -97,7 +85,7 @@
                 </td>
                 <td>{{ $project->name }}</td>
                 <td>
-                    <a href="{{route('projects.project', $project->id)}}" class="btn-return">Voir</a>
+                    <a href="{{route('projects.project', $project)}}" class="btn-return">Voir</a>
                     @if (auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
                         <span class="responsiveSpan">|</span>
                         <a href="" class="btn-return">Modifier</a>
