@@ -14,12 +14,6 @@ $(document).ready(function() {
                 "sLoadingRecords": "Chargement en cours...",
                 "sZeroRecords": "Aucun élément à afficher",
                 "sEmptyTable": "Aucune donnée disponible dans le tableau",
-                // "oPaginate": {
-                //     "sFirst":      "Premier",
-                //     "sPrevious":   "Précédent",
-                //     "sNext":       "Suivant",
-                //     "sLast":       "Dernier"
-                // },
                 "oAria": {
                     "sSortAscending": ": activer pour trier la colonne par ordre croissant",
                     "sSortDescending": ": activer pour trier la colonne par ordre décroissant"

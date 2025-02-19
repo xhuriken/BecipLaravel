@@ -15,11 +15,7 @@
     <header>
         <div class="affinfo">
             <p><strong>Entreprise : </strong>
-                @if($company_id == null)
-                    Pas encore définit
-                @else
-                @endif
-                    {{$company}}
+                {{$company}}
             </p>
 
             <p><strong>Nom de l'affaire : </strong>{{$project->name}}</p>

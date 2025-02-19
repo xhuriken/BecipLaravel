@@ -48,14 +48,14 @@ class Project extends Model
     {
         $user = User::where('id', $id)->first();
 
-        return $user ? $user->name : 'Inconnu';
+        return $user ? $user->name : 'Aucun';
     }
 
     public static function getCompanyName($id)
     {
         $company = Company::where('id', $id)->first();
 
-        return $company ? $company->name : 'Inconnu';
+        return $company ? $company->name : 'Aucune';
     }
 
 

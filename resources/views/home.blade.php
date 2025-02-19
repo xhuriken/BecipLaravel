@@ -14,6 +14,9 @@
             @csrf
             <label>Entreprise</label>
             <select class="custom-select" name="company_id" required>
+                <option value="{{null}}">
+                    - Entreprise manquante -
+                </option>
                 @foreach($companies as $company)
                     <option value="{{ $company->id }}">
                         {{$company->name}}

@@ -14518,10 +14518,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _bootstrap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 /* harmony import */ var _main__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./main */ "./resources/js/main.js");
 /* harmony import */ var _main__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_main__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _project__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./project */ "./resources/js/project.js");
-/* harmony import */ var _project__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_project__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _usercontroller__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./usercontroller */ "./resources/js/usercontroller.js");
-/* harmony import */ var _usercontroller__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_usercontroller__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _usercontroller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./usercontroller */ "./resources/js/usercontroller.js");
+/* harmony import */ var _usercontroller__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_usercontroller__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _project__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./project */ "./resources/js/project.js");
+/* harmony import */ var _project__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_project__WEBPACK_IMPORTED_MODULE_3__);
 
 
 
@@ -14597,12 +14597,6 @@ $(document).ready(function () {
         "sLoadingRecords": "Chargement en cours...",
         "sZeroRecords": "Aucun élément à afficher",
         "sEmptyTable": "Aucune donnée disponible dans le tableau",
-        // "oPaginate": {
-        //     "sFirst":      "Premier",
-        //     "sPrevious":   "Précédent",
-        //     "sNext":       "Suivant",
-        //     "sLast":       "Dernier"
-        // },
         "oAria": {
           "sSortAscending": ": activer pour trier la colonne par ordre croissant",
           "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
@@ -14771,7 +14765,268 @@ document.addEventListener('DOMContentLoaded', function (event) {
   \****************************************/
 /***/ (() => {
 
+$(document).ready(function () {
+  var companiesTable = $('#companies-table').DataTable({
+    language: {
+      "decimal": ",",
+      "thousands": ".",
+      "sProcessing": "Traitement en cours...",
+      "sSearch": "Rechercher :",
+      "sLengthMenu": "Afficher _MENU_ éléments",
+      "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ éléments",
+      "sInfoEmpty": "Affichage de 0 à 0 sur 0 éléments",
+      "sInfoFiltered": "(filtré à partir de _MAX_ éléments au total)",
+      "sInfoPostFix": "",
+      "sLoadingRecords": "Chargement en cours...",
+      "sZeroRecords": "Aucun élément à afficher",
+      "sEmptyTable": "Aucune donnée disponible dans le tableau",
+      "oAria": {
+        "sSortAscending": ": activer pour trier la colonne par ordre croissant",
+        "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
+      }
+    }
+  });
+  var usersTable = $('#users-table').DataTable({
+    language: {
+      "decimal": ",",
+      "thousands": ".",
+      "sProcessing": "Traitement en cours...",
+      "sSearch": "Rechercher :",
+      "sLengthMenu": "Afficher _MENU_ éléments",
+      "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ éléments",
+      "sInfoEmpty": "Affichage de 0 à 0 sur 0 éléments",
+      "sInfoFiltered": "(filtré à partir de _MAX_ éléments au total)",
+      "sInfoPostFix": "",
+      "sLoadingRecords": "Chargement en cours...",
+      "sZeroRecords": "Aucun élément à afficher",
+      "sEmptyTable": "Aucune donnée disponible dans le tableau",
+      "oAria": {
+        "sSortAscending": ": activer pour trier la colonne par ordre croissant",
+        "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
+      }
+    }
+  });
+});
+document.addEventListener('DOMContentLoaded', function () {
+  var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  var roles = window.allRoles;
+  // Supposons que companiesTable est déjà initialisé via DataTables
+  // -------------------------------
+  // a) Éditer une entreprise
+  document.addEventListener('click', function (event) {
+    if (event.target.closest('.edit-company')) {
+      event.stopImmediatePropagation(); // Empeche le double evenement (pour le bouton et le <i>)
 
+      var btn = event.target.closest('.edit-company');
+      var $row = $(btn).closest('tr');
+      // Récupération de la cellule contenant le nom
+      var $nameCell = $row.find('.company-name');
+      var currentName = $nameCell.text().trim();
+
+      // Remplacer le texte par un input
+      $nameCell.html("<input type=\"text\" class=\"form-control\" value=\"".concat(currentName, "\" />"));
+
+      // Transformer le bouton en mode sauvegarde (disquette)
+      btn.classList.remove('edit-company', 'btn-primary');
+      btn.classList.add('save-company', 'btn-warning');
+      btn.innerHTML = '<i class="fa fa-floppy-o"></i>';
+    }
+  });
+
+  // b) Sauvegarder une entreprise avec Fetch
+  document.addEventListener('click', function (event) {
+    if (event.target.closest('.save-company')) {
+      event.stopImmediatePropagation(); // Empeche le double evenement (pour le bouton et le <i>)
+      var btn = event.target.closest('.save-company');
+      var route = btn.getAttribute('data-route'); // URL définie dans l'attribut data-route
+      var $row = $(btn).closest('tr');
+      var companyId = $row.data('company-id');
+      var newName = $row.find('.company-name input').val();
+      fetch(route, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify({
+          company_id: companyId,
+          name: newName
+        })
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        if (data.success) {
+          // Remettre la cellule en mode lecture
+          $row.find('.company-name').text(newName);
+          // Revenir au bouton "éditer"
+          btn.classList.remove('save-company', 'btn-warning');
+          btn.classList.add('edit-company', 'btn-primary');
+          btn.innerHTML = '<i class="fa fa-pencil"></i>';
+        } else {
+          alert(data.message || 'Erreur inconnue');
+        }
+      })["catch"](function () {
+        alert('Une erreur est survenue lors de la sauvegarde.');
+      });
+    }
+  });
+
+  // c) Supprimer une entreprise avec Fetch
+  document.addEventListener('click', function (event) {
+    if (event.target.closest('.delete-company')) {
+      if (!confirm('Supprimer cette entreprise ?')) return;
+      var btn = event.target.closest('.delete-company');
+      var route = btn.getAttribute('data-route'); // URL définie dans l'attribut data-route
+      var $row = $(btn).closest('tr');
+      var companyId = $row.data('company-id');
+      fetch(route, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify({
+          company_id: companyId
+        })
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        if (data.success) {
+          // Suppression de la ligne dans le DataTable
+          var companiesTable = $('#companies-table').DataTable();
+          companiesTable.row($row).remove().draw();
+        } else {
+          alert(data.message || 'Erreur inconnue');
+        }
+      })["catch"](function () {
+        alert('Une erreur est survenue lors de la suppression.');
+      });
+    }
+  });
+  document.addEventListener('click', function (event) {
+    if (event.target.closest('.edit-user')) {
+      event.stopImmediatePropagation(); // Empeche le double evenement (pour le bouton et le <i>)
+
+      var btn = event.target.closest('.edit-user');
+      var $row = $(btn).closest('tr');
+
+      // Récupération des cellules
+      var $nameCell = $row.find('.user-name');
+      var $emailCell = $row.find('.user-email');
+      var $roleCell = $row.find('.user-role');
+      var $companyCell = $row.find('.user-company');
+      var currentName = $nameCell.text().trim();
+      var currentEmail = $emailCell.text().trim();
+      var currentRole = $roleCell.text().trim();
+      var currentCompany = $companyCell.text().trim();
+
+      // Transformation en champs éditables
+      $nameCell.html("<input type=\"text\" class=\"form-control\" value=\"".concat(currentName, "\" />"));
+      $emailCell.html("<input type=\"text\" class=\"form-control\" value=\"".concat(currentEmail, "\" />"));
+
+      // Select pour le rôle
+      var roleOptions = roles.map(function (role) {
+        return "<option value=\"".concat(role, "\" ").concat(role === currentRole ? 'selected' : '', ">").concat(role, "</option>");
+      }).join('');
+      $roleCell.html("<select class=\"form-control\">".concat(roleOptions, "</select>"));
+
+      // Select pour l'entreprise
+      var companyOptions = "<option value=\"\">Aucune</option>";
+      allCompanies.forEach(function (c) {
+        companyOptions += "<option value=\"".concat(c.id, "\" ").concat(c.name === currentCompany ? 'selected' : '', ">").concat(c.name, "</option>");
+      });
+      $companyCell.html("<select class=\"form-control\">".concat(companyOptions, "</select>"));
+
+      // Passage du bouton en mode sauvegarde
+      btn.classList.remove('edit-user', 'btn-primary');
+      btn.classList.add('save-user', 'btn-warning');
+      btn.innerHTML = '<i class="fa fa-floppy-o"></i>';
+    }
+  });
+
+  // b) Sauvegarder un utilisateur avec Fetch
+  document.addEventListener('click', function (event) {
+    if (event.target.closest('.save-user')) {
+      event.stopImmediatePropagation(); // Empeche le double evenement (pour le bouton et le <i>)
+
+      var btn = event.target.closest('.save-user');
+      var route = btn.getAttribute('data-route'); // URL définie dans data-route
+      var $row = $(btn).closest('tr');
+      var userId = $row.data('user-id');
+      var newName = $row.find('.user-name input').val();
+      var newEmail = $row.find('.user-email input').val();
+      var newRole = $row.find('.user-role select').val();
+      var newCompanyId = $row.find('.user-company select').val();
+      var data = {
+        user_id: userId,
+        name: newName,
+        email: newEmail,
+        role: newRole,
+        company_id: newCompanyId
+      };
+      fetch(route, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify(data)
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        if (data.success) {
+          $row.find('.user-name').text(newName);
+          $row.find('.user-email').text(newEmail);
+          $row.find('.user-role').text(newRole);
+          var selectedCompany = allCompanies.find(function (c) {
+            return c.id == newCompanyId;
+          });
+          $row.find('.user-company').text(selectedCompany ? selectedCompany.name : 'Aucune');
+          btn.classList.remove('save-user', 'btn-warning');
+          btn.classList.add('edit-user', 'btn-primary');
+          btn.innerHTML = '<i class="fa fa-pencil"></i>';
+        } else {
+          alert(data.message || 'Erreur inconnue');
+        }
+      })["catch"](function () {
+        alert('Une erreur est survenue lors de la sauvegarde.');
+      });
+    }
+  });
+
+  // c) Supprimer un utilisateur avec Fetch
+  document.addEventListener('click', function (event) {
+    if (event.target.closest('.delete-user')) {
+      if (!confirm('Supprimer cet utilisateur ?')) return;
+      var btn = event.target.closest('.delete-user');
+      var route = btn.getAttribute('data-route'); // URL définie dans data-route
+      var $row = $(btn).closest('tr');
+      var userId = $row.data('user-id');
+      fetch(route, {
+        method: 'POST',
+        // ou DELETE, selon ta configuration
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify({
+          user_id: userId
+        })
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        if (data.success) {
+          var usersTable = $('#users-table').DataTable();
+          usersTable.row($row).remove().draw();
+        } else {
+          alert(data.message || 'Erreur inconnue');
+        }
+      })["catch"](function () {
+        alert('Une erreur est survenue lors de la suppression.');
+      });
+    }
+  });
+});
 
 /***/ }),
 

@@ -18,6 +18,67 @@ class UserController extends Controller
         ]);
     }
 
+    public function updateCompany(Request $request)
+    {
+        $request->validate([
+            'company_id' => 'required|exists:companies,id',
+            'name'       => 'required|string|max:255',
+        ]);
+
+        $company = Company::findOrFail($request->company_id);
+        $company->name = $request->name;
+        $company->save();
+
+        return response()->json(['success' => true]);
+    }
+
+
+    public function deleteCompany(Request $request)
+    {
+        $request->validate([
+            'company_id' => 'required|exists:companies,id',
+        ]);
+
+        $company = Company::findOrFail($request->company_id);
+        $company->delete();
+
+        return response()->json(['success' => true]);
+    }
+
+    public function updateUser(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,'.$request->user_id,
+            'role' => 'required|in:engineer,drawer,secretary,client',
+            'company_id' => 'nullable|exists:companies,id',
+        ]);
+
+        $user = User::findOrFail($request->user_id);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->role = $request->role;
+        $user->company_id = $request->company_id ?: null;
+        $user->save();
+
+        return response()->json(['success' => true]);
+    }
+
+    public function deleteUser(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        $user = User::findOrFail($request->user_id);
+        $user->delete();
+
+        return response()->json(['success' => true]);
+    }
+
+
+
     function genNewPassword($lenght = 12) {
         $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()';
         $password = '';

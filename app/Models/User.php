@@ -61,7 +61,12 @@ class User extends Authenticatable
      */
     public static function getCompanyName($id){
         $name = Company::from("companies")->where("id", "=", $id)->first();
-        return $name->name;
+        if($name!=null){
+            return $name->name;
+        }else{
+            return "Aucune";
+        }
+
     }
 
     public function isBecip() {
