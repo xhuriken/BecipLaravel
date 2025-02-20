@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const btn = event.target.closest('.edit-company');
             const $row = $(btn).closest('tr');
-            // Récupération de la cellule contenant le nom
+                    // Récupération de la cellule contenant le nom
             const $nameCell = $row.find('.company-name');
             const currentName = $nameCell.text().trim();
 
@@ -107,7 +107,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // c) Supprimer une entreprise avec Fetch
     document.addEventListener('click', function(event) {
         if(event.target.closest('.delete-company')) {
+
             if(!confirm('Supprimer cette entreprise ?')) return;
+
             const btn = event.target.closest('.delete-company');
             const route = btn.getAttribute('data-route'); // URL définie dans l'attribut data-route
             const $row = $(btn).closest('tr');

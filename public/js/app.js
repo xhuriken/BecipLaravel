@@ -14522,6 +14522,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _usercontroller__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_usercontroller__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _project__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./project */ "./resources/js/project.js");
 /* harmony import */ var _project__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_project__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _project_file__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./project_file */ "./resources/js/project_file.js");
+/* harmony import */ var _project_file__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_project_file__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _profile__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./profile */ "./resources/js/profile.js");
+/* harmony import */ var _profile__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_profile__WEBPACK_IMPORTED_MODULE_5__);
+
+
 
 
 
@@ -14631,6 +14637,141 @@ $(document).ready(function () {
         }
       }
     });
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/profile.js":
+/*!*********************************!*\
+  !*** ./resources/js/profile.js ***!
+  \*********************************/
+/***/ (() => {
+
+document.addEventListener('DOMContentLoaded', function () {
+  var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  var updateProfileUrl = window.updateProfileUrl;
+
+  // Récupération des éléments pour le nom
+  var nameEditBtn = document.getElementById('name-edit-btn');
+  var nameDisplay = document.getElementById('name-display');
+  var nameInput = document.getElementById('name-input');
+
+  // Récupération des éléments pour l'email
+  var emailEditBtn = document.getElementById('email-edit-btn');
+  var emailDisplay = document.getElementById('email-display');
+  var emailInput = document.getElementById('email-input');
+
+  // Gestion du bouton d'édition du nom
+  nameEditBtn.addEventListener('click', function (event) {
+    // Si le bouton est déjà en mode "édition" (classe "editing"), on sauvegarde
+    if (nameEditBtn.classList.contains('editing')) {
+      var newName = nameInput.value.trim();
+      if (newName === "") {
+        alert("Le nom ne peut pas être vide.");
+        return;
+      }
+      nameEditBtn.disabled = true; // désactiver le bouton pour éviter les doublons
+
+      fetch(updateProfileUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify({
+          field: 'name',
+          value: newName
+        })
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        if (data.success) {
+          nameDisplay.textContent = newName;
+          toggleNameEditMode(false);
+        } else {
+          alert(data.message || "Erreur lors de la sauvegarde.");
+        }
+      })["catch"](function () {
+        alert("Une erreur est survenue lors de la sauvegarde.");
+      })["finally"](function () {
+        nameEditBtn.disabled = false;
+      });
+    } else {
+      // Passage en mode édition
+      toggleNameEditMode(true);
+      // On stoppe la propagation pour éviter un double déclenchement
+      event.stopImmediatePropagation();
+    }
+  });
+
+  // Gestion du bouton d'édition de l'email
+  emailEditBtn.addEventListener('click', function (event) {
+    if (emailEditBtn.classList.contains('editing')) {
+      var newEmail = emailInput.value.trim();
+      if (newEmail === "") {
+        alert("L'email ne peut pas être vide.");
+        return;
+      }
+      emailEditBtn.disabled = true;
+      fetch(updateProfileUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify({
+          field: 'email',
+          value: newEmail
+        })
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        if (data.success) {
+          emailDisplay.textContent = newEmail;
+          toggleEmailEditMode(false);
+        } else {
+          alert(data.message || "Erreur lors de la sauvegarde.");
+        }
+      })["catch"](function () {
+        alert("Une erreur est survenue lors de la sauvegarde.");
+      })["finally"](function () {
+        emailEditBtn.disabled = false;
+      });
+    } else {
+      toggleEmailEditMode(true);
+      event.stopImmediatePropagation();
+    }
+  });
+
+  // Fonctions pour activer/désactiver le mode édition pour le nom
+  function toggleNameEditMode(editing) {
+    if (editing) {
+      nameDisplay.style.display = 'none';
+      nameInput.style.display = 'inline-block';
+      nameEditBtn.classList.add('editing');
+      nameEditBtn.innerHTML = '<i class="fa fa-floppy-o"></i>';
+    } else {
+      nameDisplay.style.display = 'inline-block';
+      nameInput.style.display = 'none';
+      nameEditBtn.classList.remove('editing');
+      nameEditBtn.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
+    }
+  }
+
+  // Fonctions pour activer/désactiver le mode édition pour l'email
+  function toggleEmailEditMode(editing) {
+    if (editing) {
+      emailDisplay.style.display = 'none';
+      emailInput.style.display = 'inline-block';
+      emailEditBtn.classList.add('editing');
+      emailEditBtn.innerHTML = '<i class="fa fa-floppy-o"></i>';
+    } else {
+      emailDisplay.style.display = 'inline-block';
+      emailInput.style.display = 'none';
+      emailEditBtn.classList.remove('editing');
+      emailEditBtn.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
+    }
   }
 });
 
@@ -14756,6 +14897,16 @@ document.addEventListener('DOMContentLoaded', function (event) {
   project_year.addEventListener("keypress", enforceNumericInput);
   project_number.addEventListener("keypress", enforceNumericInput);
 });
+
+/***/ }),
+
+/***/ "./resources/js/project_file.js":
+/*!**************************************!*\
+  !*** ./resources/js/project_file.js ***!
+  \**************************************/
+/***/ (() => {
+
+
 
 /***/ }),
 
