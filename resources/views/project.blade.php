@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-page">
+<div class="container-page project">
     {{-- comment mettre en place ce 'success' ? --}}
     @if(session('success'))
         <div class="alert alert-success">
@@ -28,7 +28,17 @@
             </div>
         @endif
 
-        <table id="files-table" class="table table-striped" style="width:100%">
+        <div id="project-container" data-project-id="{{ $project->id }}" data-route="{{ route('projects.upload', $project->id) }}">
+            <h2>Upload de fichiers</h2>
+            <form id="file-upload-form" enctype="multipart/form-data">
+                @csrf
+                <input type="file" id="file-input" name="files[]" multiple>
+                <button type="button" id="upload-files-btn">Uploader</button>
+            </form>
+        </div>
+
+
+        <table id="files-table" class="table-responsive table table-striped" style="width:100%">
             <thead>
                 <tr>
                     @if(auth()->user()->isBecip())
@@ -60,7 +70,7 @@
                                         <i class="fa-solid fa-filter-circle-xmark icon-hidden"></i>
                                     </span>
                             </button>
-                            <select class="filter-type-select transition-hidden">
+                            <select class="filter-type-select transition-hidden form-control">
                                 <option value="all">Tout</option>
                                 <option value="undefine">Undefine</option>
                                 <option value="coffrage">Coffrage</option>
@@ -128,21 +138,21 @@
                                 <input
                                     type="checkbox"
                                     class="update-last-index"
-                                    {{ $file->last_index ? 'checked' : '' }}
+                                    {{ $file->is_last_index ? 'checked' : '' }}
                                 />
                             @else
                                 <input
                                     type="checkbox"
                                     class="update-last-index"
                                     disabled
-                                    {{ $file->last_index ? 'checked' : '' }}
+                                    {{ $file->is_last_index ? 'checked' : '' }}
                                 />
                             @endif
                         </td>
                         <td data-label="Nom">{{$file->name}}</td>
                         <td data-label="Type">
                             @if(auth()->user()->role == 'drawer' || auth()->user()->role == 'engineer')
-                                <select class="file-type-select">
+                                <select class="file-type-select form-control">
                                     <option value="undefine"        {{ $file->type === 'undefine' ? 'selected' : ''}}>      Undefine</option>
                                     <option value="coffrage"        {{ $file->type === 'coffrage' ? 'selected' : ''}}>      Coffrage</option>
                                     <option value="ferraillage"     {{ $file->type === 'ferraillage' ? 'selected' : ''}}>   Ferraillage</option>
@@ -154,7 +164,7 @@
                         </td>
                         <td data-label="Commentaire">
                             @if($file->user_id == auth()->user()->id)
-                                <textarea placeholder="Ajoutez un commentaire..." name="comment[{{$file->id}}]" class="comment-textarea">{{$file->comment}}</textarea>
+                                <textarea placeholder="Ajoutez un commentaire..." name="comment[{{$file->id}}]" class="comment-textarea form-control">{{$file->comment}}</textarea>
                             @else
                                 {{--ICI IL FAUT LIMITER LE COMMENTAIRE A 10 char--}}
                                 {{$file->comment}}
@@ -185,16 +195,16 @@
                             <span class="tooltip">
                                 <input type="checkbox" name="print_files[]" value="{{$file->id}}"
                                        class="distribution-checkbox"
-                                        {{($file->print_count >= 1) ? 'disabled' : '' }}
+                                        {{($file->distribution_count >= 1) ? 'disabled' : '' }}
                                 />
-                                @if($file->print_count >= 1)
+                                @if($file->distribution_count >= 1)
                                     <span class="tooltiptext">Demandez à l'équipe BECIP pour une réimpression.</span>
                                 @endif
                             </span>
                         </td>
                         <td data-label="Impressions">
                             {{--Rendre ce chiffre dynamique avec la checkbox distribute--}}
-                            {{$file->print_count}}
+                            {{$file->distribution_count}}
                         </td>
                     </tr>
                 @empty

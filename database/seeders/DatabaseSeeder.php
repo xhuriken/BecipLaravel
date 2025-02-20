@@ -20,45 +20,32 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         Company::create([
-            'name' => 'Test',
+            'name' => 'Becip',
         ]);
 
         User::create([
             'company_id' => 1,
-            'name' => 'Test User',
+            'name' => 'Ingénieur Principale',
             'email' => 'test@test.com',
             'password' => Hash::make('1234'),
             'role' => 'engineer',
         ]);
 
         Project::create([
-            'name' => 'P1',
-            'company_id' => 1,
-            'referent_id' => 1,
-            'address' => 'Test Address',
-            'is_mask_valided' => true,
-            'is_mask_distributed' => true,
-            'comment' => 'Test Comment',
-        ]);
-
-        Project::create([
-            'name' => 'P2',
-            'company_id' => 1,
-            'referent_id' => 1,
+            'name' => 'B24.001',
             'address' => 'Test Address',
             'is_mask_valided' => false,
             'is_mask_distributed' => false,
-            'comment' => 'Test Comment',
         ]);
 
-        ProjectUser::create([
-            'project_id' => 1,
-            'user_id' => 1,
-        ]);
-
-        ProjectUser::create([
-            'project_id' => 2,
-            'user_id' => 1,
-        ]);
+//        ProjectUser::create([
+//            'project_id' => 1,
+//            'user_id' => 1,
+//        ]);
+//
+//        ProjectUser::create([
+//            'project_id' => 2,
+//            'user_id' => 1,
+//        ]);
     }
 }

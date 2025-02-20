@@ -1,46 +1,53 @@
 document.addEventListener('DOMContentLoaded', function(event) {
+    let selectAll    = document.querySelector("#select-all"),
+        deleteSelected  = document.querySelector("#delete-selected");
 
-    document.querySelector("#select-all").addEventListener('change', function () {
-        let isChecked = this.checked;
-        document.querySelectorAll(".delete-checkbox").forEach(checkbox => {
-            checkbox.checked = isChecked;
+    if (selectAll ) {
+        selectAll.addEventListener('change', function () {
+            let isChecked = this.checked;
+            document.querySelectorAll(".delete-checkbox").forEach(checkbox => {
+                checkbox.checked = isChecked;
+            });
         });
-    });
+    }
 
-    document.querySelector("#delete-selected").addEventListener('click', function(event) {
-        let route = this.getAttribute('data-route');
-        let selectedProjects = [];
+    if( deleteSelected ) {
+        deleteSelected.addEventListener('click', function(event) {
+            let route = this.getAttribute('data-route');
+            let selectedProjects = [];
 
-        document.querySelectorAll(".delete-checkbox:checked").forEach(checkbox => {
-            selectedProjects.push(checkbox.getAttribute('data-project-id'));
-        });
+            document.querySelectorAll(".delete-checkbox:checked").forEach(checkbox => {
+                selectedProjects.push(checkbox.getAttribute('data-project-id'));
+            });
 
-        if (selectedProjects.length === 0) {
-            alert("Aucune affaire sélectionnée.");
-            //pop up perso ?
-            return;
-        }
+            if (selectedProjects.length === 0) {
+                alert("Aucune affaire sélectionnée.");
+                //pop up perso ?
+                return;
+            }
 
-        if (!confirm("Voulez-vous vraiment supprimer les affaires sélectionnées ?")) {
-            //confirm perso ?
-            return;
-        }
+            if (!confirm("Voulez-vous vraiment supprimer les affaires sélectionnées ?")) {
+                //confirm perso ?
+                return;
+            }
 
-        fetch(route, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({ selected_projects: selectedProjects })
-        })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-                location.reload();
+            fetch(route, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ selected_projects: selectedProjects })
             })
-            .catch(error => console.error("Erreur lors de la suppression :", error));
-    });
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    location.reload();
+                })
+                .catch(error => console.error("Erreur lors de la suppression :", error));
+        });
+    }
+
 
 
     $(document).ready(function() {
@@ -115,9 +122,14 @@ document.addEventListener('DOMContentLoaded', function(event) {
         }
     }
 
-    project_year.addEventListener("input", updateNomDossier);
-    project_number.addEventListener("input", updateNomDossier);
-    project_year.addEventListener("keypress", enforceNumericInput);
-    project_number.addEventListener("keypress", enforceNumericInput);
+    if( project_year ) {
+        project_year.addEventListener("input", updateNomDossier);
+        project_year.addEventListener("keypress", enforceNumericInput);
+    }
+
+    if( project_number ) {
+        project_number.addEventListener("input", updateNomDossier);
+        project_number.addEventListener("keypress", enforceNumericInput);
+    }
 
 });

@@ -51,7 +51,6 @@ class ProjectController extends Controller
         return redirect()->route('home');
     }
 
-
     public function deleteEmptyProject()
     {
         Project::whereNull('referent_id')
@@ -102,9 +101,6 @@ class ProjectController extends Controller
         return redirect()->route('home')->with('success', 'Affaire ajoutée avec succès.');
     }
 
-
-
-
     public function deleteSelected(Request $request)
     {
         $request->validate([
@@ -116,5 +112,44 @@ class ProjectController extends Controller
 
         return response()->json(['message' => 'Les affaires sélectionnée ont été supprimées !']);
     }
+
+
+    public function uploadFiles(Request $request, Project $project)
+    {
+        // Validation : chaque fichier doit être présent et être un fichier
+        $request->validate([
+            'files.*' => 'required|file'
+        ]);
+
+        $uploadedFiles = $request->file('files');
+        $storedFiles = [];
+
+        foreach ($uploadedFiles as $file) {
+            // Récupérer l'extension en minuscules
+            $extension = strtolower($file->getClientOriginalExtension());
+
+            // On utilise le nom du projet tel quel, par exemple "B25.001"
+            $projectName = $project->name;
+
+            // Le chemin de stockage sera par exemple : "B25.001/png/"
+            $directory = $projectName . '/' . $extension;
+
+            // Stocker le fichier en conservant son nom original
+            $storedPath = $file->storeAs($directory, $file->getClientOriginalName(), 'public');
+            $storedFiles[] = $storedPath;
+
+            // Enregistrer le fichier dans la table files
+            File::create([
+                'project_id' => $project->id,
+                'user_id'    => auth()->user()->id,
+                'name'       => $file->getClientOriginalName(),
+                'extension'  => $extension,
+                'is_last_index' => 1, // par défaut, si c'est la dernière version
+            ]);
+        }
+
+        return response()->json(['success' => true, 'files' => $storedFiles]);
+    }
+
 
 }

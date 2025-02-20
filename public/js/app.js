@@ -14587,9 +14587,9 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
   \******************************/
 /***/ (() => {
 
-$(document).ready(function () {
-  if ($('#project-table tbody tr').length > 1) {
-    new DataTable('#project-table', {
+jQuery(document).ready(function ($) {
+  if ($('#project-table tbody tr').length > 0) {
+    $('#project-table').DataTable({
       language: {
         "decimal": ",",
         "thousands": ".",
@@ -14610,8 +14610,8 @@ $(document).ready(function () {
       }
     });
   }
-  if ($('#files-table tbody tr').length > 1) {
-    new DataTable('#files-table', {
+  if ($('#files-table tbody tr').length > 0) {
+    $('#files-table').DataTable({
       language: {
         "decimal": ",",
         "thousands": ".",
@@ -14625,12 +14625,6 @@ $(document).ready(function () {
         "sLoadingRecords": "Chargement en cours...",
         "sZeroRecords": "Aucun élément à afficher",
         "sEmptyTable": "Aucune donnée disponible dans le tableau",
-        // "oPaginate": {
-        //     "sFirst":      "Premier",
-        //     "sPrevious":   "Précédent",
-        //     "sNext":       "Suivant",
-        //     "sLast":       "Dernier"
-        // },
         "oAria": {
           "sSortAscending": ": activer pour trier la colonne par ordre croissant",
           "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
@@ -14661,117 +14655,114 @@ document.addEventListener('DOMContentLoaded', function () {
   var emailEditBtn = document.getElementById('email-edit-btn');
   var emailDisplay = document.getElementById('email-display');
   var emailInput = document.getElementById('email-input');
-
-  // Gestion du bouton d'édition du nom
-  nameEditBtn.addEventListener('click', function (event) {
-    // Si le bouton est déjà en mode "édition" (classe "editing"), on sauvegarde
-    if (nameEditBtn.classList.contains('editing')) {
-      var newName = nameInput.value.trim();
-      if (newName === "") {
-        alert("Le nom ne peut pas être vide.");
-        return;
+  if (nameEditBtn) {
+    // Fonctions pour activer/désactiver le mode édition pour le nom
+    var toggleNameEditMode = function toggleNameEditMode(editing) {
+      if (editing) {
+        nameDisplay.style.display = 'none';
+        nameInput.style.display = 'inline-block';
+        nameEditBtn.classList.add('editing');
+        nameEditBtn.innerHTML = '<i class="fa fa-floppy-o"></i>';
+      } else {
+        nameDisplay.style.display = 'inline-block';
+        nameInput.style.display = 'none';
+        nameEditBtn.classList.remove('editing');
+        nameEditBtn.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
       }
-      nameEditBtn.disabled = true; // désactiver le bouton pour éviter les doublons
-
-      fetch(updateProfileUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': csrfToken
-        },
-        body: JSON.stringify({
-          field: 'name',
-          value: newName
-        })
-      }).then(function (response) {
-        return response.json();
-      }).then(function (data) {
-        if (data.success) {
-          nameDisplay.textContent = newName;
-          toggleNameEditMode(false);
-        } else {
-          alert(data.message || "Erreur lors de la sauvegarde.");
-        }
-      })["catch"](function () {
-        alert("Une erreur est survenue lors de la sauvegarde.");
-      })["finally"](function () {
-        nameEditBtn.disabled = false;
-      });
-    } else {
-      // Passage en mode édition
-      toggleNameEditMode(true);
-      // On stoppe la propagation pour éviter un double déclenchement
-      event.stopImmediatePropagation();
-    }
-  });
-
-  // Gestion du bouton d'édition de l'email
-  emailEditBtn.addEventListener('click', function (event) {
-    if (emailEditBtn.classList.contains('editing')) {
-      var newEmail = emailInput.value.trim();
-      if (newEmail === "") {
-        alert("L'email ne peut pas être vide.");
-        return;
+    }; // Fonctions pour activer/désactiver le mode édition pour l'email
+    var toggleEmailEditMode = function toggleEmailEditMode(editing) {
+      if (editing) {
+        emailDisplay.style.display = 'none';
+        emailInput.style.display = 'inline-block';
+        emailEditBtn.classList.add('editing');
+        emailEditBtn.innerHTML = '<i class="fa fa-floppy-o"></i>';
+      } else {
+        emailDisplay.style.display = 'inline-block';
+        emailInput.style.display = 'none';
+        emailEditBtn.classList.remove('editing');
+        emailEditBtn.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
       }
-      emailEditBtn.disabled = true;
-      fetch(updateProfileUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': csrfToken
-        },
-        body: JSON.stringify({
-          field: 'email',
-          value: newEmail
-        })
-      }).then(function (response) {
-        return response.json();
-      }).then(function (data) {
-        if (data.success) {
-          emailDisplay.textContent = newEmail;
-          toggleEmailEditMode(false);
-        } else {
-          alert(data.message || "Erreur lors de la sauvegarde.");
+    };
+    // Gestion du bouton d'édition du nom
+    nameEditBtn.addEventListener('click', function (event) {
+      // Si le bouton est déjà en mode "édition" (classe "editing"), on sauvegarde
+      if (nameEditBtn.classList.contains('editing')) {
+        var newName = nameInput.value.trim();
+        if (newName === "") {
+          alert("Le nom ne peut pas être vide.");
+          return;
         }
-      })["catch"](function () {
-        alert("Une erreur est survenue lors de la sauvegarde.");
-      })["finally"](function () {
-        emailEditBtn.disabled = false;
-      });
-    } else {
-      toggleEmailEditMode(true);
-      event.stopImmediatePropagation();
-    }
-  });
+        nameEditBtn.disabled = true; // désactiver le bouton pour éviter les doublons
 
-  // Fonctions pour activer/désactiver le mode édition pour le nom
-  function toggleNameEditMode(editing) {
-    if (editing) {
-      nameDisplay.style.display = 'none';
-      nameInput.style.display = 'inline-block';
-      nameEditBtn.classList.add('editing');
-      nameEditBtn.innerHTML = '<i class="fa fa-floppy-o"></i>';
-    } else {
-      nameDisplay.style.display = 'inline-block';
-      nameInput.style.display = 'none';
-      nameEditBtn.classList.remove('editing');
-      nameEditBtn.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
-    }
-  }
-
-  // Fonctions pour activer/désactiver le mode édition pour l'email
-  function toggleEmailEditMode(editing) {
-    if (editing) {
-      emailDisplay.style.display = 'none';
-      emailInput.style.display = 'inline-block';
-      emailEditBtn.classList.add('editing');
-      emailEditBtn.innerHTML = '<i class="fa fa-floppy-o"></i>';
-    } else {
-      emailDisplay.style.display = 'inline-block';
-      emailInput.style.display = 'none';
-      emailEditBtn.classList.remove('editing');
-      emailEditBtn.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
-    }
+        fetch(updateProfileUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+          },
+          body: JSON.stringify({
+            field: 'name',
+            value: newName
+          })
+        }).then(function (response) {
+          return response.json();
+        }).then(function (data) {
+          if (data.success) {
+            nameDisplay.textContent = newName;
+            toggleNameEditMode(false);
+          } else {
+            alert(data.message || "Erreur lors de la sauvegarde.");
+          }
+        })["catch"](function () {
+          alert("Une erreur est survenue lors de la sauvegarde.");
+        })["finally"](function () {
+          nameEditBtn.disabled = false;
+        });
+      } else {
+        // Passage en mode édition
+        toggleNameEditMode(true);
+        // On stoppe la propagation pour éviter un double déclenchement
+        event.stopImmediatePropagation();
+      }
+    });
+    // Gestion du bouton d'édition de l'email
+    emailEditBtn.addEventListener('click', function (event) {
+      if (emailEditBtn.classList.contains('editing')) {
+        var newEmail = emailInput.value.trim();
+        if (newEmail === "") {
+          alert("L'email ne peut pas être vide.");
+          return;
+        }
+        emailEditBtn.disabled = true;
+        fetch(updateProfileUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+          },
+          body: JSON.stringify({
+            field: 'email',
+            value: newEmail
+          })
+        }).then(function (response) {
+          return response.json();
+        }).then(function (data) {
+          if (data.success) {
+            emailDisplay.textContent = newEmail;
+            toggleEmailEditMode(false);
+          } else {
+            alert(data.message || "Erreur lors de la sauvegarde.");
+          }
+        })["catch"](function () {
+          alert("Une erreur est survenue lors de la sauvegarde.");
+        })["finally"](function () {
+          emailEditBtn.disabled = false;
+        });
+      } else {
+        toggleEmailEditMode(true);
+        event.stopImmediatePropagation();
+      }
+    });
   }
 });
 
@@ -14784,45 +14775,51 @@ document.addEventListener('DOMContentLoaded', function () {
 /***/ (() => {
 
 document.addEventListener('DOMContentLoaded', function (event) {
-  document.querySelector("#select-all").addEventListener('change', function () {
-    var isChecked = this.checked;
-    document.querySelectorAll(".delete-checkbox").forEach(function (checkbox) {
-      checkbox.checked = isChecked;
+  var selectAll = document.querySelector("#select-all"),
+    deleteSelected = document.querySelector("#delete-selected");
+  if (selectAll) {
+    selectAll.addEventListener('change', function () {
+      var isChecked = this.checked;
+      document.querySelectorAll(".delete-checkbox").forEach(function (checkbox) {
+        checkbox.checked = isChecked;
+      });
     });
-  });
-  document.querySelector("#delete-selected").addEventListener('click', function (event) {
-    var route = this.getAttribute('data-route');
-    var selectedProjects = [];
-    document.querySelectorAll(".delete-checkbox:checked").forEach(function (checkbox) {
-      selectedProjects.push(checkbox.getAttribute('data-project-id'));
+  }
+  if (deleteSelected) {
+    deleteSelected.addEventListener('click', function (event) {
+      var route = this.getAttribute('data-route');
+      var selectedProjects = [];
+      document.querySelectorAll(".delete-checkbox:checked").forEach(function (checkbox) {
+        selectedProjects.push(checkbox.getAttribute('data-project-id'));
+      });
+      if (selectedProjects.length === 0) {
+        alert("Aucune affaire sélectionnée.");
+        //pop up perso ?
+        return;
+      }
+      if (!confirm("Voulez-vous vraiment supprimer les affaires sélectionnées ?")) {
+        //confirm perso ?
+        return;
+      }
+      fetch(route, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+          selected_projects: selectedProjects
+        })
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        alert(data.message);
+        location.reload();
+      })["catch"](function (error) {
+        return console.error("Erreur lors de la suppression :", error);
+      });
     });
-    if (selectedProjects.length === 0) {
-      alert("Aucune affaire sélectionnée.");
-      //pop up perso ?
-      return;
-    }
-    if (!confirm("Voulez-vous vraiment supprimer les affaires sélectionnées ?")) {
-      //confirm perso ?
-      return;
-    }
-    fetch(route, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-      },
-      body: JSON.stringify({
-        selected_projects: selectedProjects
-      })
-    }).then(function (response) {
-      return response.json();
-    }).then(function (data) {
-      alert(data.message);
-      location.reload();
-    })["catch"](function (error) {
-      return console.error("Erreur lors de la suppression :", error);
-    });
-  });
+  }
   $(document).ready(function () {
     $('#search-clients').select2({
       placeholder: "Sélectionner des clients",
@@ -14892,10 +14889,14 @@ document.addEventListener('DOMContentLoaded', function (event) {
       event.preventDefault();
     }
   }
-  project_year.addEventListener("input", updateNomDossier);
-  project_number.addEventListener("input", updateNomDossier);
-  project_year.addEventListener("keypress", enforceNumericInput);
-  project_number.addEventListener("keypress", enforceNumericInput);
+  if (project_year) {
+    project_year.addEventListener("input", updateNomDossier);
+    project_year.addEventListener("keypress", enforceNumericInput);
+  }
+  if (project_number) {
+    project_number.addEventListener("input", updateNomDossier);
+    project_number.addEventListener("keypress", enforceNumericInput);
+  }
 });
 
 /***/ }),
@@ -14906,7 +14907,52 @@ document.addEventListener('DOMContentLoaded', function (event) {
   \**************************************/
 /***/ (() => {
 
+document.addEventListener('DOMContentLoaded', function () {
+  var uploadBtn = document.getElementById('upload-files-btn');
+  var fileInput = document.getElementById('file-input');
+  var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  if (uploadBtn) {
+    uploadBtn.addEventListener('click', function () {
+      var files = fileInput.files;
+      if (files.length === 0) {
+        alert('Veuillez sélectionner au moins un fichier.');
+        return;
+      }
 
+      // Récupère l'ID du projet et la route depuis le conteneur
+      var projectContainer = document.getElementById('project-container');
+      var projectId = projectContainer.getAttribute('data-project-id');
+      var route = projectContainer.getAttribute('data-route');
+      var formData = new FormData();
+      formData.append('_token', csrfToken);
+      for (var i = 0; i < files.length; i++) {
+        formData.append('files[]', files[i]);
+      }
+
+      // Utilisation de Fetch pour envoyer les fichiers
+      fetch(route, {
+        method: 'POST',
+        headers: {
+          // 'Content-Type' n'est pas défini ici car FormData s'en charge automatiquement
+          'X-CSRF-TOKEN': csrfToken
+        },
+        body: formData
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        if (data.success) {
+          alert('Fichiers uploadés avec succès !');
+          // Optionnel : mettre à jour la liste des fichiers ou recharger la page
+        } else {
+          alert(data.message || "Erreur lors de l'upload des fichiers.");
+        }
+      })["catch"](function (error) {
+        console.error("Erreur lors de l'upload :", error);
+        alert("Une erreur est survenue lors de l'upload.");
+      });
+    });
+  }
+});
 
 /***/ }),
 
@@ -14997,7 +15043,7 @@ document.addEventListener('DOMContentLoaded', function () {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': csrfToken
+          'X-CSRF-TOKEN': window.csrf_token
         },
         body: JSON.stringify({
           company_id: companyId,

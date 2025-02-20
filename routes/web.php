@@ -25,6 +25,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('projects/delete-selected', [ProjectController::class, 'deleteSelected'])->name('projects.delete-selected');
     Route::post('projects/delete-empty', [ProjectController::class, 'deleteEmptyProject'])->name('projects.delete-empty');
     Route::post('projects/add', [ProjectController::class, 'store'])->name('projects.store');
+    Route::post('projects/upload/{project}', [ProjectController::class, 'uploadFiles'])->name('projects.upload');
 
     //
     // PROFILE

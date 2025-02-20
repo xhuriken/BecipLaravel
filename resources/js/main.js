@@ -1,6 +1,6 @@
-$(document).ready(function() {
-    if ($('#project-table tbody tr').length > 1) {
-        new DataTable('#project-table', {
+jQuery(document).ready(function($) {
+    if ($('#project-table tbody tr').length > 0) {
+        $('#project-table').DataTable({
             language: {
                 "decimal": ",",
                 "thousands": ".",
@@ -21,9 +21,8 @@ $(document).ready(function() {
             }
         });
     }
-    if ($('#files-table tbody tr').length > 1) {
-
-        new DataTable('#files-table', {
+    if ($('#files-table tbody tr').length > 0) {
+        $('#files-table').DataTable({
             language: {
                 "decimal": ",",
                 "thousands": ".",
@@ -37,12 +36,6 @@ $(document).ready(function() {
                 "sLoadingRecords": "Chargement en cours...",
                 "sZeroRecords": "Aucun élément à afficher",
                 "sEmptyTable": "Aucune donnée disponible dans le tableau",
-                // "oPaginate": {
-                //     "sFirst":      "Premier",
-                //     "sPrevious":   "Précédent",
-                //     "sNext":       "Suivant",
-                //     "sLast":       "Dernier"
-                // },
                 "oAria": {
                     "sSortAscending": ": activer pour trier la colonne par ordre croissant",
                     "sSortDescending": ": activer pour trier la colonne par ordre décroissant"

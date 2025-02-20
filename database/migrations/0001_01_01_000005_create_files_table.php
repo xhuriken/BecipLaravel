@@ -22,7 +22,7 @@ return new class extends Migration
             $table->text('comment')->nullable();
             $table->boolean('is_validated')->default(false);
             $table->dateTime('validated_time')->nullable();
-            $table->enum('type', ['coffrage', 'ferraillage', 'divers'])->default(null);
+            $table->enum('type', ['undefine','coffrage', 'ferraillage', 'divers'])->default('undefine');
             $table->boolean('is_last_index')->default(true);
             $table->integer('distribution_count')->default(0);
             $table->timestamps();

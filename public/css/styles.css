@@ -28,6 +28,10 @@ body {
     min-width: 37.5rem;
 }
 
+.project{
+    min-width: 90rem;
+}
+
 .tooltip {
     position: relative;
     display: inline-block;
