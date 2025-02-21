@@ -30,11 +30,11 @@
 
         <div id="project-container" data-project-id="{{ $project->id }}" data-route="{{ route('projects.upload', $project->id) }}">
             <h2>Upload de fichiers</h2>
-            <form id="file-upload-form" enctype="multipart/form-data">
-                @csrf
-                <input type="file" id="file-input" name="files[]" multiple>
-                <button type="button" id="upload-files-btn">Uploader</button>
-            </form>
+            <!-- Drag & Drop -->
+            <div id="dropzone" class="dropzone" style="border: 2px dashed #ccc; padding: 20px; text-align: center; cursor: pointer;">
+                Glissez-déposez vos fichiers ici ou cliquez pour sélectionner.
+                <input type="file" id="file-input" name="files[]" multiple style="display: none;">
+            </div>
         </div>
 
 

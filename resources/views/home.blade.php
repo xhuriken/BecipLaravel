@@ -2,6 +2,8 @@
 
 @section('content')
 <div class="container-page min-width">
+    <div class="items-container">
+
     @if (auth()->user()->role == 'engineer')
         <a href='{{ route('usermanager') }}' class='btn-return'>Gérer les utilisateurs</a>
     @endif
@@ -10,7 +12,7 @@
         <a href="{{ route('projects.generate', [500, date('Y')+1]) }}" class="btn-mask">Générer 500 affaire l'année suivante</a>
         <button id="toggleButton" class="btn-mask">Ajouter une affaire manuellement</button>
 
-        <form method="POST" action="{{ route('projects.store') }}">
+        <form method="POST" action="{{ route('projects.store') }}" class="form-custom">
             @csrf
             <label>Entreprise</label>
             <select class="custom-select" name="company_id" required>
@@ -48,10 +50,10 @@
                 @endforeach
             </select>
 
-            <button type="submit">Ajouter</button>
+            <input type="submit" value="Ajouter" />
         </form>
-
     @endif
+    </div>
     <h2>Liste des affaires</h2>
 
     <table id="project-table" class="table table-striped" style="width:100%">

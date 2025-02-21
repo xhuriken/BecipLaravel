@@ -1,6 +1,9 @@
 body {
     margin: 0;
     padding: 0;
+    font-family: Poppins, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
 }
 .container{
     min-width: 55rem;
@@ -126,4 +129,67 @@ body {
 }
 .logout input:hover{
     background-color: #eb0f0f;
+}
+
+.form-custom{
+    margin: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.5rem;
+    background-color: #cdcdcd;
+    border-radius: 0.3rem;
+    padding: 2rem;
+}
+
+input[type="submit"]{
+    border: none;
+    color: #fff;
+    border-radius: 0.3rem;
+    background-color: #0c9155;
+    padding: 0.4rem 2rem;
+    margin: auto;
+    transition: ease 0.3s;
+}
+
+input[type="submit"]:hover {
+    background-color: #10b068;
+    outline: 0.15rem solid #0c9155 ;
+}
+select{
+    padding: 0.3rem;
+    outline: none;
+    border: none;
+    border-radius: 0.3rem;
+}
+select:focus{
+    padding: 0.3rem;
+    outline: 0.15rem solid #0c9155;
+    border-radius: 0.3rem;
+}
+input{
+    padding: 0.3rem;
+    outline: none;
+    border: none;
+    border-radius: 0.3rem;
+}
+input:focus{
+    padding: 0.3rem;
+    outline: 0.15rem solid #0c9155;
+    border-radius: 0.3rem;
+}
+#project_year{
+    width: 2rem;
+}
+#project_number{
+    width: 3rem;
+}
+a {
+    color: #0c9155;
+    text-decoration: none;
+    cursor: pointer;
+}
+.items-container{
+    display: flex;
+    flex-direction: column;
 }

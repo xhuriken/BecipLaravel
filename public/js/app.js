@@ -14978,48 +14978,79 @@ document.addEventListener('DOMContentLoaded', function (event) {
 /***/ (() => {
 
 document.addEventListener('DOMContentLoaded', function () {
-  var uploadBtn = document.getElementById('upload-files-btn');
+  var dropzone = document.getElementById('dropzone');
   var fileInput = document.getElementById('file-input');
   var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-  if (uploadBtn) {
-    uploadBtn.addEventListener('click', function () {
-      var files = fileInput.files;
-      if (files.length === 0) {
-        alert('Veuillez sélectionner au moins un fichier.');
-        return;
-      }
 
-      // Récupère l'ID du projet et la route depuis le conteneur
-      var projectContainer = document.getElementById('project-container');
-      var projectId = projectContainer.getAttribute('data-project-id');
-      var route = projectContainer.getAttribute('data-route');
-      var formData = new FormData();
-      formData.append('_token', csrfToken);
-      for (var i = 0; i < files.length; i++) {
-        formData.append('files[]', files[i]);
-      }
+  // Au clic sur la dropzone, on ouvre l'input fichier caché
+  dropzone.addEventListener('click', function () {
+    fileInput.click();
+  });
 
-      // Utilisation de Fetch pour envoyer les fichiers
-      fetch(route, {
-        method: 'POST',
-        headers: {
-          // 'Content-Type' n'est pas défini ici car FormData s'en charge automatiquement
-          'X-CSRF-TOKEN': csrfToken
-        },
-        body: formData
-      }).then(function (response) {
-        return response.json();
-      }).then(function (data) {
-        if (data.success) {
-          alert('Fichiers uploadés avec succès !');
-          // Optionnel : mettre à jour la liste des fichiers ou recharger la page
-        } else {
-          alert(data.message || "Erreur lors de l'upload des fichiers.");
-        }
-      })["catch"](function (error) {
-        console.error("Erreur lors de l'upload :", error);
-        alert("Une erreur est survenue lors de l'upload.");
-      });
+  // Gestion du dragover pour indiquer que l'utilisateur peut déposer
+  dropzone.addEventListener('dragover', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    dropzone.style.backgroundColor = "#f0f0f0";
+  });
+
+  // Réinitialiser le style lors du dragleave
+  dropzone.addEventListener('dragleave', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    dropzone.style.backgroundColor = "";
+  });
+
+  // Lorsque des fichiers sont déposés dans la zone
+  dropzone.addEventListener('drop', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    dropzone.style.backgroundColor = "";
+    var files = e.dataTransfer.files;
+    if (files.length > 0) {
+      uploadFiles(files);
+    }
+  });
+
+  // Quand l'utilisateur sélectionne des fichiers via l'input
+  fileInput.addEventListener('change', function () {
+    if (fileInput.files.length > 0) {
+      uploadFiles(fileInput.files);
+    }
+  });
+  function uploadFiles(files) {
+    if (files.length === 0) {
+      alert('Veuillez sélectionner au moins un fichier.');
+      return;
+    }
+
+    // Récupère la route d'upload depuis le conteneur
+    var projectContainer = document.getElementById('project-container');
+    var route = projectContainer.getAttribute('data-route');
+    var formData = new FormData();
+    formData.append('_token', csrfToken);
+    for (var i = 0; i < files.length; i++) {
+      formData.append('files[]', files[i]);
+    }
+    fetch(route, {
+      method: 'POST',
+      headers: {
+        // Ne pas définir Content-Type avec FormData !
+        'X-CSRF-TOKEN': csrfToken
+      },
+      body: formData
+    }).then(function (response) {
+      return response.json();
+    }).then(function (data) {
+      if (data.success) {
+        alert('Fichiers uploadés avec succès !');
+        // Optionnel : actualiser la liste des fichiers ou recharger la page
+      } else {
+        alert(data.message || "Erreur lors de l'upload des fichiers.");
+      }
+    })["catch"](function (error) {
+      console.error("Erreur lors de l'upload :", error);
+      alert("Une erreur est survenue lors de l'upload.");
     });
   }
 });

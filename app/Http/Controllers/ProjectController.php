@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\File;
 use App\Models\Project;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
@@ -113,10 +112,8 @@ class ProjectController extends Controller
         return response()->json(['message' => 'Les affaires sélectionnée ont été supprimées !']);
     }
 
-
     public function uploadFiles(Request $request, Project $project)
     {
-        // Validation : chaque fichier doit être présent et être un fichier
         $request->validate([
             'files.*' => 'required|file'
         ]);
@@ -125,31 +122,27 @@ class ProjectController extends Controller
         $storedFiles = [];
 
         foreach ($uploadedFiles as $file) {
-            // Récupérer l'extension en minuscules
             $extension = strtolower($file->getClientOriginalExtension());
 
-            // On utilise le nom du projet tel quel, par exemple "B25.001"
             $projectName = $project->name;
 
-            // Le chemin de stockage sera par exemple : "B25.001/png/"
             $directory = $projectName . '/' . $extension;
 
-            // Stocker le fichier en conservant son nom original
             $storedPath = $file->storeAs($directory, $file->getClientOriginalName(), 'public');
             $storedFiles[] = $storedPath;
 
-            // Enregistrer le fichier dans la table files
-            File::create([
+            \App\Models\File::create([
                 'project_id' => $project->id,
                 'user_id'    => auth()->user()->id,
                 'name'       => $file->getClientOriginalName(),
                 'extension'  => $extension,
-                'is_last_index' => 1, // par défaut, si c'est la dernière version
+                'is_last_index' => 1,
             ]);
         }
 
         return response()->json(['success' => true, 'files' => $storedFiles]);
     }
+
 
     public function update(Request $request)
     {
@@ -167,7 +160,5 @@ class ProjectController extends Controller
 
         return response()->json(['success' => true]);
     }
-
-
 
 }
