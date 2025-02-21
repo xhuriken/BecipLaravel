@@ -151,5 +151,23 @@ class ProjectController extends Controller
         return response()->json(['success' => true, 'files' => $storedFiles]);
     }
 
+    public function update(Request $request)
+    {
+        $validated = $request->validate([
+            'project_id'   => 'required|exists:projects,id',
+            'project_name' => 'required|string|max:255|unique:projects,name,' . $request->project_id,
+            'company_id'   => 'nullable|exists:companies,id'
+        ]);
+
+        $project = Project::findOrFail($validated['project_id']);
+        $project->name = $validated['project_name'];
+        // Si company_id est vide (ou une chaîne vide), on affecte null
+        $project->company_id = $validated['company_id'] ?: null;
+        $project->save();
+
+        return response()->json(['success' => true]);
+    }
+
+
 
 }

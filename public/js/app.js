@@ -14526,12 +14526,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _project_file__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_project_file__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _profile__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./profile */ "./resources/js/profile.js");
 /* harmony import */ var _profile__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_profile__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _home__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./home */ "./resources/js/home.js");
+/* harmony import */ var _home__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_home__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var bootstrap__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.esm.js");
 
 
 
 
 
 
+
+
+window.bootstrap = bootstrap__WEBPACK_IMPORTED_MODULE_7__;
 
 /***/ }),
 
@@ -14578,6 +14584,70 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     forceTLS: (import.meta.env.VITE_PUSHER_SCHEME ?? 'https') === 'https',
 //     enabledTransports: ['ws', 'wss'],
 // });
+
+/***/ }),
+
+/***/ "./resources/js/home.js":
+/*!******************************!*\
+  !*** ./resources/js/home.js ***!
+  \******************************/
+/***/ (() => {
+
+document.addEventListener('DOMContentLoaded', function () {
+  var editModalEl = document.getElementById('editProjectModal');
+  var editModal = new bootstrap.Modal(editModalEl);
+  document.querySelectorAll('.edit-project').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      var projectId = this.getAttribute('data-project-id');
+      var projectName = this.getAttribute('data-project-name');
+      var companyId = this.getAttribute('data-company-id');
+
+      // Remplir le formulaire du modal
+      document.getElementById('edit-project-id').value = projectId;
+      document.getElementById('edit-project-name').value = projectName;
+      document.getElementById('edit-project-company').value = companyId;
+
+      // Afficher le modal
+      editModal.show();
+    });
+  });
+  document.getElementById('save-project-btn').addEventListener('click', function () {
+    var projectId = document.getElementById('edit-project-id').value;
+    var projectName = document.getElementById('edit-project-name').value;
+    var companyId = document.getElementById('edit-project-company').value;
+    var data = {
+      project_id: projectId,
+      project_name: projectName,
+      company_id: companyId,
+      _token: window.csrf_token
+    };
+    fetch(window.updateProjectUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': window.csrf_token
+      },
+      body: JSON.stringify(data)
+    }).then(function (response) {
+      return response.json();
+    }).then(function (response) {
+      if (response.success) {
+        // Optionnel : mettre à jour la ligne dans le tableau avec les nouvelles données
+        // Vous pouvez rechercher la ligne par data-project-id et mettre à jour ses cellules
+
+        // Fermer le modal
+        editModal.hide();
+        // Recharger la page ou afficher un message de succès
+        location.reload();
+      } else {
+        alert(response.message || "Erreur lors de la mise à jour.");
+      }
+    })["catch"](function () {
+      alert("Une erreur est survenue lors de la mise à jour.");
+    });
+  });
+});
 
 /***/ }),
 

@@ -82,10 +82,15 @@
                 </td>
                 <td>{{ $project->name }}</td>
                 <td>
-                    <a href="{{route('projects.project', $project)}}" class="btn-return">Voir</a>
-                    @if (auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
+                    <a href="{{ route('projects.project', $project) }}" class="btn-return">Voir</a>
+                    @if(auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
                         <span class="responsiveSpan">|</span>
-                        <a href="" class="btn-return">Modifier</a>
+                        <a href="#" class="btn-return edit-project"
+                           data-project-id="{{ $project->id }}"
+                           data-project-name="{{ $project->name }}"
+                           data-company-id="{{ $project->company_id }}">
+                            Modifier
+                        </a>
                     @endif
                 </td>
 
@@ -117,5 +122,41 @@
     @endif
 </div>
 
-
+<!-- Modal de modification de l'affaire -->
+<div class="modal fade" id="editProjectModal" tabindex="-1" aria-labelledby="editProjectModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProjectModalLabel">Modifier l'affaire</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-project-form">
+                    @csrf
+                    <input type="hidden" name="project_id" id="edit-project-id">
+                    <div class="mb-3">
+                        <label for="edit-project-company" class="form-label">Entreprise</label>
+                        <select class="form-select" name="company_id" id="edit-project-company" required>
+                            <option value="">Sélectionnez une entreprise</option>
+                            @foreach($companies as $company)
+                                <option value="{{ $company->id }}">{{ $company->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-project-name" class="form-label">Nom de l'affaire</label>
+                        <input type="text" class="form-control" id="edit-project-name" name="project_name" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary" id="save-project-btn">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    window.updateProjectUrl = '{{ route("projects.update") }}';
+</script>
 @endsection

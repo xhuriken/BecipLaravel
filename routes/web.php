@@ -15,7 +15,6 @@ Auth::routes();
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
-
     //
     // PROJECTS
     //
@@ -26,6 +25,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('projects/delete-empty', [ProjectController::class, 'deleteEmptyProject'])->name('projects.delete-empty');
     Route::post('projects/add', [ProjectController::class, 'store'])->name('projects.store');
     Route::post('projects/upload/{project}', [ProjectController::class, 'uploadFiles'])->name('projects.upload');
+    Route::post('projects/update', [ProjectController::class, 'update'])->name('projects.update');
 
     //
     // PROFILE
