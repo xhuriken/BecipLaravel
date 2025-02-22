@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\CheckProjectAccess;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProjectController;
@@ -19,14 +20,13 @@ Route::group(['middleware' => 'auth'], function () {
     // PROJECTS
     //
     Route::get('projects/generate/{quantity}/{year}', [ProjectController::class, 'generate'])->name('projects.generate');
-    Route::get('projects/delete/{project}', [ProjectController::class, 'delete'])->name('projects.delete');
     Route::get('projects/project/{id}', [ProjectController::class, 'index'])->middleware(CheckProjectAccess::class)->name('projects.project');
+    Route::delete('projects/delete/{project}', [ProjectController::class, 'delete'])->name('projects.delete');
     Route::post('projects/delete-selected', [ProjectController::class, 'deleteSelected'])->name('projects.delete-selected');
     Route::post('projects/delete-empty', [ProjectController::class, 'deleteEmptyProject'])->name('projects.delete-empty');
     Route::post('projects/add', [ProjectController::class, 'store'])->name('projects.store');
     Route::post('projects/upload/{project}', [ProjectController::class, 'uploadFiles'])->name('projects.upload');
     Route::post('projects/update', [ProjectController::class, 'update'])->name('projects.update');
-
     //
     // PROFILE
     //

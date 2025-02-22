@@ -14516,19 +14516,26 @@ process.umask = function() { return 0; };
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _bootstrap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
-/* harmony import */ var _main__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./main */ "./resources/js/main.js");
-/* harmony import */ var _main__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_main__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _usercontroller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./usercontroller */ "./resources/js/usercontroller.js");
-/* harmony import */ var _usercontroller__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_usercontroller__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _project__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./project */ "./resources/js/project.js");
-/* harmony import */ var _project__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_project__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _project_file__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./project_file */ "./resources/js/project_file.js");
-/* harmony import */ var _project_file__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_project_file__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _profile__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./profile */ "./resources/js/profile.js");
-/* harmony import */ var _profile__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_profile__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _home__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./home */ "./resources/js/home.js");
-/* harmony import */ var _home__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_home__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var bootstrap__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.esm.js");
+/* harmony import */ var bootstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.esm.js");
+/* harmony import */ var _utils_universal_alerts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/universal_alerts */ "./resources/js/utils/universal_alerts.js");
+/* harmony import */ var _utils_universal_alerts__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_utils_universal_alerts__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _main__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./main */ "./resources/js/main.js");
+/* harmony import */ var _main__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_main__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _usercontroller__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./usercontroller */ "./resources/js/usercontroller.js");
+/* harmony import */ var _usercontroller__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_usercontroller__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _project__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./project */ "./resources/js/project.js");
+/* harmony import */ var _project__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_project__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _project_file__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./project_file */ "./resources/js/project_file.js");
+/* harmony import */ var _project_file__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_project_file__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _profile__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./profile */ "./resources/js/profile.js");
+/* harmony import */ var _profile__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_profile__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _home_home__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./home/home */ "./resources/js/home/home.js");
+/* harmony import */ var _home_home__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_home_home__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _home_project_name__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./home/project_name */ "./resources/js/home/project_name.js");
+/* harmony import */ var _home_project_name__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_home_project_name__WEBPACK_IMPORTED_MODULE_9__);
+
+
+window.bootstrap = bootstrap__WEBPACK_IMPORTED_MODULE_1__;
 
 
 
@@ -14537,7 +14544,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-window.bootstrap = bootstrap__WEBPACK_IMPORTED_MODULE_7__;
 
 /***/ }),
 
@@ -14587,39 +14593,87 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /***/ }),
 
-/***/ "./resources/js/home.js":
-/*!******************************!*\
-  !*** ./resources/js/home.js ***!
-  \******************************/
+/***/ "./resources/js/home/home.js":
+/*!***********************************!*\
+  !*** ./resources/js/home/home.js ***!
+  \***********************************/
 /***/ (() => {
 
 document.addEventListener('DOMContentLoaded', function () {
   var editModalEl = document.getElementById('editProjectModal');
   var editModal = new bootstrap.Modal(editModalEl);
+  $('#editProjectModal').on('shown.bs.modal', function () {
+    $('#edit-project-clients').select2({
+      placeholder: "Sélectionner des clients",
+      allowClear: true,
+      dropdownParent: $('#editProjectModal'),
+      width: '100%',
+      templateResult: formatClient,
+      // Ajoute les checkboxes
+      templateSelection: formatClientSelection // Garde l'affichage propre
+    });
+  });
   document.querySelectorAll('.edit-project').forEach(function (btn) {
     btn.addEventListener('click', function (e) {
       e.preventDefault();
       var projectId = this.getAttribute('data-project-id');
-      var projectName = this.getAttribute('data-project-name');
+      var projectName = this.getAttribute('data-project-name'); // Exemple: "B23.045"
       var companyId = this.getAttribute('data-company-id');
+      var referentId = this.getAttribute('data-referent-id') || ""; // Si null, mettre ""
+      var address = this.getAttribute('data-address') || ""; // Idem pour adresse
+      var comment = this.getAttribute('data-comment') || ""; // Idem pour commentaire
+      var clients = JSON.parse(this.getAttribute('data-clients')) || []; // Récupérer clients sous forme de tableau
 
-      // Remplir le formulaire du modal
+      // Décomposer le nom de l'affaire (B XX . XXX)
+      var match = projectName.match(/^B(\d{2})\.(\d{3})$/);
+      var year = match ? match[1] : "";
+      var number = match ? match[2] : "";
+
+      // Remplir les champs
       document.getElementById('edit-project-id').value = projectId;
-      document.getElementById('edit-project-name').value = projectName;
+      document.getElementById('edit-project-year').value = year;
+      document.getElementById('edit-project-number').value = number;
+      document.getElementById('edit-project-name').value = projectName; // Stocker le nom complet
+
       document.getElementById('edit-project-company').value = companyId;
+      document.getElementById('edit-project-referent').value = referentId;
+      document.getElementById('edit-project-address').value = address;
+      document.getElementById('edit-project-comment').value = comment;
+
+      // Sélectionner les clients existants
+      $('#edit-project-clients').val(clients).trigger('change');
 
       // Afficher le modal
       editModal.show();
     });
   });
+  function updateProjectName() {
+    var year = document.getElementById('edit-project-year').value.padStart(2, '0');
+    var number = document.getElementById('edit-project-number').value.padStart(3, '0');
+    document.getElementById('edit-project-name').value = "B".concat(year, ".").concat(number);
+  }
+  document.getElementById('edit-project-year').addEventListener("input", updateProjectName);
+  document.getElementById('edit-project-number').addEventListener("input", updateProjectName);
   document.getElementById('save-project-btn').addEventListener('click', function () {
     var projectId = document.getElementById('edit-project-id').value;
     var projectName = document.getElementById('edit-project-name').value;
-    var companyId = document.getElementById('edit-project-company').value;
+    var companyId = document.getElementById('edit-project-company').value || null;
+    var referentId = document.getElementById('edit-project-referent').value || null;
+    var address = document.getElementById('edit-project-address').value || null;
+    var comment = document.getElementById('edit-project-comment').value || null;
+    var clients = $('#edit-project-clients').val() || [];
+    if (!projectName.match(/^B\d{2}\.\d{3}$/)) {
+      showAlert("Nom du projet mal renseigné.", "error", 3000);
+      return;
+    }
     var data = {
       project_id: projectId,
       project_name: projectName,
       company_id: companyId,
+      referent_id: referentId,
+      address: address,
+      comment: comment,
+      clients: clients,
       _token: window.csrf_token
     };
     fetch(window.updateProjectUrl, {
@@ -14633,20 +14687,197 @@ document.addEventListener('DOMContentLoaded', function () {
       return response.json();
     }).then(function (response) {
       if (response.success) {
-        // Optionnel : mettre à jour la ligne dans le tableau avec les nouvelles données
-        // Vous pouvez rechercher la ligne par data-project-id et mettre à jour ses cellules
-
-        // Fermer le modal
+        showAlert("Affaire mise à jour avec succès !", "success", 3000);
         editModal.hide();
-        // Recharger la page ou afficher un message de succès
         location.reload();
       } else {
-        alert(response.message || "Erreur lors de la mise à jour.");
+        showAlert("Erreur lors de la mise à jour.", "error", 3000);
       }
     })["catch"](function () {
-      alert("Une erreur est survenue lors de la mise à jour.");
+      showAlert("Une erreur est survenue lors de la mise à jour.", "error", 3000);
     });
   });
+  var addProjectModalEl = document.getElementById('addProjectModal');
+  var addProjectModal = new bootstrap.Modal(addProjectModalEl);
+  $('#addProjectModal').on('shown.bs.modal', function () {
+    $('#add-project-clients').select2({
+      placeholder: "Sélectionner des clients",
+      allowClear: true,
+      dropdownParent: $('#addProjectModal'),
+      width: '100%',
+      templateResult: formatClient,
+      // Ajoute les checkboxes
+      templateSelection: formatClientSelection // Garde l'affichage propre
+    });
+  });
+  function formatClient(client) {
+    if (!client.id) {
+      return client.text;
+    }
+    return $('<span><input type="checkbox" class="select2-checkbox"> ' + client.text + '</span>');
+  }
+  function formatClientSelection(client) {
+    return client.text;
+  }
+  var toggleButton = document.getElementById('toggleButton');
+  toggleButton.addEventListener('click', function (e) {
+    e.preventDefault();
+    addProjectModal.show();
+  });
+
+  // Buttun modal click
+  var submitAddProjectBtn = document.getElementById('submit-add-project-btn');
+  submitAddProjectBtn.addEventListener('click', function () {
+    // get all input
+    var companyId = document.getElementById('add-project-company').value;
+    var engineerId = document.getElementById('add-project-engineer').value;
+    var yearVal = document.getElementById('add-project-year').value;
+    var numberVal = document.getElementById('add-project-number').value;
+    var clientsSelect = document.getElementById('add-project-clients');
+    var clients = Array.from(clientsSelect.selectedOptions).map(function (opt) {
+      return opt.value;
+    });
+    if (yearVal.length !== 2 || numberVal.length !== 3) {
+      showAlert("Nom du projet mal renseigné.", "error", 3000);
+      return;
+    }
+
+    // create project name
+    var projectName = "B" + yearVal + "." + numberVal;
+    document.getElementById('add-project-name').value = projectName;
+
+    // prepare data
+    var data = {
+      company_id: companyId,
+      engineer_id: engineerId,
+      project_name: projectName,
+      clients: clients,
+      _token: window.csrf_token
+    };
+
+    // send request with fetch
+    fetch(window.storeProjectUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': window.csrf_token
+      },
+      body: JSON.stringify(data)
+    }).then(function (response) {
+      return response.json().then(function (data) {
+        return {
+          status: response.status,
+          body: data
+        };
+      });
+    }).then(function (_ref) {
+      var status = _ref.status,
+        body = _ref.body;
+      if (status === 200 && body.success) {
+        showAlert("Affaire ajoutée avec succès !", "success", 3000);
+        addProjectModal.hide();
+        location.reload();
+      } else {
+        if (body.error) {
+          showAlert(body.error, "error", 3000);
+        } else {
+          showAlert("Erreur lors de l'ajout de l'affaire.", "error", 3000);
+        }
+      }
+    })["catch"](function (error) {
+      console.error("Erreur fetch:", error);
+      showAlert("Une erreur est survenue.", "error", 3000);
+    });
+  });
+  document.querySelectorAll('.delete-project-btn').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      var deleteUrl = this.getAttribute('data-delete-url');
+      showConfirm("Êtes-vous sûr de vouloir supprimer cette affaire ?", function () {
+        fetch(deleteUrl, {
+          method: 'DELETE',
+          headers: {
+            'X-CSRF-TOKEN': window.csrf_token,
+            'Content-Type': 'application/json'
+          }
+        }).then(function (response) {
+          if (!response.ok) {
+            throw new Error("Erreur HTTP " + response.status);
+          }
+          return response.json();
+        }).then(function (data) {
+          if (data.success) {
+            showAlert("Affaire supprimée avec succès.", "success", 3000);
+            location.reload();
+          } else {
+            showAlert("Erreur lors de la suppression : " + (data.error || "Inconnue"), "error", 3000);
+          }
+        })["catch"](function (error) {
+          console.error("Erreur fetch:", error);
+          showAlert("Une erreur est survenue. Vérifiez votre connexion.", "error", 3000);
+        });
+      });
+    });
+  });
+});
+
+/***/ }),
+
+/***/ "./resources/js/home/project_name.js":
+/*!*******************************************!*\
+  !*** ./resources/js/home/project_name.js ***!
+  \*******************************************/
+/***/ (() => {
+
+document.addEventListener('DOMContentLoaded', function () {
+  // === ADD PROJECT === //
+  var yearA = document.getElementById("add-project-year");
+  var numberA = document.getElementById("add-project-number");
+  var projectNameA = document.getElementById("add-project-name");
+  function updateProjectNameA() {
+    var year = yearA.value;
+    var number = numberA.value;
+
+    // Vérification stricte : empêcher un nom invalide
+    if (year.length !== 2 || number.length !== 3 || isNaN(year) || isNaN(number)) {
+      projectNameA.value = ""; // Efface le champ pour éviter une valeur invalide
+      return;
+    }
+    projectNameA.value = "B".concat(year, ".").concat(number);
+  }
+  function enforceNumericInput(event) {
+    if (!/^\d$/.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+  if (yearA && numberA) {
+    yearA.addEventListener("input", updateProjectNameA);
+    numberA.addEventListener("input", updateProjectNameA);
+    yearA.addEventListener("keypress", enforceNumericInput);
+    numberA.addEventListener("keypress", enforceNumericInput);
+  }
+
+  // === EDIT PROJECT === //
+  var yearE = document.getElementById("edit-project-year");
+  var numberE = document.getElementById("edit-project-number");
+  var projectNameE = document.getElementById("edit-project-name");
+  function updateProjectNameE() {
+    var year = yearE.value;
+    var number = numberE.value;
+
+    // Vérification stricte : empêcher un nom invalide
+    if (year.length !== 2 || number.length !== 3 || isNaN(year) || isNaN(number)) {
+      projectNameE.value = ""; // Efface le champ pour éviter une valeur invalide
+      return;
+    }
+    projectNameE.value = "B".concat(year, ".").concat(number);
+  }
+  if (yearE && numberE) {
+    yearE.addEventListener("input", updateProjectNameE);
+    numberE.addEventListener("input", updateProjectNameE);
+    yearE.addEventListener("keypress", enforceNumericInput);
+    numberE.addEventListener("keypress", enforceNumericInput);
+  }
 });
 
 /***/ }),
@@ -14981,76 +15212,74 @@ document.addEventListener('DOMContentLoaded', function () {
   var dropzone = document.getElementById('dropzone');
   var fileInput = document.getElementById('file-input');
   var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-  // Au clic sur la dropzone, on ouvre l'input fichier caché
-  dropzone.addEventListener('click', function () {
-    fileInput.click();
-  });
-
-  // Gestion du dragover pour indiquer que l'utilisateur peut déposer
-  dropzone.addEventListener('dragover', function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    dropzone.style.backgroundColor = "#f0f0f0";
-  });
-
-  // Réinitialiser le style lors du dragleave
-  dropzone.addEventListener('dragleave', function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    dropzone.style.backgroundColor = "";
-  });
-
-  // Lorsque des fichiers sont déposés dans la zone
-  dropzone.addEventListener('drop', function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    dropzone.style.backgroundColor = "";
-    var files = e.dataTransfer.files;
-    if (files.length > 0) {
-      uploadFiles(files);
-    }
-  });
-
-  // Quand l'utilisateur sélectionne des fichiers via l'input
-  fileInput.addEventListener('change', function () {
-    if (fileInput.files.length > 0) {
-      uploadFiles(fileInput.files);
-    }
-  });
-  function uploadFiles(files) {
-    if (files.length === 0) {
-      alert('Veuillez sélectionner au moins un fichier.');
-      return;
-    }
-
-    // Récupère la route d'upload depuis le conteneur
-    var projectContainer = document.getElementById('project-container');
-    var route = projectContainer.getAttribute('data-route');
-    var formData = new FormData();
-    formData.append('_token', csrfToken);
-    for (var i = 0; i < files.length; i++) {
-      formData.append('files[]', files[i]);
-    }
-    fetch(route, {
-      method: 'POST',
-      headers: {
-        // Ne pas définir Content-Type avec FormData !
-        'X-CSRF-TOKEN': csrfToken
-      },
-      body: formData
-    }).then(function (response) {
-      return response.json();
-    }).then(function (data) {
-      if (data.success) {
-        alert('Fichiers uploadés avec succès !');
-        // Optionnel : actualiser la liste des fichiers ou recharger la page
-      } else {
-        alert(data.message || "Erreur lors de l'upload des fichiers.");
+  if (dropzone) {
+    var uploadFiles = function uploadFiles(files) {
+      if (files.length === 0) {
+        alert('Veuillez sélectionner au moins un fichier.');
+        return;
       }
-    })["catch"](function (error) {
-      console.error("Erreur lors de l'upload :", error);
-      alert("Une erreur est survenue lors de l'upload.");
+
+      // get route
+      var projectContainer = document.getElementById('project-container');
+      var route = projectContainer.getAttribute('data-route');
+      var formData = new FormData();
+      formData.append('_token', csrfToken);
+      for (var i = 0; i < files.length; i++) {
+        formData.append('files[]', files[i]);
+      }
+      fetch(route, {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': csrfToken
+        },
+        body: formData
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        if (data.success) {
+          alert('Fichiers uploadés avec succès !');
+          // Need REFRESH
+        } else {
+          alert(data.message || "Erreur lors de l'upload des fichiers.");
+        }
+      })["catch"](function (error) {
+        console.error("Erreur lors de l'upload :", error);
+        alert("Une erreur est survenue lors de l'upload.");
+      });
+    };
+    //dropzone clic, hidden input launch
+    dropzone.addEventListener('click', function () {
+      fileInput.click();
+    });
+
+    //change style on dragover
+    dropzone.addEventListener('dragover', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      dropzone.style.backgroundColor = "#f0f0f0";
+    });
+
+    // re init style on leave
+    dropzone.addEventListener('dragleave', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      dropzone.style.backgroundColor = "";
+    });
+
+    //launch upload file when drop
+    dropzone.addEventListener('drop', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      dropzone.style.backgroundColor = "";
+      var files = e.dataTransfer.files;
+      if (files.length > 0) {
+        uploadFiles(files);
+      }
+    });
+    fileInput.addEventListener('change', function () {
+      if (fileInput.files.length > 0) {
+        uploadFiles(fileInput.files);
+      }
     });
   }
 });
@@ -15325,6 +15554,71 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 });
+
+/***/ }),
+
+/***/ "./resources/js/utils/universal_alerts.js":
+/*!************************************************!*\
+  !*** ./resources/js/utils/universal_alerts.js ***!
+  \************************************************/
+/***/ (() => {
+
+function showAlert(message) {
+  var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'info';
+  var duration = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 5000;
+  var alertEl = document.getElementById('universal-alert');
+  var messageEl = document.getElementById('universal-alert-message');
+
+  // Appliquer la classe correspondant au type
+  alertEl.classList.remove('success', 'error', 'info');
+  alertEl.classList.add(type);
+  messageEl.textContent = message;
+  alertEl.style.display = 'block';
+  alertEl.style.opacity = '0.95';
+
+  // Masquer l'alerte après la durée indiquée
+  setTimeout(function () {
+    alertEl.style.opacity = '0';
+    setTimeout(function () {
+      alertEl.style.display = 'none';
+    }, 500);
+  }, duration);
+}
+window.showAlert = showAlert;
+// Exemple d'utilisation:
+// showAlert("Opération réussie", "success", 5000);
+// showAlert("Une erreur s'est produite", "error", 5000);
+
+function showConfirm(message, onConfirm) {
+  var modalEl = document.getElementById('universal-confirm-modal');
+  var messageEl = document.getElementById('confirm-modal-message');
+  var okBtn = document.getElementById('confirm-ok-btn');
+
+  // Mettre à jour le message de confirmation
+  messageEl.textContent = message;
+
+  // Retirer d'éventuels événements antérieurs sur le bouton
+  var newOkBtn = okBtn.cloneNode(true);
+  okBtn.parentNode.replaceChild(newOkBtn, okBtn);
+
+  // Ajouter l'événement pour confirmer
+  newOkBtn.addEventListener('click', function () {
+    onConfirm();
+    // Fermer le modal
+    var modalInstance = bootstrap.Modal.getInstance(modalEl);
+    modalInstance.hide();
+  });
+
+  // Afficher le modal de confirmation
+  var confirmModal = new bootstrap.Modal(modalEl);
+  confirmModal.show();
+}
+
+// showConfirm("Voulez-vous vraiment supprimer cet élément ?", function() {
+//     // Code à exécuter après confirmation
+//     console.log("Elément supprimé");
+// });
+window.showConfirm = showConfirm;
 
 /***/ }),
 
