@@ -14519,18 +14519,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var bootstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.esm.js");
 /* harmony import */ var _utils_universal_alerts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/universal_alerts */ "./resources/js/utils/universal_alerts.js");
 /* harmony import */ var _utils_universal_alerts__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_utils_universal_alerts__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _main__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./main */ "./resources/js/main.js");
-/* harmony import */ var _main__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_main__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _usercontroller__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./usercontroller */ "./resources/js/usercontroller.js");
-/* harmony import */ var _usercontroller__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_usercontroller__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _project__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./project */ "./resources/js/project.js");
-/* harmony import */ var _project__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_project__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _project_file__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./project_file */ "./resources/js/project_file.js");
-/* harmony import */ var _project_file__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_project_file__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _profile__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./profile */ "./resources/js/profile.js");
-/* harmony import */ var _profile__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_profile__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _home_home__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./home/home */ "./resources/js/home/home.js");
-/* harmony import */ var _home_home__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_home_home__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _utils_datatables__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils/datatables */ "./resources/js/utils/datatables.js");
+/* harmony import */ var _utils_datatables__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_utils_datatables__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _usercontroller_usercontroller__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./usercontroller/usercontroller */ "./resources/js/usercontroller/usercontroller.js");
+/* harmony import */ var _usercontroller_usercontroller__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_usercontroller_usercontroller__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _home_checkboxtable__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./home/checkboxtable */ "./resources/js/home/checkboxtable.js");
+/* harmony import */ var _home_checkboxtable__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_home_checkboxtable__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _project_dropzone__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./project/dropzone */ "./resources/js/project/dropzone.js");
+/* harmony import */ var _project_dropzone__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_project_dropzone__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _profile_profile__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./profile/profile */ "./resources/js/profile/profile.js");
+/* harmony import */ var _profile_profile__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_profile_profile__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _home_modals__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./home/modals */ "./resources/js/home/modals.js");
+/* harmony import */ var _home_modals__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_home_modals__WEBPACK_IMPORTED_MODULE_8__);
 /* harmony import */ var _home_project_name__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./home/project_name */ "./resources/js/home/project_name.js");
 /* harmony import */ var _home_project_name__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_home_project_name__WEBPACK_IMPORTED_MODULE_9__);
 
@@ -14593,10 +14593,122 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /***/ }),
 
-/***/ "./resources/js/home/home.js":
-/*!***********************************!*\
-  !*** ./resources/js/home/home.js ***!
-  \***********************************/
+/***/ "./resources/js/home/checkboxtable.js":
+/*!********************************************!*\
+  !*** ./resources/js/home/checkboxtable.js ***!
+  \********************************************/
+/***/ (() => {
+
+document.addEventListener('DOMContentLoaded', function (event) {
+  var selectAll = document.querySelector("#select-all"),
+    deleteSelected = document.querySelector("#delete-selected");
+  if (selectAll) {
+    selectAll.addEventListener('change', function () {
+      var isChecked = this.checked;
+      document.querySelectorAll(".delete-checkbox").forEach(function (checkbox) {
+        checkbox.checked = isChecked;
+      });
+    });
+  }
+  if (deleteSelected) {
+    deleteSelected.addEventListener('click', function (event) {
+      var route = this.getAttribute('data-route');
+      var selectedProjects = [];
+      document.querySelectorAll(".delete-checkbox:checked").forEach(function (checkbox) {
+        selectedProjects.push(checkbox.getAttribute('data-project-id'));
+      });
+      if (selectedProjects.length === 0) {
+        alert("Aucune affaire sélectionnée.");
+        //pop up perso ?
+        return;
+      }
+      if (!confirm("Voulez-vous vraiment supprimer les affaires sélectionnées ?")) {
+        //confirm perso ?
+        return;
+      }
+      fetch(route, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+          selected_projects: selectedProjects
+        })
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        alert(data.message);
+        location.reload();
+      })["catch"](function (error) {
+        return console.error("Erreur lors de la suppression :", error);
+      });
+    });
+  }
+  $(document).ready(function () {
+    $('#search-clients').select2({
+      placeholder: "Sélectionner des clients",
+      allowClear: true,
+      closeOnSelect: false,
+      // Ne pas fermer la liste après sélection
+      templateResult: formatOption,
+      // Personnalisation de l'affichage des options
+      templateSelection: formatSelection,
+      // Personnalisation de l'affichage des éléments sélectionnés
+      width: '100%'
+    });
+
+    // Fonction pour afficher les checkboxes à côté de chaque client
+    function formatOption(option) {
+      if (!option.id) {
+        return option.text;
+      }
+
+      // Création de la checkbox
+      var checkbox = $('<input type="checkbox" class="client-checkbox" style="margin-right: 8px;">');
+      checkbox.val(option.id);
+
+      // Vérifie si l'option est déjà sélectionnée
+      if ($('#search-clients').find('option[value="' + option.id + '"]').prop('selected')) {
+        checkbox.prop('checked', true);
+      }
+      var $option = $('<span></span>').text(option.text);
+      return $('<span style="display: flex; align-items: center;"></span>').append(checkbox).append($option);
+    }
+
+    // Fonction pour afficher correctement les éléments sélectionnés
+    function formatSelection(selection) {
+      return selection.text;
+    }
+
+    // Gestion du clic sur les checkboxes
+    $(document).on('click', '.client-checkbox', function (e) {
+      var value = $(this).val();
+
+      // Met à jour la sélection dans Select2
+      var isSelected = $('#search-clients').find('option[value="' + value + '"]').prop('selected');
+      $('#search-clients').find('option[value="' + value + '"]').prop('selected', !isSelected);
+      $('#search-clients').trigger('change'); // Met à jour Select2 visuellement
+
+      e.stopPropagation(); // Empêche la fermeture de Select2 lors du clic
+    });
+
+    // Met à jour les checkboxes lorsqu'un élément est sélectionné depuis Select2
+    $('#search-clients').on('select2:select select2:unselect', function () {
+      $('.client-checkbox').each(function () {
+        var value = $(this).val();
+        $(this).prop('checked', $('#search-clients').find('option[value="' + value + '"]').prop('selected'));
+      });
+    });
+  });
+});
+
+/***/ }),
+
+/***/ "./resources/js/home/modals.js":
+/*!*************************************!*\
+  !*** ./resources/js/home/modals.js ***!
+  \*************************************/
 /***/ (() => {
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -14882,65 +14994,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 /***/ }),
 
-/***/ "./resources/js/main.js":
-/*!******************************!*\
-  !*** ./resources/js/main.js ***!
-  \******************************/
-/***/ (() => {
-
-jQuery(document).ready(function ($) {
-  if ($('#project-table tbody tr').length > 0) {
-    $('#project-table').DataTable({
-      language: {
-        "decimal": ",",
-        "thousands": ".",
-        "sProcessing": "Traitement en cours...",
-        "sSearch": "Rechercher :",
-        "sLengthMenu": "Afficher _MENU_ éléments",
-        "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ éléments",
-        "sInfoEmpty": "Affichage de 0 à 0 sur 0 éléments",
-        "sInfoFiltered": "(filtré à partir de _MAX_ éléments au total)",
-        "sInfoPostFix": "",
-        "sLoadingRecords": "Chargement en cours...",
-        "sZeroRecords": "Aucun élément à afficher",
-        "sEmptyTable": "Aucune donnée disponible dans le tableau",
-        "oAria": {
-          "sSortAscending": ": activer pour trier la colonne par ordre croissant",
-          "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
-        }
-      }
-    });
-  }
-  if ($('#files-table tbody tr').length > 0) {
-    $('#files-table').DataTable({
-      language: {
-        "decimal": ",",
-        "thousands": ".",
-        "sProcessing": "Traitement en cours...",
-        "sSearch": "Rechercher :",
-        "sLengthMenu": "Afficher _MENU_ éléments",
-        "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ éléments",
-        "sInfoEmpty": "Affichage de 0 à 0 sur 0 éléments",
-        "sInfoFiltered": "(filtré à partir de _MAX_ éléments au total)",
-        "sInfoPostFix": "",
-        "sLoadingRecords": "Chargement en cours...",
-        "sZeroRecords": "Aucun élément à afficher",
-        "sEmptyTable": "Aucune donnée disponible dans le tableau",
-        "oAria": {
-          "sSortAscending": ": activer pour trier la colonne par ordre croissant",
-          "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
-        }
-      }
-    });
-  }
-});
-
-/***/ }),
-
-/***/ "./resources/js/profile.js":
-/*!*********************************!*\
-  !*** ./resources/js/profile.js ***!
-  \*********************************/
+/***/ "./resources/js/profile/profile.js":
+/*!*****************************************!*\
+  !*** ./resources/js/profile/profile.js ***!
+  \*****************************************/
 /***/ (() => {
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -15069,143 +15126,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 /***/ }),
 
-/***/ "./resources/js/project.js":
-/*!*********************************!*\
-  !*** ./resources/js/project.js ***!
-  \*********************************/
-/***/ (() => {
-
-document.addEventListener('DOMContentLoaded', function (event) {
-  var selectAll = document.querySelector("#select-all"),
-    deleteSelected = document.querySelector("#delete-selected");
-  if (selectAll) {
-    selectAll.addEventListener('change', function () {
-      var isChecked = this.checked;
-      document.querySelectorAll(".delete-checkbox").forEach(function (checkbox) {
-        checkbox.checked = isChecked;
-      });
-    });
-  }
-  if (deleteSelected) {
-    deleteSelected.addEventListener('click', function (event) {
-      var route = this.getAttribute('data-route');
-      var selectedProjects = [];
-      document.querySelectorAll(".delete-checkbox:checked").forEach(function (checkbox) {
-        selectedProjects.push(checkbox.getAttribute('data-project-id'));
-      });
-      if (selectedProjects.length === 0) {
-        alert("Aucune affaire sélectionnée.");
-        //pop up perso ?
-        return;
-      }
-      if (!confirm("Voulez-vous vraiment supprimer les affaires sélectionnées ?")) {
-        //confirm perso ?
-        return;
-      }
-      fetch(route, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify({
-          selected_projects: selectedProjects
-        })
-      }).then(function (response) {
-        return response.json();
-      }).then(function (data) {
-        alert(data.message);
-        location.reload();
-      })["catch"](function (error) {
-        return console.error("Erreur lors de la suppression :", error);
-      });
-    });
-  }
-  $(document).ready(function () {
-    $('#search-clients').select2({
-      placeholder: "Sélectionner des clients",
-      allowClear: true,
-      closeOnSelect: false,
-      // Ne pas fermer la liste après sélection
-      templateResult: formatOption,
-      // Personnalisation de l'affichage des options
-      templateSelection: formatSelection,
-      // Personnalisation de l'affichage des éléments sélectionnés
-      width: '100%'
-    });
-
-    // Fonction pour afficher les checkboxes à côté de chaque client
-    function formatOption(option) {
-      if (!option.id) {
-        return option.text;
-      }
-
-      // Création de la checkbox
-      var checkbox = $('<input type="checkbox" class="client-checkbox" style="margin-right: 8px;">');
-      checkbox.val(option.id);
-
-      // Vérifie si l'option est déjà sélectionnée
-      if ($('#search-clients').find('option[value="' + option.id + '"]').prop('selected')) {
-        checkbox.prop('checked', true);
-      }
-      var $option = $('<span></span>').text(option.text);
-      return $('<span style="display: flex; align-items: center;"></span>').append(checkbox).append($option);
-    }
-
-    // Fonction pour afficher correctement les éléments sélectionnés
-    function formatSelection(selection) {
-      return selection.text;
-    }
-
-    // Gestion du clic sur les checkboxes
-    $(document).on('click', '.client-checkbox', function (e) {
-      var value = $(this).val();
-
-      // Met à jour la sélection dans Select2
-      var isSelected = $('#search-clients').find('option[value="' + value + '"]').prop('selected');
-      $('#search-clients').find('option[value="' + value + '"]').prop('selected', !isSelected);
-      $('#search-clients').trigger('change'); // Met à jour Select2 visuellement
-
-      e.stopPropagation(); // Empêche la fermeture de Select2 lors du clic
-    });
-
-    // Met à jour les checkboxes lorsqu'un élément est sélectionné depuis Select2
-    $('#search-clients').on('select2:select select2:unselect', function () {
-      $('.client-checkbox').each(function () {
-        var value = $(this).val();
-        $(this).prop('checked', $('#search-clients').find('option[value="' + value + '"]').prop('selected'));
-      });
-    });
-  });
-  var project_year = document.getElementById("project_year");
-  var project_number = document.getElementById("project_number");
-  var project_name = document.getElementById("project_name");
-  function updateNomDossier() {
-    var year = project_year.value.padStart(2, '0');
-    var number = project_number.value.padStart(3, '0');
-    project_name.value = "B".concat(year, ".").concat(number);
-  }
-  function enforceNumericInput(event) {
-    if (!/^\d$/.test(event.key)) {
-      event.preventDefault();
-    }
-  }
-  if (project_year) {
-    project_year.addEventListener("input", updateNomDossier);
-    project_year.addEventListener("keypress", enforceNumericInput);
-  }
-  if (project_number) {
-    project_number.addEventListener("input", updateNomDossier);
-    project_number.addEventListener("keypress", enforceNumericInput);
-  }
-});
-
-/***/ }),
-
-/***/ "./resources/js/project_file.js":
-/*!**************************************!*\
-  !*** ./resources/js/project_file.js ***!
-  \**************************************/
+/***/ "./resources/js/project/dropzone.js":
+/*!******************************************!*\
+  !*** ./resources/js/project/dropzone.js ***!
+  \******************************************/
 /***/ (() => {
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -15286,10 +15210,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 /***/ }),
 
-/***/ "./resources/js/usercontroller.js":
-/*!****************************************!*\
-  !*** ./resources/js/usercontroller.js ***!
-  \****************************************/
+/***/ "./resources/js/usercontroller/usercontroller.js":
+/*!*******************************************************!*\
+  !*** ./resources/js/usercontroller/usercontroller.js ***!
+  \*******************************************************/
 /***/ (() => {
 
 $(document).ready(function () {
@@ -15553,6 +15477,61 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
   });
+});
+
+/***/ }),
+
+/***/ "./resources/js/utils/datatables.js":
+/*!******************************************!*\
+  !*** ./resources/js/utils/datatables.js ***!
+  \******************************************/
+/***/ (() => {
+
+jQuery(document).ready(function ($) {
+  if ($('#project-table tbody tr').length > 0) {
+    $('#project-table').DataTable({
+      language: {
+        "decimal": ",",
+        "thousands": ".",
+        "sProcessing": "Traitement en cours...",
+        "sSearch": "Rechercher :",
+        "sLengthMenu": "Afficher _MENU_ éléments",
+        "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ éléments",
+        "sInfoEmpty": "Affichage de 0 à 0 sur 0 éléments",
+        "sInfoFiltered": "(filtré à partir de _MAX_ éléments au total)",
+        "sInfoPostFix": "",
+        "sLoadingRecords": "Chargement en cours...",
+        "sZeroRecords": "Aucun élément à afficher",
+        "sEmptyTable": "Aucune donnée disponible dans le tableau",
+        "oAria": {
+          "sSortAscending": ": activer pour trier la colonne par ordre croissant",
+          "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
+        }
+      }
+    });
+  }
+  if ($('#files-table tbody tr').length > 0) {
+    $('#files-table').DataTable({
+      language: {
+        "decimal": ",",
+        "thousands": ".",
+        "sProcessing": "Traitement en cours...",
+        "sSearch": "Rechercher :",
+        "sLengthMenu": "Afficher _MENU_ éléments",
+        "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ éléments",
+        "sInfoEmpty": "Affichage de 0 à 0 sur 0 éléments",
+        "sInfoFiltered": "(filtré à partir de _MAX_ éléments au total)",
+        "sInfoPostFix": "",
+        "sLoadingRecords": "Chargement en cours...",
+        "sZeroRecords": "Aucun élément à afficher",
+        "sEmptyTable": "Aucune donnée disponible dans le tableau",
+        "oAria": {
+          "sSortAscending": ": activer pour trier la colonne par ordre croissant",
+          "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
+        }
+      }
+    });
+  }
 });
 
 /***/ }),

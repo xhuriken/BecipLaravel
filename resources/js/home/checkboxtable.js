@@ -48,8 +48,6 @@ document.addEventListener('DOMContentLoaded', function(event) {
         });
     }
 
-
-
     $(document).ready(function() {
         $('#search-clients').select2({
             placeholder: "Sélectionner des clients",
@@ -105,31 +103,4 @@ document.addEventListener('DOMContentLoaded', function(event) {
             });
         });
     });
-
-    const project_year = document.getElementById("project_year");
-    const project_number = document.getElementById("project_number");
-    const project_name = document.getElementById("project_name");
-
-    function updateNomDossier() {
-        const year = project_year.value.padStart(2, '0');
-        const number = project_number.value.padStart(3, '0');
-        project_name.value = `B${year}.${number}`;
-    }
-
-    function enforceNumericInput(event) {
-        if (!/^\d$/.test(event.key)) {
-            event.preventDefault();
-        }
-    }
-
-    if( project_year ) {
-        project_year.addEventListener("input", updateNomDossier);
-        project_year.addEventListener("keypress", enforceNumericInput);
-    }
-
-    if( project_number ) {
-        project_number.addEventListener("input", updateNomDossier);
-        project_number.addEventListener("keypress", enforceNumericInput);
-    }
-
 });
