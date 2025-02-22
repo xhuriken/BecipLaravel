@@ -6,7 +6,8 @@ use App\Models\Project;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Storage;
+use \Illuminate\Http\JsonResponse;
 class ProjectController extends Controller
 {
     public function index($id)
@@ -59,17 +60,45 @@ class ProjectController extends Controller
         return redirect()->back()->with('success', 'Les affaires vides ont été supprimées.');
     }
 
-    public function delete(Project $project, Request $request) {
+    public function delete(Project $project, Request $request): JsonResponse
+    {
         \Log::info('Tentative de suppression du projet : ', ['project_id' => $project->id]);
 
         if (!$project) {
             return response()->json(['error' => 'Projet introuvable.'], 404);
         }
 
+        //delete folder too
+        $projectFolder = storage_path('app/public/' . $project->id);
+
+        // Vérification et suppression du dossier
+        if (is_dir($projectFolder)) {
+            \Log::info("Dossier trouvé, suppression en cours : $projectFolder");
+            $this->deleteFolder($projectFolder);
+            \Log::info("Dossier du projet supprimé : $projectFolder");
+        } else {
+            \Log::warning("Dossier non trouvé : $projectFolder");
+        }
+
         $project->delete();
         return response()->json(['success' => true]);
     }
 
+    /**
+     * Supprime un dossier et tout son contenu
+     */
+    private function deleteFolder(string $folderPath): void {
+        $files = array_diff(scandir($folderPath), ['.', '..']);
+        foreach ($files as $file) {
+            $filePath = $folderPath . DIRECTORY_SEPARATOR . $file;
+            if (is_dir($filePath)) {
+                $this->deleteFolder($filePath);
+            } else {
+                unlink($filePath);
+            }
+        }
+        rmdir($folderPath);
+    }
     public function store(Request $request)
     {
         \Log::info('Données reçues : ', $request->all());
@@ -130,9 +159,7 @@ class ProjectController extends Controller
         foreach ($uploadedFiles as $file) {
             $extension = strtolower($file->getClientOriginalExtension());
 
-            $projectName = $project->name;
-
-            $directory = $projectName . '/' . $extension;
+            $directory = $project->id . '/' . $extension;
 
             $storedPath = $file->storeAs($directory, $file->getClientOriginalName(), 'public');
             $storedFiles[] = $storedPath;
@@ -180,7 +207,5 @@ class ProjectController extends Controller
 
         return response()->json(['success' => true]);
     }
-
-
 
 }

@@ -27,7 +27,7 @@ return new class extends Migration
             $table->integer('distribution_count')->default(0);
             $table->timestamps();
 
-            $table->foreign('project_id')->references('id')->on('projects')->onDelete('set null');
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
         });
     }

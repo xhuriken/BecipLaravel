@@ -67,15 +67,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert('Fichiers uploadés avec succès !');
-                        // Need REFRESH
+                        showAlert('Fichiers uploadés avec succès !', 'success', 3000)
+                        location.reload();
                     } else {
                         alert(data.message || "Erreur lors de l'upload des fichiers.");
                     }
                 })
                 .catch(error => {
                     console.error("Erreur lors de l'upload :", error);
-                    alert("Une erreur est survenue lors de l'upload.");
+                    showAlert('Une erreur est survenue', 'error', 3000)
                 });
         }
     }
