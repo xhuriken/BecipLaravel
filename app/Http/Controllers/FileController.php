@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
 {
-    public function update(File $file, Request $request)
+    public function update(File $file, Request $request): \Illuminate\Http\JsonResponse
     {
         // Récupérer les champs à mettre à jour
         $data = $request->validate([
@@ -53,6 +54,26 @@ class FileController extends Controller
 
         $file->save();
 
+        return response()->json(['success' => true]);
+    }
+
+    public function delete(File $file, Request $request): \Illuminate\Http\JsonResponse
+    {
+        \Log::info('Tentative de suppression du fichier : ', ['file_id' => $file->id]);
+
+        $relativePath = $file->project_id . '/' . $file->extension . '/' . $file->name;
+
+        if (Storage::disk('public')->exists($relativePath)) {
+            \Log::info("Fichier trouvé, suppression en cours : " . $file->name);
+            //Storage delete
+            Storage::disk('public')->delete($relativePath);
+            \Log::info("Fichier du projet supprimé : " . $file->name);
+        } else {
+            \Log::warning("Fichier non trouvé : " . $relativePath);
+        }
+
+        //BDD delete
+        $file->delete();
         return response()->json(['success' => true]);
     }
 }

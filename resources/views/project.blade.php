@@ -130,7 +130,9 @@
                     <tr data-id="{{$file->id}}">
                         @if(auth()->user()->isBecip())
                             <td data-label="Delete" class="icon-cell">
-                                <i class="fa-solid fa-trash delete-icon"></i>
+                                <a href="#" class="delete-file-btn" data-delete-url="{{ route('file.delete', $file) }}">
+                                    <i class="fa-solid fa-trash delete-icon"></i>
+                                </a>
                             </td>
                         @endif
                         <td data-label="Révision">
@@ -153,7 +155,7 @@
                         <td data-label="Type">
                             @if(auth()->user()->role == 'drawer' || auth()->user()->role == 'engineer')
                                 <select class="file-type-select form-control">
-                                    <option value="undefine"        {{ $file->type === 'undefine' ? 'selected' : ''}}>      Undefine</option>
+                                    <option value="undefine"        {{ $file->type === 'undefine' ? 'selected' : ''}}>      Pas définie</option>
                                     <option value="coffrage"        {{ $file->type === 'coffrage' ? 'selected' : ''}}>      Coffrage</option>
                                     <option value="ferraillage"     {{ $file->type === 'ferraillage' ? 'selected' : ''}}>   Ferraillage</option>
                                     <option value="divers"          {{ $file->type === 'divers' ? 'selected' : ''}}>        Divers</option>
