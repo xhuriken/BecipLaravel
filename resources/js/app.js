@@ -9,3 +9,4 @@ import './project/dropzone';
 import './profile/profile'
 import './home/modals'
 import './home/project_name'
+import './file/update_file'

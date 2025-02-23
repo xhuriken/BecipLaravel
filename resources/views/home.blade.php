@@ -21,57 +21,58 @@
         <h2>Liste des affaires</h2>
         <table id="project-table" class="table table-striped" style="width:100%">
             <thead>
-            <tr>
-                <th>Entreprise</th>
-                <th>Nom de l'affaire</th>
-                <th>Actions</th>
-                @if (auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
-                    <th data-label="Delete"><i class="fa-solid fa-trash"></i></th>
-                    <th><input type="checkbox" id="select-all"></th>
-                @endif
-            </tr>
-            </thead>
-            <tbody>
-            @forelse($projects as $project)
                 <tr>
-                    <td>
-                        @if($project->company_id == null)
-                            Aucune
-                        @else
-                            {{ $project->getCompanyName($project->company_id) }}
-                        @endif
-                    </td>
-                    <td>{{ $project->name }}</td>
-                    <td>
-                        <a href="{{ route('projects.project', $project) }}" class="btn-return">Voir</a>
-                        @if(auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
-                            <span class="responsiveSpan">|</span>
-                            <a href="#" class="btn-return edit-project"
-                               data-project-id="{{ $project->id }}"
-                               data-project-name="{{ $project->name }}"
-                               data-company-id="{{ $project->company_id }}"
-                               data-referent-id="{{ $project->referent_id }}"
-                               data-address="{{ $project->address }}"
-                               data-comment="{{ $project->comment }}"
-                               data-clients="{{ json_encode($project->clients->pluck('id')->toArray()) }}">
-                                Modifier
-                            </a>
-                        @endif
-                    </td>
+                    <th>Entreprise</th>
+                    <th>Nom de l'affaire</th>
+                    <th>Actions</th>
                     @if (auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
-                        <td class="icon-cell">
-                            <a href="#" class="delete-project-btn" data-delete-url="{{ route('projects.delete', $project) }}">
-                                <i class="fa-solid fa-trash delete-icon"></i>
-                            </a>
-                        </td>
-                        <td>
-                            <input type="checkbox" class="delete-checkbox" data-project-id="{{ $project->id }}">
-                        </td>
+                        <th data-label="Delete"><i class="fa-solid fa-trash"></i></th>
+                        <th><input type="checkbox" id="select-all"></th>
                     @endif
                 </tr>
-            @empty
-                <tr><td colspan="5">Aucune affaire trouvée</td></tr>
-            @endforelse
+            </thead>
+            <tbody>
+                @forelse($projects as $project)
+                    <tr>
+                        <td>{{ $project->company_id ? $project->getCompanyName($project->company_id) : 'Aucune' }}</td>
+                        <td>{{ $project->name }}</td>
+                        <td>
+                            <a href="{{ route('projects.project', $project) }}" class="btn-return">Voir</a>
+                            @if(auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
+                                <span class="responsiveSpan">|</span>
+                                <a href="#" class="btn-return edit-project"
+                                   data-project-id="{{ $project->id }}"
+                                   data-project-name="{{ $project->name }}"
+                                   data-company-id="{{ $project->company_id }}"
+                                   data-referent-id="{{ $project->referent_id }}"
+                                   data-address="{{ $project->address }}"
+                                   data-comment="{{ $project->comment }}"
+                                   data-clients="{{ json_encode($project->clients->pluck('id')->toArray()) }}">
+                                    Modifier
+                                </a>
+                            @endif
+                        </td>
+                        @if (auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
+                            <td class="icon-cell">
+                                <a href="#" class="delete-project-btn" data-delete-url="{{ route('projects.delete', $project) }}">
+                                    <i class="fa-solid fa-trash delete-icon"></i>
+                                </a>
+                            </td>
+                            <td>
+                                <input type="checkbox" class="delete-checkbox" data-project-id="{{ $project->id }}">
+                            </td>
+                        @endif
+                    </tr>
+                @empty
+                    <!-- TODO: trouver un moyen d'utiliser un ptn de colspan avec datatable-->
+                    <tr class="no-data">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
 

@@ -1,7 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     const editModalEl = document.getElementById('editProjectModal');
-    const editModal = new bootstrap.Modal(editModalEl);
+    if(editModalEl){
+        const editModal = new bootstrap.Modal(editModalEl);
+    }
 
     $('#editProjectModal').on('shown.bs.modal', function () {
         $('#edit-project-clients').select2({

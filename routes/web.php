@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FileController;
 use App\Http\Middleware\CheckProjectAccess;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -45,5 +46,9 @@ Route::group(['middleware' => 'auth'], function () {
     // UTILISATEURS
     Route::post('usermanager/updateuser', [UserController::class, 'updateUser'])->name('usermanager.updateuser');
     Route::post('usermanager/deleteuser', [UserController::class, 'deleteUser'])->name('usermanager.deleteuser');
+    //
+    // FILES
+    //
+    Route::post('files/update/{file}', [FileController::class, 'update'])->name('files.update');
 });
 

@@ -208,12 +208,28 @@
                         </td>
                     </tr>
                 @empty
-                    <tr>
-                        <td colspan="{{ auth()->user()->isBecip() ? 12 : 11 }}">Aucun fichier</td>
+                    <tr class="no-data">
+{{--                        <td colspan="{{ auth()->user()->isBecip() ? 12 : 11 }}">Aucun fichier</td>--}}
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        @if(auth()->user()->isBecip())
+                            <td></td>
+                        @endif
                     </tr>
                 @endforelse
             </tbody>
         </table>
     </header>
 </div>
+    <script>
+        window.fileUpdateRoute = '{{ route("files.update", ["file" => "FILE_ID"]) }}';
+    </script>
 @endsection

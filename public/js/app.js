@@ -14533,9 +14533,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _home_modals__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_home_modals__WEBPACK_IMPORTED_MODULE_8__);
 /* harmony import */ var _home_project_name__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./home/project_name */ "./resources/js/home/project_name.js");
 /* harmony import */ var _home_project_name__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_home_project_name__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _file_update_file__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./file/update_file */ "./resources/js/file/update_file.js");
+/* harmony import */ var _file_update_file__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_file_update_file__WEBPACK_IMPORTED_MODULE_10__);
 
 
 window.bootstrap = bootstrap__WEBPACK_IMPORTED_MODULE_1__;
+
 
 
 
@@ -14590,6 +14593,86 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     forceTLS: (import.meta.env.VITE_PUSHER_SCHEME ?? 'https') === 'https',
 //     enabledTransports: ['ws', 'wss'],
 // });
+
+/***/ }),
+
+/***/ "./resources/js/file/update_file.js":
+/*!******************************************!*\
+  !*** ./resources/js/file/update_file.js ***!
+  \******************************************/
+/***/ (() => {
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Fonction générique pour mettre à jour un champ d'un fichier
+  function updateFileField(fileId, field, value) {
+    // Construit l'URL en insérant l'ID du fichier
+    var updateUrl = "".concat(window.fileUpdateRoute.replace('FILE_ID', fileId));
+    fetch(updateUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': window.csrf_token
+      },
+      body: JSON.stringify({
+        field: field,
+        value: value
+      })
+    }).then(function (response) {
+      return response.json();
+    }).then(function (data) {
+      if (!data.success) {
+        alert(data.error || "Erreur lors de la mise à jour.");
+        // TODO: éventuellement remettre la valeur précédente
+      }
+    })["catch"](function (err) {
+      console.error(err);
+      alert("Une erreur s'est produite.");
+    });
+  }
+
+  // 1) GESTION REVISION (is_last_index)
+  document.querySelectorAll('.update-last-index').forEach(function (checkbox) {
+    checkbox.addEventListener('change', function () {
+      var row = this.closest('tr');
+      var fileId = row.getAttribute('data-id');
+      var newValue = this.checked; // true / false
+
+      updateFileField(fileId, 'is_last_index', newValue);
+    });
+  });
+
+  // 2) GESTION TYPE (file-type-select)
+  document.querySelectorAll('.file-type-select').forEach(function (select) {
+    select.addEventListener('change', function () {
+      var row = this.closest('tr');
+      var fileId = row.getAttribute('data-id');
+      var newValue = this.value;
+      updateFileField(fileId, 'type', newValue);
+    });
+  });
+
+  // 3) GESTION COMMENTAIRE (comment-textarea)
+  document.querySelectorAll('.comment-textarea').forEach(function (textarea) {
+    // On déclenche la mise à jour au blur (perte de focus) par exemple
+    textarea.addEventListener('blur', function () {
+      var row = this.closest('tr');
+      var fileId = row.getAttribute('data-id');
+      var newValue = this.value;
+      updateFileField(fileId, 'comment', newValue);
+    });
+  });
+
+  // 4) GESTION VALIDATION (is-validated-checkbox)
+  document.querySelectorAll('.is-validated-checkbox').forEach(function (checkbox) {
+    checkbox.addEventListener('change', function () {
+      var row = this.closest('tr');
+      var fileId = row.getAttribute('data-id');
+      var newValue = this.checked; // true / false
+
+      updateFileField(fileId, 'is_validated', newValue);
+    });
+  });
+});
 
 /***/ }),
 
@@ -14713,7 +14796,9 @@ document.addEventListener('DOMContentLoaded', function (event) {
 
 document.addEventListener('DOMContentLoaded', function () {
   var editModalEl = document.getElementById('editProjectModal');
-  var editModal = new bootstrap.Modal(editModalEl);
+  if (editModalEl) {
+    var _editModal = new bootstrap.Modal(editModalEl);
+  }
   $('#editProjectModal').on('shown.bs.modal', function () {
     $('#edit-project-clients').select2({
       placeholder: "Sélectionner des clients",
@@ -15488,50 +15573,55 @@ document.addEventListener('DOMContentLoaded', function () {
 /***/ (() => {
 
 jQuery(document).ready(function ($) {
-  if ($('#project-table tbody tr').length > 0) {
-    $('#project-table').DataTable({
-      language: {
-        "decimal": ",",
-        "thousands": ".",
-        "sProcessing": "Traitement en cours...",
-        "sSearch": "Rechercher :",
-        "sLengthMenu": "Afficher _MENU_ éléments",
-        "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ éléments",
-        "sInfoEmpty": "Affichage de 0 à 0 sur 0 éléments",
-        "sInfoFiltered": "(filtré à partir de _MAX_ éléments au total)",
-        "sInfoPostFix": "",
-        "sLoadingRecords": "Chargement en cours...",
-        "sZeroRecords": "Aucun élément à afficher",
-        "sEmptyTable": "Aucune donnée disponible dans le tableau",
-        "oAria": {
-          "sSortAscending": ": activer pour trier la colonne par ordre croissant",
-          "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
-        }
+  var table = $('#project-table').DataTable({
+    destroy: true,
+    responsive: true,
+    language: {
+      "decimal": ",",
+      "thousands": ".",
+      "sProcessing": "Traitement en cours...",
+      "sSearch": "Rechercher :",
+      "sLengthMenu": "Afficher _MENU_ éléments",
+      "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ éléments",
+      "sInfoEmpty": "Affichage de 0 à 0 sur 0 éléments",
+      "sInfoFiltered": "(filtré à partir de _MAX_ éléments au total)",
+      "sInfoPostFix": "",
+      "sLoadingRecords": "Chargement en cours...",
+      "sZeroRecords": "Aucun élément à afficher",
+      "sEmptyTable": "Aucune donnée disponible dans le tableau",
+      "oAria": {
+        "sSortAscending": ": activer pour trier la colonne par ordre croissant",
+        "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
       }
-    });
-  }
-  if ($('#files-table tbody tr').length > 0) {
-    $('#files-table').DataTable({
-      language: {
-        "decimal": ",",
-        "thousands": ".",
-        "sProcessing": "Traitement en cours...",
-        "sSearch": "Rechercher :",
-        "sLengthMenu": "Afficher _MENU_ éléments",
-        "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ éléments",
-        "sInfoEmpty": "Affichage de 0 à 0 sur 0 éléments",
-        "sInfoFiltered": "(filtré à partir de _MAX_ éléments au total)",
-        "sInfoPostFix": "",
-        "sLoadingRecords": "Chargement en cours...",
-        "sZeroRecords": "Aucun élément à afficher",
-        "sEmptyTable": "Aucune donnée disponible dans le tableau",
-        "oAria": {
-          "sSortAscending": ": activer pour trier la colonne par ordre croissant",
-          "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
-        }
+    }
+  });
+  table.on('draw', function () {
+    if ($('#project-table tbody tr').length === 1 && $('#project-table tbody .no-data').length) {
+      $('#project-table tbody .no-data td').attr('colspan', $('#project-table thead th').length);
+    }
+  });
+  $('#files-table').DataTable({
+    destroy: true,
+    responsive: true,
+    language: {
+      "decimal": ",",
+      "thousands": ".",
+      "sProcessing": "Traitement en cours...",
+      "sSearch": "Rechercher :",
+      "sLengthMenu": "Afficher _MENU_ éléments",
+      "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ éléments",
+      "sInfoEmpty": "Affichage de 0 à 0 sur 0 éléments",
+      "sInfoFiltered": "(filtré à partir de _MAX_ éléments au total)",
+      "sInfoPostFix": "",
+      "sLoadingRecords": "Chargement en cours...",
+      "sZeroRecords": "Aucun élément à afficher",
+      "sEmptyTable": "Aucune donnée disponible dans le tableau",
+      "oAria": {
+        "sSortAscending": ": activer pour trier la colonne par ordre croissant",
+        "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
       }
-    });
-  }
+    }
+  });
 });
 
 /***/ }),
