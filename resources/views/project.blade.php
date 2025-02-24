@@ -194,7 +194,6 @@
                             @endif
                         </td>
                         <td data-label="Distribuer">
-                            <span class="tooltip">
                                 <input type="checkbox" name="print_files[]" value="{{$file->id}}"
                                        class="distribution-checkbox"
                                         {{($file->distribution_count >= 1) ? 'disabled' : '' }}
@@ -202,7 +201,6 @@
                                 @if($file->distribution_count >= 1)
                                     <span class="tooltiptext">Demandez à l'équipe BECIP pour une réimpression.</span>
                                 @endif
-                            </span>
                         </td>
                         <td data-label="Impressions">
                             {{--Rendre ce chiffre dynamique avec la checkbox distribute--}}
@@ -229,9 +227,14 @@
                 @endforelse
             </tbody>
         </table>
+        <button id="download-btn" class="btn btn-primary">Download</button>
+
+        <button id="distribute-btn" class="btn btn-warning">Distribute</button>
     </header>
 </div>
     <script>
         window.fileUpdateRoute = '{{ route("files.update", ["file" => "FILE_ID"]) }}';
+        window.downloadProjectUrl = '{{ route("projects.download") }}';
+        window.distributeProjectUrl = '{{ route("projects.distribute") }}';
     </script>
 @endsection

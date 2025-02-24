@@ -17,7 +17,6 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 if (!data.success) {
                     alert(data.error || "Erreur lors de la mise à jour.");
-                    // TODO: éventuellement remettre la valeur précédente
                 }
             })
             .catch(err => {

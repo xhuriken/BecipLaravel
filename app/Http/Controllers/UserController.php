@@ -96,7 +96,7 @@ class UserController extends Controller
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|unique:users,email',
                 'password' => 'required|string|min:8',
-                'role' => 'required|in:engineer,drawer,secretaty,client',
+                'role' => 'required|in:engineer,drawer,secretary,client',
                 'company_id' => 'nullable|exists:companies,id'
             ]);
 

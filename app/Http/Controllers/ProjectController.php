@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\FileDistributionMail;
 use App\Models\Project;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use \Illuminate\Http\JsonResponse;
+use ZipArchive;
+
 class ProjectController extends Controller
 {
     public function index($id)
@@ -64,9 +68,9 @@ class ProjectController extends Controller
     {
         \Log::info('Tentative de suppression du projet : ', ['project_id' => $project->id]);
 
-        if (!$project) {
-            return response()->json(['error' => 'Projet introuvable.'], 404);
-        }
+//        if (!$project) {
+//            return response()->json(['error' => 'Projet introuvable.'], 404);
+//        }
 
         //delete folder too
         $projectFolder = storage_path('app/public/' . $project->id);
@@ -203,6 +207,103 @@ class ProjectController extends Controller
             $project->clients()->sync($validated['clients']);
         } else {
             $project->clients()->detach();
+        }
+
+        return response()->json(['success' => true]);
+    }
+
+    public function downloadFiles(Request $request)
+    {
+        $fileIds = $request->input('file_ids'); // Array of file IDs
+        $projectId = $request->input('project_id'); // Project ID
+
+        if (empty($fileIds) || empty($projectId)) {
+            return response()->json(['error' => 'No files selected.'], 422);
+        }
+
+        // Retrieve file records (adjust your File model as needed)
+        $files = \App\Models\File::whereIn('id', $fileIds)->where('project_id', $projectId)->get();
+        \Log::info("téléchargement initié avec " . $files->count() .' fichier');
+
+        if ($files->count() == 0) {
+            return response()->json(['error' => 'Files not found.'], 404);
+        }
+
+        if ($files->count() == 1) {
+            // Download the single file
+            $file = $files->first();
+            $relativePath = $file->project_id . '/' . $file->extension . '/' . $file->name;
+            if (Storage::disk('public')->exists($relativePath)) {
+                \Log::info($relativePath);
+                return response()->download(storage_path('app/public/' . $relativePath));
+            } else {
+                return response()->json(['error' => 'File does not exist.'], 404);
+            }
+        } else {
+            // Create a ZIP file for multiple files
+            $zip = new ZipArchive();
+            $zipName = 'files_' . Carbon::now()->format('Y-m-d_H-i-s') . '_' . $projectId . '.zip';
+            $zipPath = storage_path('app/public/' . $zipName);
+
+            if ($zip->open($zipPath, ZipArchive::CREATE) !== TRUE) {
+                return response()->json(['error' => 'Error creating ZIP file.'], 500);
+            }
+
+            foreach ($files as $file) {
+                $relativePath = $file->project_id . '/' . $file->extension . '/' . $file->name;
+                if (Storage::disk('public')->exists($relativePath)) {
+                    // Add file to ZIP; second parameter sets the name inside ZIP
+                    $zip->addFile(storage_path('app/public/' . $relativePath), $file->name);
+                    \Log::info($relativePath. 'zip');
+
+                }
+            }
+            $zip->close();
+
+            // Return ZIP for download and then delete the ZIP file after sending
+            return response()->download($zipPath)->deleteFileAfterSend(true);
+        }
+    }
+
+    // Distribute selected files: send email to all secretaries.
+    public function distributeFiles(Request $request)
+    {
+        $fileIds = $request->input('file_ids'); // Array of file IDs
+        $projectId = $request->input('project_id'); // Project ID
+        $requesterId = auth()->id();
+
+        if (empty($fileIds) || empty($projectId)) {
+            return response()->json(['error' => 'No files selected.'], 422);
+        }
+
+        // Get project and requester info
+        $project = Project::find($projectId);
+        if (!$project) {
+            return response()->json(['error' => 'Project not found.'], 404);
+        }
+
+        $requester = auth()->user();
+
+        // Get files names
+        $files = \App\Models\File::whereIn('id', $fileIds)->where('project_id', $projectId)->get();
+        $fileNames = $files->pluck('name')->toArray();
+
+        // Get secretary users
+        $secretaries = \App\Models\User::where('role', 'secretary')->get();
+        if ($secretaries->isEmpty()) {
+            return response()->json(['error' => 'No secretary users found.'], 422);
+        }
+
+        // Send email to each secretary using a Mailable class
+        foreach ($secretaries as $secretary) {
+            Mail::to($secretary->email)->send(new FileDistributionMail([
+                'secretaryName'   => $secretary->name,
+                'requesterName'   => $requester->name,
+                'projectName'     => $project->name,
+                'fileNames'       => $fileNames,
+                // You can also add a link to download all files if needed.
+                'downloadLink'    => route('projects.download', ['project' => $project->id]) // or a custom route with file IDs
+            ]));
         }
 
         return response()->json(['success' => true]);

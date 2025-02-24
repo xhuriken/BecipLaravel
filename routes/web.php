@@ -28,6 +28,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('projects/add', [ProjectController::class, 'store'])->name('projects.store');
     Route::post('projects/upload/{project}', [ProjectController::class, 'uploadFiles'])->name('projects.upload');
     Route::post('projects/update', [ProjectController::class, 'update'])->name('projects.update');
+
+    Route::post('projects/download', [ProjectController::class, 'downloadFiles'])->name('projects.download');
+    Route::post('projects/distribute', [ProjectController::class, 'distributeFiles'])->name('projects.distribute');
+
     //
     // PROFILE
     //

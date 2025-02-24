@@ -162,6 +162,9 @@ document.addEventListener('DOMContentLoaded', function() {
             $emailCell.html(`<input type="text" class="form-control" value="${currentEmail}" />`);
 
             // Select pour le rôle
+
+            //TODO: replace by french word roles
+
             const roleOptions = roles.map(role =>
                 `<option value="${role}" ${role === currentRole ? 'selected' : ''}>${role}</option>`
             ).join('');
