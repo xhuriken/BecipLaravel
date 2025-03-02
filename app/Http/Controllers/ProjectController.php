@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use \Illuminate\Http\JsonResponse;
+use Illuminate\Support\Str;
 use ZipArchive;
 
 class ProjectController extends Controller
@@ -164,16 +165,23 @@ class ProjectController extends Controller
 
         foreach ($uploadedFiles as $file) {
             $extension = strtolower($file->getClientOriginalExtension());
-
             $directory = $project->id . '/' . $extension;
 
-            $storedPath = $file->storeAs($directory, $file->getClientOriginalName(), 'public');
+            $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeName = Str::slug($originalName) . '.' . $extension;
+
+            if (Storage::disk('public')->exists("$directory/$safeName")) {
+                //si le nom existe déjà on rajoute une date pour évité l'écrasement ou erreur
+                $safeName = Str::slug($originalName) . '-' . time() . '.' . $extension;
+            }
+
+            $storedPath = $file->storeAs($directory, $safeName, 'public');
             $storedFiles[] = $storedPath;
 
             \App\Models\File::create([
                 'project_id' => $project->id,
                 'user_id'    => auth()->user()->id,
-                'name'       => $file->getClientOriginalName(),
+                'name'       => $safeName,
                 'extension'  => $extension,
                 'is_last_index' => 1,
             ]);

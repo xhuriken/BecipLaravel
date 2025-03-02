@@ -31,9 +31,13 @@
             const files = @json($files);
             if (files.length > 0) {
                 files.forEach(file => {
+                    const cleanName = file.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                    //Au cas ou :
+                    //.normalize("NFD") décompose les lettres accentuées en lettres normales + accents séparés
+                    //.replace(/[\u0300-\u036f]/g, "") supprime ces accents
                     const a = document.createElement('a');
                     a.href = encodeURI("{{ asset('storage') }}/" + file.project_id + "/" + file.extension + "/" + encodeURIComponent(file.name));
-                    a.download = file.name;
+                    a.download = cleanName;
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
