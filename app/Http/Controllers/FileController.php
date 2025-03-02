@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\File;
+use App\Models\Project;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use ZipArchive;
 
 class FileController extends Controller
 {
@@ -76,4 +79,25 @@ class FileController extends Controller
         $file->delete();
         return response()->json(['success' => true]);
     }
+
+
+    public function downloadMultipleFiles(Request $request)
+    {
+        $fileIds = explode(',', $request->input('file_ids')); // Récupérer les IDs des fichiers
+        $projectId = $request->input('project_id');
+
+        if (empty($fileIds) || empty($projectId)) {
+            return response()->json(['error' => 'No files selected.'], 422);
+        }
+
+        // Récupérer les fichiers
+        $files = \App\Models\File::whereIn('id', $fileIds)->where('project_id', $projectId)->get();
+
+        if ($files->isEmpty()) {
+            return redirect()->back()->with('error', 'No valid files found.');
+        }
+
+        return view('files.download_multiple', compact('files'));
+    }
+
 }

@@ -26,7 +26,7 @@ class Project extends Model
     }
 
     /**
-     * Relationship with Files
+     * Relationship with files
      */
     public function files()
     {

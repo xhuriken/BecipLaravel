@@ -55,5 +55,7 @@ Route::group(['middleware' => 'auth'], function () {
     //
     Route::post('files/update/{file}', [FileController::class, 'update'])->name('files.update');
     Route::delete('files/delete/{file}', [FileController::class, 'delete'])->name('file.delete');
+    Route::get('/files/download_multiple', [FileController::class, 'downloadMultipleFiles'])->name('files.download');
+
 });
 

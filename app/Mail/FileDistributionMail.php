@@ -12,27 +12,38 @@ use Illuminate\Queue\SerializesModels;
 class FileDistributionMail extends Mailable
 {
     use Queueable, SerializesModels;
+    //variable used in the mail:
+    public $userName;
+    public $projectName;
+    public $senderName;
+    public $files;
+    public $downloadLink;
 
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    //mail constuctor
+    public function __construct($userName, $projectName, $senderName, $files, $downloadLink)
     {
-        //
+        $this->userName = $userName;
+        $this->projectName = $projectName;
+        $this->senderName = $senderName;
+        $this->files = $files;
+        $this->downloadLink = $downloadLink;
     }
 
     /**
-     * Get the message envelope.
+     * Define the email envelope.
      */
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'File Distribution Mail',
+            subject: "📁 Nouvelle demande de distribution - $this->projectName",
         );
     }
 
     /**
-     * Get the message content definition.
+     * Define the email content.
      */
     public function content(): Content
     {
@@ -43,8 +54,6 @@ class FileDistributionMail extends Mailable
 
     /**
      * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
      */
     public function attachments(): array
     {

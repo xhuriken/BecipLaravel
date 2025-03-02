@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Mail\FileDistributionMail;
+use App\Models\File;
 use App\Models\Project;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -214,96 +216,94 @@ class ProjectController extends Controller
 
     public function downloadFiles(Request $request)
     {
-        $fileIds = $request->input('file_ids'); // Array of file IDs
-        $projectId = $request->input('project_id'); // Project ID
+        $fileIds = $request->input('file_ids');
+        $projectId = $request->input('project_id');
 
         if (empty($fileIds) || empty($projectId)) {
             return response()->json(['error' => 'No files selected.'], 422);
         }
 
-        // Retrieve file records (adjust your File model as needed)
         $files = \App\Models\File::whereIn('id', $fileIds)->where('project_id', $projectId)->get();
-        \Log::info("téléchargement initié avec " . $files->count() .' fichier');
+        \Log::info("Download initiated with " . $files->count() . " file(s)");
 
         if ($files->count() == 0) {
-            return response()->json(['error' => 'Files not found.'], 404);
+            return response()->json(['error' => 'files not found.'], 404);
         }
 
-        if ($files->count() == 1) {
-            // Download the single file
-            $file = $files->first();
+        $zip = new ZipArchive();
+        $zipName = 'files_' . now()->format('Y-m-d_H-i-s') . '_' . $projectId . '.zip';
+        $zipPath = storage_path('app/public/' . $zipName);
+
+        if ($zip->open($zipPath, ZipArchive::CREATE) !== TRUE) {
+            return response()->json(['error' => 'Error creating ZIP file.'], 500);
+        }
+
+        $addedFiles = 0;
+
+        foreach ($files as $file) {
             $relativePath = $file->project_id . '/' . $file->extension . '/' . $file->name;
-            if (Storage::disk('public')->exists($relativePath)) {
-                \Log::info($relativePath);
-                return response()->download(storage_path('app/public/' . $relativePath));
+            $absolutePath = storage_path('app/public/' . $relativePath);
+
+            if (file_exists($absolutePath)) {
+                $zip->addFile($absolutePath, $file->name);
+                $addedFiles++;
+                \Log::info("Added to ZIP: " . $relativePath);
             } else {
-                return response()->json(['error' => 'File does not exist.'], 404);
+                \Log::warning("File not found: " . $absolutePath);
             }
-        } else {
-            // Create a ZIP file for multiple files
-            $zip = new ZipArchive();
-            $zipName = 'files_' . Carbon::now()->format('Y-m-d_H-i-s') . '_' . $projectId . '.zip';
-            $zipPath = storage_path('app/public/' . $zipName);
-
-            if ($zip->open($zipPath, ZipArchive::CREATE) !== TRUE) {
-                return response()->json(['error' => 'Error creating ZIP file.'], 500);
-            }
-
-            foreach ($files as $file) {
-                $relativePath = $file->project_id . '/' . $file->extension . '/' . $file->name;
-                if (Storage::disk('public')->exists($relativePath)) {
-                    // Add file to ZIP; second parameter sets the name inside ZIP
-                    $zip->addFile(storage_path('app/public/' . $relativePath), $file->name);
-                    \Log::info($relativePath. 'zip');
-
-                }
-            }
-            $zip->close();
-
-            // Return ZIP for download and then delete the ZIP file after sending
-            return response()->download($zipPath)->deleteFileAfterSend(true);
         }
+
+        $zip->close();
+
+        if ($addedFiles == 0) {
+            \Log::error("ZIP creation failed: No valid files.");
+            return response()->json(['error' => 'No valid files to download.'], 404);
+        }
+
+        return response()->download($zipPath)->deleteFileAfterSend(true);
     }
 
-    // Distribute selected files: send email to all secretaries.
     public function distributeFiles(Request $request)
     {
         $fileIds = $request->input('file_ids'); // Array of file IDs
         $projectId = $request->input('project_id'); // Project ID
-        $requesterId = auth()->id();
+        $requester = auth()->user(); // Get the authenticated user
 
         if (empty($fileIds) || empty($projectId)) {
-            return response()->json(['error' => 'No files selected.'], 422);
+            return response()->json(['error' => 'No files selected or project ID missing.'], 422);
         }
 
-        // Get project and requester info
+        // Retrieve project
         $project = Project::find($projectId);
         if (!$project) {
             return response()->json(['error' => 'Project not found.'], 404);
         }
 
-        $requester = auth()->user();
+        // Retrieve files
+        $files = File::whereIn('id', $fileIds)->where('project_id', $projectId)->get();
+        if ($files->isEmpty()) {
+            return response()->json(['error' => 'No valid files found.'], 404);
+        }
+        $fileNames = $files->pluck('name')->toArray(); // Extract file names
 
-        // Get files names
-        $files = \App\Models\File::whereIn('id', $fileIds)->where('project_id', $projectId)->get();
-        $fileNames = $files->pluck('name')->toArray();
-
-        // Get secretary users
-        $secretaries = \App\Models\User::where('role', 'secretary')->get();
+        // Retrieve secretary users
+        $secretaries = User::where('role', 'secretary')->get();
         if ($secretaries->isEmpty()) {
             return response()->json(['error' => 'No secretary users found.'], 422);
         }
 
-        // Send email to each secretary using a Mailable class
+        // Generate the download link (adjust if necessary)s
+        $downloadLink = route('files.download', ['project_id' => $projectId, 'file_ids' => implode(',', $fileIds)]);
+
+        // Send email to each secretary
         foreach ($secretaries as $secretary) {
-            Mail::to($secretary->email)->send(new FileDistributionMail([
-                'secretaryName'   => $secretary->name,
-                'requesterName'   => $requester->name,
-                'projectName'     => $project->name,
-                'fileNames'       => $fileNames,
-                // You can also add a link to download all files if needed.
-                'downloadLink'    => route('projects.download', ['project' => $project->id]) // or a custom route with file IDs
-            ]));
+            Mail::to($secretary->email)->send(new FileDistributionMail(
+                $secretary->name,  // Secretary name
+                $project->name,    // Project name
+                $requester->name,  // User who made the request
+                $fileNames,        // List of file names
+                $downloadLink      // Download link
+            ));
         }
 
         return response()->json(['success' => true]);
