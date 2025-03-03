@@ -6,6 +6,9 @@ use App\Models\Company;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use App\Mail\NewUser;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -31,7 +34,6 @@ class UserController extends Controller
 
         return response()->json(['success' => true]);
     }
-
 
     public function deleteCompany(Request $request)
     {
@@ -77,8 +79,6 @@ class UserController extends Controller
         return response()->json(['success' => true]);
     }
 
-
-
     function genNewPassword($lenght = 12) {
         $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()';
         $password = '';
@@ -100,7 +100,7 @@ class UserController extends Controller
                 'company_id' => 'nullable|exists:companies,id'
             ]);
 
-            User::create([
+            $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
@@ -108,7 +108,13 @@ class UserController extends Controller
                 'company_id' => $request->company_id,
             ]);
 
+
+            Mail::to($user->email)->send(new NewUser(
+                userName: $user->name
+            ));
+
             return redirect()->back()->with('success', 'Utilisateur ajouté avec succès.');
+
         }
 
         $companies = Company::all();
@@ -126,5 +132,4 @@ class UserController extends Controller
         }
         return view('usermanager.addcompany');
     }
-
 }
