@@ -14543,9 +14543,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _project_project_actions__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(_project_project_actions__WEBPACK_IMPORTED_MODULE_13__);
 /* harmony import */ var _project_masks__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./project/masks */ "./resources/js/project/masks.js");
 /* harmony import */ var _project_masks__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(_project_masks__WEBPACK_IMPORTED_MODULE_14__);
+/* harmony import */ var _project_distribution_checkbox__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./project/distribution_checkbox */ "./resources/js/project/distribution_checkbox.js");
+/* harmony import */ var _project_distribution_checkbox__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(_project_distribution_checkbox__WEBPACK_IMPORTED_MODULE_15__);
 
 
 window.bootstrap = bootstrap__WEBPACK_IMPORTED_MODULE_1__;
+
 
 
 
@@ -14669,7 +14672,9 @@ document.addEventListener('DOMContentLoaded', function () {
       var row = this.closest('tr');
       var fileId = row.getAttribute('data-id');
       var newValue = this.value;
-      updateFileField(fileId, 'comment', newValue);
+      if (newValue !== "") {
+        updateFileField(fileId, 'comment', newValue);
+      }
     });
   });
 
@@ -15555,6 +15560,38 @@ document.addEventListener('DOMContentLoaded', function (event) {
 
 /***/ }),
 
+/***/ "./resources/js/project/distribution_checkbox.js":
+/*!*******************************************************!*\
+  !*** ./resources/js/project/distribution_checkbox.js ***!
+  \*******************************************************/
+/***/ (() => {
+
+document.addEventListener('DOMContentLoaded', function () {
+  var distributionCheckboxes = document.querySelectorAll('.distribution-checkbox');
+  distributionCheckboxes.forEach(function (checkbox) {
+    checkbox.addEventListener('change', function () {
+      var row = this.closest('tr'); // get the row file
+      var countCell = row.querySelector('[data-label="Impressions"]'); // get the cell of this row
+      var currentCount = parseInt(countCell.textContent) || 0;
+      if (this.checked) {
+        countCell.textContent = currentCount + 1; // add +1
+      } else {
+        countCell.textContent = Math.max(currentCount - 1, 0);
+      }
+    });
+  });
+  document.querySelectorAll('.distribution-checkbox').forEach(function (checkbox) {
+    var row = checkbox.closest('tr');
+    var countCell = row.querySelector('[data-label="Impressions"]');
+    var count = parseInt(countCell.textContent) || 0;
+    if (count >= 1) {
+      checkbox.disabled = true;
+    }
+  });
+});
+
+/***/ }),
+
 /***/ "./resources/js/project/dropzone.js":
 /*!******************************************!*\
   !*** ./resources/js/project/dropzone.js ***!
@@ -15812,6 +15849,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return response.json();
       }).then(function (response) {
         if (response.success) {
+          location.reload();
           showAlert("Distribution email sent successfully!", "success", 3000);
         } else {
           showAlert(response.error || "Error during distribution.", "error", 3000);

@@ -101,7 +101,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(response => response.json())
                 .then(response => {
                     if (response.success) {
-                        showAlert("Distribution email sent successfully!", "success", 3000);
+                            location.reload()
+                            showAlert("Distribution email sent successfully!", "success", 3000);
                     } else {
                         showAlert(response.error || "Error during distribution.", "error", 3000);
                     }

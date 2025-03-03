@@ -55,7 +55,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const fileId = row.getAttribute('data-id');
             const newValue = this.value;
 
-            updateFileField(fileId, 'comment', newValue);
+            if(newValue !== ""){
+                updateFileField(fileId, 'comment', newValue);
+            }
         });
     });
 

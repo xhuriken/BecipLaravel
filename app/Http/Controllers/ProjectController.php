@@ -273,37 +273,44 @@ class ProjectController extends Controller
 
     public function distributeFiles(Request $request)
     {
-        $fileIds = $request->input('file_ids'); // Array of file IDs
-        $projectId = $request->input('project_id'); // Project ID
-        $requester = auth()->user(); // Get the authenticated user
+        $fileIds = $request->input('file_ids');
+        $projectId = $request->input('project_id');
+        $requester = auth()->user();
 
         if (empty($fileIds) || empty($projectId)) {
             return response()->json(['error' => 'No files selected or project ID missing.'], 422);
         }
 
-        // Retrieve project
+        // get project
         $project = Project::find($projectId);
         if (!$project) {
             return response()->json(['error' => 'Project not found.'], 404);
         }
 
-        // Retrieve files
+        // get fiels
         $files = File::whereIn('id', $fileIds)->where('project_id', $projectId)->get();
         if ($files->isEmpty()) {
             return response()->json(['error' => 'No valid files found.'], 404);
         }
-        $fileNames = $files->pluck('name')->toArray(); // Extract file names
+        $fileNames = $files->pluck('name')->toArray(); // get names
 
-        // Retrieve secretary users
+
+        foreach ($files as $file) {
+            if ($file->distribution_count < 1) {
+                $file->distribution_count += 1;
+                $file->save();
+            }
+        }
+        // get all secretary users
         $secretaries = User::where('role', 'secretary')->get();
         if ($secretaries->isEmpty()) {
             return response()->json(['error' => 'No secretary users found.'], 422);
         }
 
-        // Generate the download link (adjust if necessary)s
+        // generate downloadLink
         $downloadLink = route('files.download', ['project_id' => $projectId, 'file_ids' => implode(',', $fileIds)]);
 
-        // Send email to each secretary
+        // and send mail
         foreach ($secretaries as $secretary) {
             Mail::to($secretary->email)->send(new FileDistributionMail(
                 $secretary->name,  // Secretary name

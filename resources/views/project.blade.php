@@ -197,7 +197,7 @@
                                             {{($file->distribution_count >= 1) ? 'disabled' : '' }}
                                     />
                                     @if($file->distribution_count >= 1)
-                                        <span class="tooltiptext">Demandez à l'équipe BECIP pour une réimpression.</span>
+                                        {{--Trouver un moyen de faire des tooltip avec DataTable--}}
                                     @endif
                             </td>
                             <td data-label="Impressions">
