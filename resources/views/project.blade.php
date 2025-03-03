@@ -13,21 +13,26 @@
 
     <h1>Détails de l'affaire</h1>
     <header>
-        <div class="affinfo">
+        <div class="affinfo"> <!-- Pour le css plus tard -->
             <p><strong>Entreprise : </strong>
                 {{$company}}
             </p>
-
             <p><strong>Nom de l'affaire : </strong>{{$project->name}}</p>
             <p><strong>Ingénieur référent : </strong>{{$referent}}</p>
             <p><strong>Clients : </strong>{{ $clients->pluck('name')->join(', ') }}</p>
         </div>
-        @if(auth()->user()->isBecip())
-            <div class="settingsbtn">
-                <i id="settings-icon" class="fa-solid fa-gear" data-dossier-id="{{$id}}"></i>
+        @if(auth()->user()->role == 'engineer')
+            <div class="masks"> <!--need flex-->
+                <div class="mask">
+                    <input type="checkbox" data-label="mask-valid" {{ $project->is_mask_valided ? 'checked' : '' }}>
+                    <label>Masquer les non validé au clients</label>
+                </div>
+                <div class="mask">
+                    <input type="checkbox" data-label="mask-distrib" {{ $project->is_mask_distributed ? 'checked' : '' }}>
+                    <label>Masquer la distribution</label>
+                </div>
             </div>
         @endif
-
         <div id="project-container" data-project-id="{{ $project->id }}" data-route="{{ route('projects.upload', $project->id) }}">
             <h2>Upload de fichiers</h2>
             <!-- Drag & Drop -->
@@ -100,33 +105,25 @@
                         </button>
                     </th>
                     <th data-label="Télécharger">
-                            <span class="tooltip">
-                                <i class="fa-solid fa-download"></i>
-                                <span class="tooltiptext">
-                                    Télécharger: <br>Séléctionner plusieurs document à télécharger
-                                </span>
-                            </span>
+                        <i class="fa-solid fa-download"></i>
                     </th>
-                    <th data-label="Distribuer">
-                            <span class="tooltip">
-                                <i class="fa-solid fa-print"></i>
-                                <span class="tooltiptext">
-                                    Distribuer: <br> Séléctionner plusieurs documents pour faire une demande de distribution
-                                </span>
-                            </span>
-                    </th>
-                    <th data-label="Impressions">
-                        <span class="tooltip">
+                    @if(!$project->is_mask_distributed)
+                        <th data-label="Distribuer">
+                            <i class="fa-solid fa-print"></i>
+                        </th>
+                        <th data-label="Impressions">
                             <i class="fa-solid fa-sheet-plastic"></i>
-                            <span class="tooltiptext">
-                                Nombre d'impressions: <br> Besoin d'information Florent :)
-                            </span>
-                        </span>
-                    </th>
+                        </th>
+                    @endif
                 </tr>
             </thead>
             <tbody>
                 @forelse($files as $file)
+                    {{--j'en fait une fonction ?--}}
+                    @php
+                        $hideFile = auth()->user()->role === 'client' && $project->is_mask_valided && !$file->is_validated;
+                    @endphp
+                    @if (!$hideFile)
                     <tr data-id="{{$file->id}}">
                         @if(auth()->user()->isBecip())
                             <td data-label="Delete" class="icon-cell">
@@ -173,7 +170,7 @@
                             @endif
                         </td>
                         <td data-label="Déposé par">
-                            {{--Inconnu n'arriveras jamais (we never know)--}}
+                            {{--Seulement si l'utilisateur est supprimé--}}
                             {{ $file->uploadedBy ? $file->uploadedBy->name : 'Inconnu' }}
                         </td>
                         <td>
@@ -193,20 +190,23 @@
                                 <input type="checkbox" name="download_files[]" value="{{$file->id}}" disabled>
                             @endif
                         </td>
-                        <td data-label="Distribuer">
-                                <input type="checkbox" name="print_files[]" value="{{$file->id}}"
-                                       class="distribution-checkbox"
-                                        {{($file->distribution_count >= 1) ? 'disabled' : '' }}
-                                />
-                                @if($file->distribution_count >= 1)
-                                    <span class="tooltiptext">Demandez à l'équipe BECIP pour une réimpression.</span>
-                                @endif
-                        </td>
-                        <td data-label="Impressions">
-                            {{--Rendre ce chiffre dynamique avec la checkbox distribute--}}
-                            {{$file->distribution_count}}
-                        </td>
+                        @if(!$project->is_mask_distributed)
+                            <td data-label="Distribuer">
+                                    <input type="checkbox" name="print_files[]" value="{{$file->id}}"
+                                           class="distribution-checkbox"
+                                            {{($file->distribution_count >= 1) ? 'disabled' : '' }}
+                                    />
+                                    @if($file->distribution_count >= 1)
+                                        <span class="tooltiptext">Demandez à l'équipe BECIP pour une réimpression.</span>
+                                    @endif
+                            </td>
+                            <td data-label="Impressions">
+                                {{--Rendre ce chiffre dynamique avec la checkbox distribute--}}
+                                {{$file->distribution_count}}
+                            </td>
+                        @endif
                     </tr>
+                    @endif
                 @empty
                     <tr class="no-data">
 {{--                        <td colspan="{{ auth()->user()->isBecip() ? 12 : 11 }}">Aucun fichier</td>--}}
@@ -236,5 +236,7 @@
         window.fileUpdateRoute = '{{ route("files.update", ["file" => "FILE_ID"]) }}';
         window.downloadProjectUrl = '{{ route("projects.download") }}';
         window.distributeProjectUrl = '{{ route("projects.distribute") }}';
+        window.maskValidedRoute = '{{ route("projects.updateMaskValidated") }}';
+        window.maskDistributedRoute = '{{ route("projects.updateMaskDistributed") }}';
     </script>
 @endsection

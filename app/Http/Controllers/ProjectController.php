@@ -317,4 +317,34 @@ class ProjectController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function updateMaskValidated(Request $request)
+    {
+        $project = Project::find($request->project_id);
+
+        if (!$project) {
+            return response()->json(['error' => 'Project not found.'], 404);
+        }
+
+        $project->update([
+            'is_mask_valided' => $request->is_mask_valided ? 1 : 0,
+        ]);
+
+        return response()->json(['success' => true]);
+    }
+
+    public function updateMaskDistributed(Request $request)
+    {
+        $project = Project::find($request->project_id);
+
+        if (!$project) {
+            return response()->json(['error' => 'Project not found.'], 404);
+        }
+
+        $project->update([
+            'is_mask_distributed' => $request->is_mask_distributed ? 1 : 0,
+        ]);
+
+        return response()->json(['success' => true]);
+    }
+
 }

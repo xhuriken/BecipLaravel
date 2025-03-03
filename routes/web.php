@@ -28,10 +28,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('projects/add', [ProjectController::class, 'store'])->name('projects.store');
     Route::post('projects/upload/{project}', [ProjectController::class, 'uploadFiles'])->name('projects.upload');
     Route::post('projects/update', [ProjectController::class, 'update'])->name('projects.update');
-
+    // FILES IN PROJECT
     Route::post('projects/download', [ProjectController::class, 'downloadFiles'])->name('projects.download');
     Route::post('projects/distribute', [ProjectController::class, 'distributeFiles'])->name('projects.distribute');
-
+    // MASKS
+    Route::post('projects/update-mask-validated', [ProjectController::class, 'updateMaskValidated'])->name('projects.updateMaskValidated');
+    Route::post('projects/update-mask-distributed', [ProjectController::class, 'updateMaskDistributed'])->name('projects.updateMaskDistributed');
     //
     // PROFILE
     //
@@ -41,13 +43,13 @@ Route::group(['middleware' => 'auth'], function () {
     // USER MANAGER
     //
     Route::get('usermanager', [UserController::class, 'index'])->name('usermanager');
-    //USER
+    // USER
     Route::post('usermanager/adduser', [UserController::class, 'adduser'])->name('usermanager.adduser');
     Route::post('usermanager/addcompany', [UserController::class, 'addcompany'])->name('usermanager.addcompany');
-    // ENTREPRISES
+    // COMPANY
     Route::post('usermanager/updatecompany', [UserController::class, 'updateCompany'])->name('usermanager.updatecompany');
     Route::post('usermanager/deletecompany', [UserController::class, 'deleteCompany'])->name('usermanager.deletecompany');
-    // UTILISATEURS
+    // USERS
     Route::post('usermanager/updateuser', [UserController::class, 'updateUser'])->name('usermanager.updateuser');
     Route::post('usermanager/deleteuser', [UserController::class, 'deleteUser'])->name('usermanager.deleteuser');
     //

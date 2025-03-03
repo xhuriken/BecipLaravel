@@ -14541,9 +14541,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _project_delete_file__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(_project_delete_file__WEBPACK_IMPORTED_MODULE_12__);
 /* harmony import */ var _project_project_actions__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./project/project_actions */ "./resources/js/project/project_actions.js");
 /* harmony import */ var _project_project_actions__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(_project_project_actions__WEBPACK_IMPORTED_MODULE_13__);
+/* harmony import */ var _project_masks__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./project/masks */ "./resources/js/project/masks.js");
+/* harmony import */ var _project_masks__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(_project_masks__WEBPACK_IMPORTED_MODULE_14__);
 
 
 window.bootstrap = bootstrap__WEBPACK_IMPORTED_MODULE_1__;
+
 
 
 
@@ -15632,6 +15635,74 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   }
+});
+
+/***/ }),
+
+/***/ "./resources/js/project/masks.js":
+/*!***************************************!*\
+  !*** ./resources/js/project/masks.js ***!
+  \***************************************/
+/***/ (() => {
+
+document.addEventListener('DOMContentLoaded', function () {
+  var projectContainer = document.getElementById('project-container');
+  // for dodge errors
+  if (!projectContainer) return;
+  var projectId = projectContainer.getAttribute('data-project-id');
+  //first checkbox
+  var maskValidedCheckbox = document.querySelector('input[data-label="mask-valid"]');
+  //second checkbox
+  var maskDistributedCheckbox = document.querySelector('input[data-label="mask-distrib"]');
+  function updateMaskValidated() {
+    fetch(window.maskValidedRoute, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': window.csrf_token
+      },
+      body: JSON.stringify({
+        project_id: projectId,
+        is_mask_valided: maskValidedCheckbox.checked ? 1 : 0
+      })
+    }).then(function (response) {
+      return response.json();
+    }).then(function (data) {
+      if (data.success) {
+        console.log("Mask validated updated");
+        //reload useless because it's only for client view
+        //location.reload();
+      }
+    })["catch"](function (error) {
+      return console.error("Error updating mask validated:", error);
+    });
+  }
+  function updateMaskDistributed() {
+    fetch(window.maskDistributedRoute, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': window.csrf_token
+      },
+      body: JSON.stringify({
+        project_id: projectId,
+        is_mask_distributed: maskDistributedCheckbox.checked ? 1 : 0
+      })
+    }).then(function (response) {
+      return response.json();
+    }).then(function (data) {
+      if (data.success) {
+        console.log("Mask distributed updated");
+        location.reload();
+      }
+    })["catch"](function (error) {
+      return console.error("Error updating mask distributed:", error);
+    });
+  }
+
+  //update when click
+  if (maskValidedCheckbox) maskValidedCheckbox.addEventListener('change', updateMaskValidated);
+  if (maskDistributedCheckbox) maskDistributedCheckbox.addEventListener('change', updateMaskDistributed);
 });
 
 /***/ }),
