@@ -11,7 +11,7 @@
             color: #333333;
             font-size: 17px;
             margin: 0;
-            padding: 0;
+            padding: 20px;
         }
         .email-container {
             max-width: 600px;

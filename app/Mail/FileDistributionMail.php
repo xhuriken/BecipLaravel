@@ -48,7 +48,7 @@ class FileDistributionMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.distribute_files',
+            view: 'emails.distribute_files',
         );
     }
 
