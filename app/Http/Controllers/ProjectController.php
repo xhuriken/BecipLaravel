@@ -58,6 +58,10 @@ class ProjectController extends Controller
         return redirect()->route('home');
     }
 
+    /**
+     * Delete all empty Project
+     * @return RedirectResponse
+     */
     public function deleteEmptyProject()
     {
         Project::whereNull('referent_id')
@@ -67,6 +71,12 @@ class ProjectController extends Controller
         return redirect()->back()->with('success', 'Les affaires vides ont été supprimées.');
     }
 
+    /**
+     * Delete specific Project AND files inside (BDD and Storage)
+     * @param Project $project
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function delete(Project $project, Request $request): JsonResponse
     {
         \Log::info('Tentative de suppression du projet : ', ['project_id' => $project->id]);
@@ -92,7 +102,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * Supprime un dossier et tout son contenu
+     * Delete Folder and content inside
      */
     private function deleteFolder(string $folderPath): void {
         $files = array_diff(scandir($folderPath), ['.', '..']);
@@ -106,6 +116,12 @@ class ProjectController extends Controller
         }
         rmdir($folderPath);
     }
+
+    /**
+     * Store (add) new Project
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function store(Request $request)
     {
         \Log::info('Données reçues : ', $request->all());
@@ -142,6 +158,11 @@ class ProjectController extends Controller
         return response()->json(['success' => true, 'project_id' => $project->id]);
     }
 
+    /**
+     * Delete Projects selected
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function deleteSelected(Request $request)
     {
         $request->validate([
@@ -154,6 +175,12 @@ class ProjectController extends Controller
         return response()->json(['message' => 'Les affaires sélectionnée ont été supprimées !']);
     }
 
+    /**
+     * Upload Files in storage and BDD in a project
+     * @param Request $request
+     * @param Project $project
+     * @return JsonResponse
+     */
     public function uploadFiles(Request $request, Project $project)
     {
         $request->validate([
@@ -190,6 +217,11 @@ class ProjectController extends Controller
         return response()->json(['success' => true, 'files' => $storedFiles]);
     }
 
+    /**
+     * Update fields of an specific project id
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function update(Request $request)
     {
         $validated = $request->validate([
@@ -212,7 +244,6 @@ class ProjectController extends Controller
             'comment' => $validated['comment'],
         ]);
 
-        // Synchroniser les clients sélectionnés
         if (!empty($validated['clients'])) {
             $project->clients()->sync($validated['clients']);
         } else {
@@ -222,6 +253,11 @@ class ProjectController extends Controller
         return response()->json(['success' => true]);
     }
 
+    /**
+     * Download file in project in ZipArchive
+     * @param Request $request
+     * @return JsonResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
     public function downloadFiles(Request $request)
     {
         $fileIds = $request->input('file_ids');
@@ -271,6 +307,11 @@ class ProjectController extends Controller
         return response()->download($zipPath)->deleteFileAfterSend(true);
     }
 
+    /**
+     * Send mail to all secretary user with download link
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function distributeFiles(Request $request)
     {
         $fileIds = $request->input('file_ids');
@@ -324,6 +365,11 @@ class ProjectController extends Controller
         return response()->json(['success' => true]);
     }
 
+    /**
+     * Update checkbox mask Validated
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function updateMaskValidated(Request $request)
     {
         $project = Project::find($request->project_id);
@@ -339,6 +385,11 @@ class ProjectController extends Controller
         return response()->json(['success' => true]);
     }
 
+    /**
+     * Update Checkbox mask Distributed
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function updateMaskDistributed(Request $request)
     {
         $project = Project::find($request->project_id);

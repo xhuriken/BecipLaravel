@@ -222,3 +222,7 @@ a {
 .universal-alert.info {
     background-color: #17a2b8;
 }
+
+input[type="checkbox"]:disabled{
+    cursor: not-allowed;
+}

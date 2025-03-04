@@ -12,15 +12,20 @@ use ZipArchive;
 
 class FileController extends Controller
 {
+    /**
+     * Update specific values of files (type, rev, comment, is_validate...)
+     * @param File $file
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(File $file, Request $request): \Illuminate\Http\JsonResponse
     {
-        // Récupérer les champs à mettre à jour
         $data = $request->validate([
             'field' => 'required|in:is_last_index,type,comment,is_validated',
             'value' => 'required'
         ]);
 
-        // Vérifier l’autorisation selon le champ
+        //verify authorization for every different field
         switch ($data['field']) {
             case 'is_last_index':
                 // Seuls BECIP (drawer/engineer/secretary/engineer ???) peuvent modifier
@@ -83,14 +88,14 @@ class FileController extends Controller
 
     public function downloadMultipleFiles(Request $request)
     {
-        $fileIds = explode(',', $request->input('file_ids')); // Récupérer les IDs des fichiers
+        $fileIds = explode(',', $request->input('file_ids'));
         $projectId = $request->input('project_id');
 
         if (empty($fileIds) || empty($projectId)) {
             return response()->json(['error' => 'No files selected.'], 422);
         }
 
-        // Récupérer les fichiers
+        // get files in bdd
         $files = \App\Models\File::whereIn('id', $fileIds)->where('project_id', $projectId)->get();
 
         if ($files->isEmpty()) {

@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // === ADD PROJECT === //
+    // PROJECT_NAME INPUT FOR "ADD PROJECT" MODAL
     const yearA = document.getElementById("add-project-year");
     const numberA = document.getElementById("add-project-number");
     const projectNameA = document.getElementById("add-project-name");
@@ -8,9 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const year = yearA.value;
         const number = numberA.value;
 
-        // Vérification stricte : empêcher un nom invalide
+        // dodge invalid chars
         if (year.length !== 2 || number.length !== 3 || isNaN(year) || isNaN(number)) {
-            projectNameA.value = ""; // Efface le champ pour éviter une valeur invalide
+            projectNameA.value = "";
             return;
         }
 
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         numberA.addEventListener("keypress", enforceNumericInput);
     }
 
-    // === EDIT PROJECT === //
+    // SAME FOR EDIT PROJECT MODAL
     const yearE = document.getElementById("edit-project-year");
     const numberE = document.getElementById("edit-project-number");
     const projectNameE = document.getElementById("edit-project-name");
@@ -39,9 +39,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const year = yearE.value;
         const number = numberE.value;
 
-        // Vérification stricte : empêcher un nom invalide
+        // Dodge invalid chars in input
         if (year.length !== 2 || number.length !== 3 || isNaN(year) || isNaN(number)) {
-            projectNameE.value = ""; // Efface le champ pour éviter une valeur invalide
+            projectNameE.value = "";
             return;
         }
 

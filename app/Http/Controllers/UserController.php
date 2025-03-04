@@ -21,6 +21,11 @@ class UserController extends Controller
         ]);
     }
 
+    /**
+     * Update name of an company (with his id)
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateCompany(Request $request)
     {
         $request->validate([
@@ -35,6 +40,11 @@ class UserController extends Controller
         return response()->json(['success' => true]);
     }
 
+    /**
+     * Delete company (with id)
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function deleteCompany(Request $request)
     {
         $request->validate([
@@ -47,6 +57,11 @@ class UserController extends Controller
         return response()->json(['success' => true]);
     }
 
+    /**
+     * Update User fields with id
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateUser(Request $request)
     {
         $request->validate([
@@ -67,6 +82,11 @@ class UserController extends Controller
         return response()->json(['success' => true]);
     }
 
+    /**
+     * Delete with id
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function deleteUser(Request $request)
     {
         $request->validate([
@@ -79,6 +99,12 @@ class UserController extends Controller
         return response()->json(['success' => true]);
     }
 
+    /**
+     * Generate password randomly
+     * @param $lenght
+     * @return string
+     * @throws \Random\RandomException
+     */
     function genNewPassword($lenght = 12) {
         $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()';
         $password = '';
@@ -89,6 +115,11 @@ class UserController extends Controller
         return $password;
     }
 
+    /**
+     * Add new user
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Http\RedirectResponse|object
+     */
     public function adduser(Request $request)
     {
         if ($request->isMethod('post')) {
@@ -108,6 +139,11 @@ class UserController extends Controller
                 'company_id' => $request->company_id,
             ]);
 
+            //
+            //
+            //BUG, COMPANY ID IS ALWAYS NULL
+            //
+            //
 
             Mail::to($user->email)->send(new NewUser(
                 userName: $user->name
@@ -121,6 +157,11 @@ class UserController extends Controller
         return view('usermanager.adduser', compact('companies'));
     }
 
+    /**
+     * Add new Company
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Http\RedirectResponse|object
+     */
     public function addcompany(Request $request){
         if ($request->isMethod('post')) {
             $request->validate(['name' => 'required|string|max:255',]);

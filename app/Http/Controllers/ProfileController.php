@@ -11,9 +11,13 @@ class ProfileController extends Controller
         return view('profile', []);
     }
 
+    /**
+     * Update Project data
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(Request $request)
     {
-        // On attend deux champs : 'field' et 'value'
         $data = $request->validate([
             'field' => 'required|in:name,email',
             'value' => 'required|string|max:255'
@@ -21,7 +25,6 @@ class ProfileController extends Controller
 
         $user = auth()->user();
 
-        // Mise à jour dynamique
         $user->{$data['field']} = $data['value'];
         $user->save();
 

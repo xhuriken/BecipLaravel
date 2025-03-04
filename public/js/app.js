@@ -14618,7 +14618,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /***/ (() => {
 
 document.addEventListener('DOMContentLoaded', function () {
-  // Fonction générique pour mettre à jour un champ d'un fichier
+  // update specific fields of specific fileId
   function updateFileField(fileId, field, value) {
     // Construit l'URL en insérant l'ID du fichier
     var updateUrl = "".concat(window.fileUpdateRoute.replace('FILE_ID', fileId));
@@ -14649,8 +14649,7 @@ document.addEventListener('DOMContentLoaded', function () {
     checkbox.addEventListener('change', function () {
       var row = this.closest('tr');
       var fileId = row.getAttribute('data-id');
-      var newValue = this.checked; // true / false
-
+      var newValue = this.checked;
       updateFileField(fileId, 'is_last_index', newValue);
     });
   });
@@ -14667,7 +14666,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // 3) GESTION COMMENTAIRE (comment-textarea)
   document.querySelectorAll('.comment-textarea').forEach(function (textarea) {
-    // On déclenche la mise à jour au blur (perte de focus) par exemple
+    //blur = perte de focus du comm
     textarea.addEventListener('blur', function () {
       var row = this.closest('tr');
       var fileId = row.getAttribute('data-id');
@@ -14683,8 +14682,7 @@ document.addEventListener('DOMContentLoaded', function () {
     checkbox.addEventListener('change', function () {
       var row = this.closest('tr');
       var fileId = row.getAttribute('data-id');
-      var newValue = this.checked; // true / false
-
+      var newValue = this.checked;
       updateFileField(fileId, 'is_validated', newValue);
     });
   });
@@ -15335,7 +15333,7 @@ document.addEventListener('DOMContentLoaded', function () {
 /***/ (() => {
 
 document.addEventListener('DOMContentLoaded', function () {
-  // === ADD PROJECT === //
+  // PROJECT_NAME INPUT FOR "ADD PROJECT" MODAL
   var yearA = document.getElementById("add-project-year");
   var numberA = document.getElementById("add-project-number");
   var projectNameA = document.getElementById("add-project-name");
@@ -15343,9 +15341,9 @@ document.addEventListener('DOMContentLoaded', function () {
     var year = yearA.value;
     var number = numberA.value;
 
-    // Vérification stricte : empêcher un nom invalide
+    // dodge invalid chars
     if (year.length !== 2 || number.length !== 3 || isNaN(year) || isNaN(number)) {
-      projectNameA.value = ""; // Efface le champ pour éviter une valeur invalide
+      projectNameA.value = "";
       return;
     }
     projectNameA.value = "B".concat(year, ".").concat(number);
@@ -15362,7 +15360,7 @@ document.addEventListener('DOMContentLoaded', function () {
     numberA.addEventListener("keypress", enforceNumericInput);
   }
 
-  // === EDIT PROJECT === //
+  // SAME FOR EDIT PROJECT MODAL
   var yearE = document.getElementById("edit-project-year");
   var numberE = document.getElementById("edit-project-number");
   var projectNameE = document.getElementById("edit-project-name");
@@ -15370,9 +15368,9 @@ document.addEventListener('DOMContentLoaded', function () {
     var year = yearE.value;
     var number = numberE.value;
 
-    // Vérification stricte : empêcher un nom invalide
+    // Dodge invalid chars in input
     if (year.length !== 2 || number.length !== 3 || isNaN(year) || isNaN(number)) {
-      projectNameE.value = ""; // Efface le champ pour éviter une valeur invalide
+      projectNameE.value = "";
       return;
     }
     projectNameE.value = "B".concat(year, ".").concat(number);
@@ -15395,19 +15393,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
 document.addEventListener('DOMContentLoaded', function () {
   var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-  var updateProfileUrl = window.updateProfileUrl;
-
-  // Récupération des éléments pour le nom
   var nameEditBtn = document.getElementById('name-edit-btn');
   var nameDisplay = document.getElementById('name-display');
   var nameInput = document.getElementById('name-input');
-
-  // Récupération des éléments pour l'email
   var emailEditBtn = document.getElementById('email-edit-btn');
   var emailDisplay = document.getElementById('email-display');
   var emailInput = document.getElementById('email-input');
   if (nameEditBtn) {
-    // Fonctions pour activer/désactiver le mode édition pour le nom
+    // Toggle Edit mode for user name
     var toggleNameEditMode = function toggleNameEditMode(editing) {
       if (editing) {
         nameDisplay.style.display = 'none';
@@ -15420,7 +15413,7 @@ document.addEventListener('DOMContentLoaded', function () {
         nameEditBtn.classList.remove('editing');
         nameEditBtn.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
       }
-    }; // Fonctions pour activer/désactiver le mode édition pour l'email
+    }; // Toggle Edit mode for email
     var toggleEmailEditMode = function toggleEmailEditMode(editing) {
       if (editing) {
         emailDisplay.style.display = 'none';
@@ -15434,18 +15427,17 @@ document.addEventListener('DOMContentLoaded', function () {
         emailEditBtn.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
       }
     };
-    // Gestion du bouton d'édition du nom
+    // Save Name
     nameEditBtn.addEventListener('click', function (event) {
-      // Si le bouton est déjà en mode "édition" (classe "editing"), on sauvegarde
+      // if already in edit mode, save
       if (nameEditBtn.classList.contains('editing')) {
         var newName = nameInput.value.trim();
         if (newName === "") {
           alert("Le nom ne peut pas être vide.");
           return;
         }
-        nameEditBtn.disabled = true; // désactiver le bouton pour éviter les doublons
-
-        fetch(updateProfileUrl, {
+        nameEditBtn.disabled = true;
+        fetch(window.updateProfileUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -15470,13 +15462,14 @@ document.addEventListener('DOMContentLoaded', function () {
           nameEditBtn.disabled = false;
         });
       } else {
-        // Passage en mode édition
+        // Edit mode
         toggleNameEditMode(true);
-        // On stoppe la propagation pour éviter un double déclenchement
+        // Si on clic sur l'icone + le bouton 2 event
+        // Alors Stop propagation
         event.stopImmediatePropagation();
       }
     });
-    // Gestion du bouton d'édition de l'email
+    //Save email
     emailEditBtn.addEventListener('click', function (event) {
       if (emailEditBtn.classList.contains('editing')) {
         var newEmail = emailInput.value.trim();
@@ -15485,7 +15478,7 @@ document.addEventListener('DOMContentLoaded', function () {
           return;
         }
         emailEditBtn.disabled = true;
-        fetch(updateProfileUrl, {
+        fetch(window.updateProfileUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -15750,32 +15743,36 @@ document.addEventListener('DOMContentLoaded', function () {
   \*************************************************/
 /***/ (() => {
 
+//
+// Download And Distribute button
+//
 document.addEventListener('DOMContentLoaded', function () {
-  // Check if the download button exists
   var downloadBtn = document.getElementById('download-btn');
+  // Dodge error
   if (downloadBtn) {
+    //Download button functionality
     downloadBtn.addEventListener('click', function (e) {
       e.preventDefault();
-      // Collect all checked file IDs for download
+      //get all checkbox checked
       var fileCheckboxes = document.querySelectorAll('input[name="download_files[]"]:checked');
       var fileIds = [];
       fileCheckboxes.forEach(function (checkbox) {
         fileIds.push(checkbox.value);
       });
 
-      // If no file is selected, alert the user
+      // if no one file selected, make alert
       if (fileIds.length === 0) {
         showAlert("Please select at least one file to download.", "error", 3000);
         return;
       }
 
-      // Prepare data to send: project ID and file IDs
+      // make data{}
       var projectContainer = document.getElementById('project-container');
       var projectId = projectContainer.getAttribute('data-project-id');
       var data = {
         project_id: projectId,
         file_ids: fileIds,
-        _token: window.csrf_token
+        _token: window.csrf_token // je sais plus pourquoi
       };
 
       // Send POST request to download files route
@@ -15915,35 +15912,32 @@ $(document).ready(function () {
 document.addEventListener('DOMContentLoaded', function () {
   var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
   var roles = window.allRoles;
-  // Supposons que companiesTable est déjà initialisé via DataTables
-  // -------------------------------
-  // a) Éditer une entreprise
+
+  // Edit Company
   document.addEventListener('click', function (event) {
     if (event.target.closest('.edit-company')) {
-      event.stopImmediatePropagation(); // Empeche le double evenement (pour le bouton et le <i>)
-
+      event.stopImmediatePropagation();
       var btn = event.target.closest('.edit-company');
       var $row = $(btn).closest('tr');
-      // Récupération de la cellule contenant le nom
       var $nameCell = $row.find('.company-name');
       var currentName = $nameCell.text().trim();
 
-      // Remplacer le texte par un input
+      // replace text by an input
       $nameCell.html("<input type=\"text\" class=\"form-control\" value=\"".concat(currentName, "\" />"));
 
-      // Transformer le bouton en mode sauvegarde (disquette)
+      // change btn to save mode
       btn.classList.remove('edit-company', 'btn-primary');
       btn.classList.add('save-company', 'btn-warning');
       btn.innerHTML = '<i class="fa fa-floppy-o"></i>';
     }
   });
 
-  // b) Sauvegarder une entreprise avec Fetch
+  // Save Company
   document.addEventListener('click', function (event) {
     if (event.target.closest('.save-company')) {
-      event.stopImmediatePropagation(); // Empeche le double evenement (pour le bouton et le <i>)
+      event.stopImmediatePropagation();
       var btn = event.target.closest('.save-company');
-      var route = btn.getAttribute('data-route'); // URL définie dans l'attribut data-route
+      var route = btn.getAttribute('data-route');
       var $row = $(btn).closest('tr');
       var companyId = $row.data('company-id');
       var newName = $row.find('.company-name input').val();
@@ -15961,9 +15955,8 @@ document.addEventListener('DOMContentLoaded', function () {
         return response.json();
       }).then(function (data) {
         if (data.success) {
-          // Remettre la cellule en mode lecture
+          // Change again mode
           $row.find('.company-name').text(newName);
-          // Revenir au bouton "éditer"
           btn.classList.remove('save-company', 'btn-warning');
           btn.classList.add('edit-company', 'btn-primary');
           btn.innerHTML = '<i class="fa fa-pencil"></i>';
@@ -15976,12 +15969,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // c) Supprimer une entreprise avec Fetch
+  // Delete Company
   document.addEventListener('click', function (event) {
     if (event.target.closest('.delete-company')) {
       if (!confirm('Supprimer cette entreprise ?')) return;
       var btn = event.target.closest('.delete-company');
-      var route = btn.getAttribute('data-route'); // URL définie dans l'attribut data-route
+      var route = btn.getAttribute('data-route');
       var $row = $(btn).closest('tr');
       var companyId = $row.data('company-id');
       fetch(route, {
@@ -15997,7 +15990,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return response.json();
       }).then(function (data) {
         if (data.success) {
-          // Suppression de la ligne dans le DataTable
+          //Delete line in datatable
           var companiesTable = $('#companies-table').DataTable();
           companiesTable.row($row).remove().draw();
         } else {
@@ -16008,14 +16001,13 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
   });
+
+  // edit User
   document.addEventListener('click', function (event) {
     if (event.target.closest('.edit-user')) {
-      event.stopImmediatePropagation(); // Empeche le double evenement (pour le bouton et le <i>)
-
+      event.stopImmediatePropagation();
       var btn = event.target.closest('.edit-user');
       var $row = $(btn).closest('tr');
-
-      // Récupération des cellules
       var $nameCell = $row.find('.user-name');
       var $emailCell = $row.find('.user-email');
       var $roleCell = $row.find('.user-role');
@@ -16025,40 +16017,38 @@ document.addEventListener('DOMContentLoaded', function () {
       var currentRole = $roleCell.text().trim();
       var currentCompany = $companyCell.text().trim();
 
-      // Transformation en champs éditables
+      // Change in edit input
       $nameCell.html("<input type=\"text\" class=\"form-control\" value=\"".concat(currentName, "\" />"));
       $emailCell.html("<input type=\"text\" class=\"form-control\" value=\"".concat(currentEmail, "\" />"));
 
-      // Select pour le rôle
-
       //TODO: replace by french word roles
 
+      // Role Select
       var roleOptions = roles.map(function (role) {
         return "<option value=\"".concat(role, "\" ").concat(role === currentRole ? 'selected' : '', ">").concat(role, "</option>");
       }).join('');
       $roleCell.html("<select class=\"form-control\">".concat(roleOptions, "</select>"));
 
-      // Select pour l'entreprise
+      //Company Select
       var companyOptions = "<option value=\"\">Aucune</option>";
       allCompanies.forEach(function (c) {
         companyOptions += "<option value=\"".concat(c.id, "\" ").concat(c.name === currentCompany ? 'selected' : '', ">").concat(c.name, "</option>");
       });
       $companyCell.html("<select class=\"form-control\">".concat(companyOptions, "</select>"));
 
-      // Passage du bouton en mode sauvegarde
+      // Change btn to saveMode
       btn.classList.remove('edit-user', 'btn-primary');
       btn.classList.add('save-user', 'btn-warning');
       btn.innerHTML = '<i class="fa fa-floppy-o"></i>';
     }
   });
 
-  // b) Sauvegarder un utilisateur avec Fetch
+  // Save User
   document.addEventListener('click', function (event) {
     if (event.target.closest('.save-user')) {
-      event.stopImmediatePropagation(); // Empeche le double evenement (pour le bouton et le <i>)
-
+      event.stopImmediatePropagation();
       var btn = event.target.closest('.save-user');
-      var route = btn.getAttribute('data-route'); // URL définie dans data-route
+      var route = btn.getAttribute('data-route');
       var $row = $(btn).closest('tr');
       var userId = $row.data('user-id');
       var newName = $row.find('.user-name input').val();
@@ -16102,17 +16092,16 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // c) Supprimer un utilisateur avec Fetch
+  // Delete User
   document.addEventListener('click', function (event) {
     if (event.target.closest('.delete-user')) {
       if (!confirm('Supprimer cet utilisateur ?')) return;
       var btn = event.target.closest('.delete-user');
-      var route = btn.getAttribute('data-route'); // URL définie dans data-route
+      var route = btn.getAttribute('data-route');
       var $row = $(btn).closest('tr');
       var userId = $row.data('user-id');
       fetch(route, {
         method: 'POST',
-        // ou DELETE, selon ta configuration
         headers: {
           'Content-Type': 'application/json',
           'X-CSRF-TOKEN': csrfToken
@@ -16209,8 +16198,6 @@ function showAlert(message) {
   var duration = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 5000;
   var alertEl = document.getElementById('universal-alert');
   var messageEl = document.getElementById('universal-alert-message');
-
-  // Appliquer la classe correspondant au type
   alertEl.classList.remove('success', 'error', 'info');
   alertEl.classList.add(type);
   messageEl.textContent = message;
@@ -16226,7 +16213,7 @@ function showAlert(message) {
   }, duration);
 }
 window.showAlert = showAlert;
-// Exemple d'utilisation:
+// exemple:
 // showAlert("Opération réussie", "success", 5000);
 // showAlert("Une erreur s'est produite", "error", 5000);
 
@@ -16234,27 +16221,18 @@ function showConfirm(message, onConfirm) {
   var modalEl = document.getElementById('universal-confirm-modal');
   var messageEl = document.getElementById('confirm-modal-message');
   var okBtn = document.getElementById('confirm-ok-btn');
-
-  // Mettre à jour le message de confirmation
   messageEl.textContent = message;
-
-  // Retirer d'éventuels événements antérieurs sur le bouton
   var newOkBtn = okBtn.cloneNode(true);
   okBtn.parentNode.replaceChild(newOkBtn, okBtn);
-
-  // Ajouter l'événement pour confirmer
   newOkBtn.addEventListener('click', function () {
     onConfirm();
-    // Fermer le modal
     var modalInstance = bootstrap.Modal.getInstance(modalEl);
     modalInstance.hide();
   });
-
-  // Afficher le modal de confirmation
   var confirmModal = new bootstrap.Modal(modalEl);
   confirmModal.show();
 }
-
+// exemple
 // showConfirm("Voulez-vous vraiment supprimer cet élément ?", function() {
 //     // Code à exécuter après confirmation
 //     console.log("Elément supprimé");

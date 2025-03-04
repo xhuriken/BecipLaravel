@@ -1,30 +1,27 @@
 document.addEventListener('DOMContentLoaded', function() {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    const updateProfileUrl = window.updateProfileUrl;
 
-    // Récupération des éléments pour le nom
     const nameEditBtn = document.getElementById('name-edit-btn');
     const nameDisplay = document.getElementById('name-display');
     const nameInput = document.getElementById('name-input');
 
-    // Récupération des éléments pour l'email
     const emailEditBtn = document.getElementById('email-edit-btn');
     const emailDisplay = document.getElementById('email-display');
     const emailInput = document.getElementById('email-input');
     if(nameEditBtn){
 
-        // Gestion du bouton d'édition du nom
+        // Save Name
         nameEditBtn.addEventListener('click', function(event) {
-            // Si le bouton est déjà en mode "édition" (classe "editing"), on sauvegarde
+            // if already in edit mode, save
             if (nameEditBtn.classList.contains('editing')) {
                 const newName = nameInput.value.trim();
                 if (newName === "") {
                     alert("Le nom ne peut pas être vide.");
                     return;
                 }
-                nameEditBtn.disabled = true; // désactiver le bouton pour éviter les doublons
+                nameEditBtn.disabled = true;
 
-                fetch(updateProfileUrl, {
+                fetch(window.updateProfileUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -51,13 +48,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         nameEditBtn.disabled = false;
                     });
             } else {
-                // Passage en mode édition
+                // Edit mode
                 toggleNameEditMode(true);
-                // On stoppe la propagation pour éviter un double déclenchement
+                // Si on clic sur l'icone + le bouton 2 event
+                // Alors Stop propagation
                 event.stopImmediatePropagation();
             }
         });
-        // Gestion du bouton d'édition de l'email
+        //Save email
         emailEditBtn.addEventListener('click', function(event) {
             if (emailEditBtn.classList.contains('editing')) {
                 const newEmail = emailInput.value.trim();
@@ -66,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
                 emailEditBtn.disabled = true;
-                fetch(updateProfileUrl, {
+                fetch(window.updateProfileUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -98,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Fonctions pour activer/désactiver le mode édition pour le nom
+        // Toggle Edit mode for user name
         function toggleNameEditMode(editing) {
             if (editing) {
                 nameDisplay.style.display = 'none';
@@ -113,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // Fonctions pour activer/désactiver le mode édition pour l'email
+        // Toggle Edit mode for email
         function toggleEmailEditMode(editing) {
             if (editing) {
                 emailDisplay.style.display = 'none';

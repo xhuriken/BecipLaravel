@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-    // Fonction générique pour mettre à jour un champ d'un fichier
+    // update specific fields of specific fileId
     function updateFileField(fileId, field, value) {
         // Construit l'URL en insérant l'ID du fichier
         const updateUrl = `${window.fileUpdateRoute.replace('FILE_ID', fileId)}`;
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
         checkbox.addEventListener('change', function() {
             const row = this.closest('tr');
             const fileId = row.getAttribute('data-id');
-            const newValue = this.checked; // true / false
+            const newValue = this.checked;
 
             updateFileField(fileId, 'is_last_index', newValue);
         });
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 3) GESTION COMMENTAIRE (comment-textarea)
     document.querySelectorAll('.comment-textarea').forEach(textarea => {
-        // On déclenche la mise à jour au blur (perte de focus) par exemple
+        //blur = perte de focus du comm
         textarea.addEventListener('blur', function() {
             const row = this.closest('tr');
             const fileId = row.getAttribute('data-id');
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
         checkbox.addEventListener('change', function() {
             const row = this.closest('tr');
             const fileId = row.getAttribute('data-id');
-            const newValue = this.checked; // true / false
+            const newValue = this.checked;
 
             updateFileField(fileId, 'is_validated', newValue);
         });

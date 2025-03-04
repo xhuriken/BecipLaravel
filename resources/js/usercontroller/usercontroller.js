@@ -44,35 +44,33 @@ $(document).ready(function() {
 document.addEventListener('DOMContentLoaded', function() {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     const roles = window.allRoles;
-    // Supposons que companiesTable est déjà initialisé via DataTables
-    // -------------------------------
-    // a) Éditer une entreprise
+
+    // Edit Company
     document.addEventListener('click', function(event) {
         if(event.target.closest('.edit-company')) {
-            event.stopImmediatePropagation(); // Empeche le double evenement (pour le bouton et le <i>)
+            event.stopImmediatePropagation();
 
             const btn = event.target.closest('.edit-company');
             const $row = $(btn).closest('tr');
-                    // Récupération de la cellule contenant le nom
             const $nameCell = $row.find('.company-name');
             const currentName = $nameCell.text().trim();
 
-            // Remplacer le texte par un input
+            // replace text by an input
             $nameCell.html(`<input type="text" class="form-control" value="${currentName}" />`);
 
-            // Transformer le bouton en mode sauvegarde (disquette)
+            // change btn to save mode
             btn.classList.remove('edit-company', 'btn-primary');
             btn.classList.add('save-company', 'btn-warning');
             btn.innerHTML = '<i class="fa fa-floppy-o"></i>';
         }
     });
 
-    // b) Sauvegarder une entreprise avec Fetch
+    // Save Company
     document.addEventListener('click', function(event) {
         if(event.target.closest('.save-company')) {
-            event.stopImmediatePropagation(); // Empeche le double evenement (pour le bouton et le <i>)
+            event.stopImmediatePropagation();
             const btn = event.target.closest('.save-company');
-            const route = btn.getAttribute('data-route'); // URL définie dans l'attribut data-route
+            const route = btn.getAttribute('data-route');
             const $row = $(btn).closest('tr');
             const companyId = $row.data('company-id');
             const newName = $row.find('.company-name input').val();
@@ -88,9 +86,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // Remettre la cellule en mode lecture
+                        // Change again mode
                         $row.find('.company-name').text(newName);
-                        // Revenir au bouton "éditer"
                         btn.classList.remove('save-company', 'btn-warning');
                         btn.classList.add('edit-company', 'btn-primary');
                         btn.innerHTML = '<i class="fa fa-pencil"></i>';
@@ -104,14 +101,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // c) Supprimer une entreprise avec Fetch
+    // Delete Company
     document.addEventListener('click', function(event) {
         if(event.target.closest('.delete-company')) {
 
             if(!confirm('Supprimer cette entreprise ?')) return;
 
             const btn = event.target.closest('.delete-company');
-            const route = btn.getAttribute('data-route'); // URL définie dans l'attribut data-route
+            const route = btn.getAttribute('data-route');
             const $row = $(btn).closest('tr');
             const companyId = $row.data('company-id');
 
@@ -126,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // Suppression de la ligne dans le DataTable
+                        //Delete line in datatable
                         const companiesTable = $('#companies-table').DataTable();
                         companiesTable.row($row).remove().draw();
                     } else {
@@ -139,14 +136,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // edit User
     document.addEventListener('click', function(event) {
         if(event.target.closest('.edit-user')) {
-            event.stopImmediatePropagation(); // Empeche le double evenement (pour le bouton et le <i>)
+            event.stopImmediatePropagation();
 
             const btn = event.target.closest('.edit-user');
             const $row = $(btn).closest('tr');
 
-            // Récupération des cellules
             const $nameCell = $row.find('.user-name');
             const $emailCell = $row.find('.user-email');
             const $roleCell = $row.find('.user-role');
@@ -157,40 +154,40 @@ document.addEventListener('DOMContentLoaded', function() {
             const currentRole = $roleCell.text().trim();
             const currentCompany = $companyCell.text().trim();
 
-            // Transformation en champs éditables
+            // Change in edit input
             $nameCell.html(`<input type="text" class="form-control" value="${currentName}" />`);
             $emailCell.html(`<input type="text" class="form-control" value="${currentEmail}" />`);
 
-            // Select pour le rôle
 
             //TODO: replace by french word roles
 
+            // Role Select
             const roleOptions = roles.map(role =>
                 `<option value="${role}" ${role === currentRole ? 'selected' : ''}>${role}</option>`
             ).join('');
             $roleCell.html(`<select class="form-control">${roleOptions}</select>`);
 
-            // Select pour l'entreprise
+            //Company Select
             let companyOptions = `<option value="">Aucune</option>`;
             allCompanies.forEach(c => {
                 companyOptions += `<option value="${c.id}" ${c.name === currentCompany ? 'selected' : ''}>${c.name}</option>`;
             });
             $companyCell.html(`<select class="form-control">${companyOptions}</select>`);
 
-            // Passage du bouton en mode sauvegarde
+            // Change btn to saveMode
             btn.classList.remove('edit-user', 'btn-primary');
             btn.classList.add('save-user', 'btn-warning');
             btn.innerHTML = '<i class="fa fa-floppy-o"></i>';
         }
     });
 
-    // b) Sauvegarder un utilisateur avec Fetch
+    // Save User
     document.addEventListener('click', function(event) {
         if(event.target.closest('.save-user')) {
-            event.stopImmediatePropagation(); // Empeche le double evenement (pour le bouton et le <i>)
+            event.stopImmediatePropagation();
 
             const btn = event.target.closest('.save-user');
-            const route = btn.getAttribute('data-route'); // URL définie dans data-route
+            const route = btn.getAttribute('data-route');
             const $row = $(btn).closest('tr');
             const userId = $row.data('user-id');
 
@@ -237,17 +234,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // c) Supprimer un utilisateur avec Fetch
+    // Delete User
     document.addEventListener('click', function(event) {
         if(event.target.closest('.delete-user')) {
             if(!confirm('Supprimer cet utilisateur ?')) return;
             const btn = event.target.closest('.delete-user');
-            const route = btn.getAttribute('data-route'); // URL définie dans data-route
+            const route = btn.getAttribute('data-route');
             const $row = $(btn).closest('tr');
             const userId = $row.data('user-id');
 
             fetch(route, {
-                method: 'POST', // ou DELETE, selon ta configuration
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': csrfToken

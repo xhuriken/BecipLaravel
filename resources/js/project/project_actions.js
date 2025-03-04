@@ -1,29 +1,33 @@
+//
+// Download And Distribute button
+//
 document.addEventListener('DOMContentLoaded', function() {
-    // Check if the download button exists
     const downloadBtn = document.getElementById('download-btn');
+    // Dodge error
     if (downloadBtn) {
+        //Download button functionality
         downloadBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            // Collect all checked file IDs for download
+            //get all checkbox checked
             const fileCheckboxes = document.querySelectorAll('input[name="download_files[]"]:checked');
             let fileIds = [];
             fileCheckboxes.forEach(function(checkbox) {
                 fileIds.push(checkbox.value);
             });
 
-            // If no file is selected, alert the user
+            // if no one file selected, make alert
             if (fileIds.length === 0) {
                 showAlert("Please select at least one file to download.", "error", 3000);
                 return;
             }
 
-            // Prepare data to send: project ID and file IDs
+            // make data{}
             const projectContainer = document.getElementById('project-container');
             const projectId = projectContainer.getAttribute('data-project-id');
             const data = {
                 project_id: projectId,
                 file_ids: fileIds,
-                _token: window.csrf_token
+                _token: window.csrf_token // je sais plus pourquoi
             };
 
             // Send POST request to download files route
