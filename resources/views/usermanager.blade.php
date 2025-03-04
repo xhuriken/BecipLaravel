@@ -100,8 +100,8 @@
                     <td class="user-email">{{ $user->email }}</td>
                     <td class="user-role">{{ $user->role }}</td>
                     <td class="user-company">
-                        @if($user->company)
-                            {{ $user->company->name }}
+                        @if($user->company_id)
+                            {{ $user->getCompanyName($user->company_id) }}
                         @else
                             Aucune
                         @endif
