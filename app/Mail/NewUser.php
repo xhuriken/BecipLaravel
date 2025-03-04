@@ -14,13 +14,19 @@ class NewUser extends Mailable
     use Queueable, SerializesModels;
 
     public $userName;
+    public $urlHome;
+    public $password;
+    public $urlPassword;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($userName)
+    public function __construct($userName, $urlHome, $password, $urlPassword)
     {
         $this->userName = $userName;
+        $this->urlHome = $urlHome;
+        $this->password = $password;
+        $this->urlPassword = $urlPassword;
     }
 
     /**

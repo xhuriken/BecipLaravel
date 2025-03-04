@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Grosv\LaravelPasswordlessLogin\Traits\PasswordlessLogin;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,7 +12,27 @@ class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+    use PasswordlessLogin;
 
+    public function getGuardNameAttribute(): string
+    {
+        return config('laravel-passwordless-login.user_guard');
+    }
+
+    public function getShouldRememberLoginAttribute(): bool
+    {
+        return config('laravel-passwordless-login.remember_login');
+    }
+
+    public function getLoginRouteExpiresInAttribute(): int
+    {
+        return config('laravel-passwordless-login.login_route_expires');
+    }
+
+    public function getRedirectUrlAttribute(): string
+    {
+        return config('laravel-passwordless-login.redirect_on_success');
+    }
     protected $table = 'users';
 
     /**

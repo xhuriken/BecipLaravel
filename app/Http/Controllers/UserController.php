@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use App\Models\User;
+use Grosv\LaravelPasswordlessLogin\LoginUrl;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -22,7 +23,7 @@ class UserController extends Controller
     }
 
     /**
-     * Update name of an company (with his id)
+     * Update name of a company (with his id)
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -145,8 +146,19 @@ class UserController extends Controller
             //
             //
 
+            //Magic link Connexion
+            $generator = new LoginUrl($user);
+            $generator->setRedirectUrl('/');
+            $url = $generator->generate();
+
+            //Link Change Password
+            $urlPassword = "";
+
             Mail::to($user->email)->send(new NewUser(
-                userName: $user->name
+                $user->name,
+                $url,
+                $request->password,
+                $urlPassword
             ));
 
             return redirect()->back()->with('success', 'Utilisateur ajouté avec succès.');

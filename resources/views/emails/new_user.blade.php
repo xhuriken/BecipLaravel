@@ -69,6 +69,10 @@
             padding: 10px;
             border-top: 1px solid #dddddd;
         }
+        p.small{
+            color: #6c757d;
+            font-size: 13px;
+        }
     </style>
 </head>
 <body>
@@ -79,22 +83,23 @@
     </div>
 
     <div class="content">
-        <h2>Bonjour || username ||,</h2>
+        <h2>Bonjour {{$userName}},</h2>
         <p>
             Nous avons le plaisir de vous informer que votre compte Becip a été créé avec succès.
         </p>
         <p>
-            Voici votre mot de passe : <strong> || MDP || </strong>
+            Voici votre mot de passe : <strong> {{$password}} </strong>
         </p>
         <div class="cta-button">
-            <a href="link">Modifier le mot de passe</a>
+            <a href="{{$urlPassword}}">Modifier le mot de passe</a>
         </div>
         <p>
             Pour accéder à votre espace personnel et commencer à utiliser nos services, cliquez sur le lien ci-dessous :
         </p>
         <div class="cta-button">
-            <a href="link">Accéder à mon compte</a>
+            <a href="{{$urlHome}}">Accéder à mon compte</a>
         </div>
+        <p class="small">Ce lien est valable 2 jours après l'envoie de ce mail.</p>
         <p>
             Si vous avez des questions ou besoin d'assistance, n'hésitez pas à nous contacter.
             Nous sommes ravis de vous compter parmi nos utilisateurs.
@@ -103,7 +108,7 @@
 
     <div class="footer">
         Cet email vous a été envoyé par Becip.<br>
-        &copy; ' . date('Y') . ' Becip. Tous droits réservés.
+        &copy; {{date('Y')}} Becip. Tous droits réservés.
     </div>
 </div>
 </body>
