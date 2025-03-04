@@ -14545,9 +14545,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _project_masks__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(_project_masks__WEBPACK_IMPORTED_MODULE_14__);
 /* harmony import */ var _project_distribution_checkbox__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./project/distribution_checkbox */ "./resources/js/project/distribution_checkbox.js");
 /* harmony import */ var _project_distribution_checkbox__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(_project_distribution_checkbox__WEBPACK_IMPORTED_MODULE_15__);
+/* harmony import */ var _project_comment_modal__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./project/comment_modal */ "./resources/js/project/comment_modal.js");
+/* harmony import */ var _project_comment_modal__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(_project_comment_modal__WEBPACK_IMPORTED_MODULE_16__);
 
 
 window.bootstrap = bootstrap__WEBPACK_IMPORTED_MODULE_1__;
+
 
 
 
@@ -15506,6 +15509,28 @@ document.addEventListener('DOMContentLoaded', function () {
         toggleEmailEditMode(true);
         event.stopImmediatePropagation();
       }
+    });
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/project/comment_modal.js":
+/*!***********************************************!*\
+  !*** ./resources/js/project/comment_modal.js ***!
+  \***********************************************/
+/***/ (() => {
+
+document.addEventListener('DOMContentLoaded', function () {
+  var commentModalEl = document.getElementById('commentModal');
+  if (commentModalEl) {
+    var commentModal = new bootstrap.Modal(commentModalEl);
+    var commentText = document.getElementById('commentModalText');
+    document.querySelectorAll('.view-comment').forEach(function (link) {
+      link.addEventListener('click', function (event) {
+        commentText.textContent = this.getAttribute('data-comment');
+        commentModal.show();
+      });
     });
   }
 });

@@ -165,8 +165,20 @@
                             @if($file->user_id == auth()->user()->id)
                                 <textarea placeholder="Ajoutez un commentaire..." name="comment[{{$file->id}}]" class="comment-textarea form-control">{{$file->comment}}</textarea>
                             @else
-                                {{--ICI IL FAUT LIMITER LE COMMENTAIRE A 10 char--}}
-                                {{$file->comment}}
+                                @php
+                                    $comment = $file->comment;
+                                    if (strlen($comment) > 10) {
+                                        $shortComment = substr($comment, 0, 10) . '...';
+                                    } else {
+                                        $shortComment = $comment;
+                                    }
+                                @endphp
+
+                                {{ $shortComment }}
+
+                                @if(strlen($comment) > 10)
+                                    <a href="#" class="view-comment" data-comment="{{ $comment }}">Voir plus</a>
+                                @endif
                             @endif
                         </td>
                         <td data-label="Déposé par">
@@ -192,13 +204,13 @@
                         </td>
                         @if(!$project->is_mask_distributed)
                             <td data-label="Distribuer">
-                                    <input type="checkbox" name="print_files[]" value="{{$file->id}}"
-                                           class="distribution-checkbox"
-                                            {{($file->distribution_count >= 1) ? 'disabled' : '' }}
-                                    />
-                                    @if($file->distribution_count >= 1)
-                                        {{--Trouver un moyen de faire des tooltip avec DataTable--}}
-                                    @endif
+                                <input type="checkbox" name="print_files[]" value="{{$file->id}}"
+                                       class="distribution-checkbox"
+                                        {{($file->distribution_count >= 1) ? 'disabled' : '' }}
+                                />
+                                @if($file->distribution_count >= 1)
+                                    {{--Trouver un moyen de faire des tooltip avec DataTable--}}
+                                @endif
                             </td>
                             <td data-label="Impressions">
                                 {{--Rendre ce chiffre dynamique avec la checkbox distribute--}}
@@ -231,7 +243,22 @@
 
         <button id="distribute-btn" class="btn btn-warning">Distribute</button>
     </header>
+    <div class="modal fade" id="commentModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Commentaire complet</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="commentModalText"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
+
     <script>
         window.fileUpdateRoute = '{{ route("files.update", ["file" => "FILE_ID"]) }}';
         window.downloadProjectUrl = '{{ route("projects.download") }}';

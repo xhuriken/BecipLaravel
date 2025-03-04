@@ -87,7 +87,7 @@
         @endif
     </div>
 
-    <!-- Modal d'ajout d'une affaire -->
+    <!-- Add Project Modal -->
     <div class="modal fade" id="addProjectModal" tabindex="-1" aria-labelledby="addProjectModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -147,7 +147,7 @@
         </div>
     </div>
 
-    <!-- Modal de modification de l'affaire -->
+    <!-- Edit Project Modal-->
     <div class="modal fade" id="editProjectModal" tabindex="-1" aria-labelledby="editProjectModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
