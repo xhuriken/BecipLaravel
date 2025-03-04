@@ -7,10 +7,9 @@ use App\Models\User;
 use Grosv\LaravelPasswordlessLogin\LoginUrl;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use App\Mail\NewUser;
 use Illuminate\Support\Facades\Mail;
-
+use Illuminate\Support\Facades\Password;
 class UserController extends Controller
 {
     public function index()
@@ -152,7 +151,12 @@ class UserController extends Controller
             $url = $generator->generate();
 
             //Link Change Password
-            $urlPassword = "";
+            $token = Password::createToken($user);
+
+            $urlPassword = url(route('password.reset', [
+                'token' => $token,
+                'email' => $user->email,
+            ]));
 
             Mail::to($user->email)->send(new NewUser(
                 $user->name,
