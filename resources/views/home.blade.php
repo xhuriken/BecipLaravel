@@ -33,7 +33,8 @@
             </thead>
             <tbody>
                 @forelse($projects as $project)
-                    <tr>
+{{--                    Add Project row id for DOM reload in js--}}
+                    <tr id="project-row-{{ $project->id }}">
                         <td>{{ $project->company_id ? $project->getCompanyName($project->company_id) : 'Aucune' }}</td>
                         <td>{{ $project->name }}</td>
                         <td>
@@ -69,21 +70,28 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td></td>
-                        <td></td>
+                        @if(auth()->user()->isBecip())
+                            <td></td>
+                            <td></td>
+                        @endif
                     </tr>
                 @endforelse
             </tbody>
         </table>
 
         @if (auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
-            <button id="delete-selected" class="btn-filter" data-route="{{ route('projects.delete-selected') }}">
+            <button
+                id="delete-selected"
+                class="btn-filter"
+                data-route="{{ route('projects.delete-selected') }}">
                 Supprimer les affaires sélectionnées
             </button>
-            <form action="{{ route('projects.delete-empty') }}" method="POST" style="display: inline;">
-                @csrf
-                <button type="submit" class="btn-filter">Supprimer les affaires vides</button>
-            </form>
+            <button
+                id="delete-empty"
+                class="btn-filter"
+                data-route="{{ route('projects.delete-empty') }}">
+                Supprimer les affaires vides
+            </button>
         @endif
     </div>
 
@@ -228,7 +236,6 @@
     </div>
 
     <script>
-
         window.storeProjectUrl = '{{ route("projects.store") }}';
         window.updateProjectUrl = '{{ route("projects.update") }}';
         window.csrf_token = '{{ csrf_token() }}';

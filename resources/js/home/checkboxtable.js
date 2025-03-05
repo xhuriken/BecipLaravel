@@ -1,8 +1,9 @@
-document.addEventListener('DOMContentLoaded', function(event) {
-    let selectAll    = document.querySelector("#select-all"),
-        deleteSelected  = document.querySelector("#delete-selected");
+document.addEventListener('DOMContentLoaded', function() {
+    let selectAll       = document.querySelector("#select-all");
+    let deleteSelected  = document.querySelector("#delete-selected");
 
-    if (selectAll ) {
+    // Toggle all checkboxes
+    if (selectAll) {
         selectAll.addEventListener('change', function () {
             let isChecked = this.checked;
             document.querySelectorAll(".delete-checkbox").forEach(checkbox => {
@@ -11,8 +12,9 @@ document.addEventListener('DOMContentLoaded', function(event) {
         });
     }
 
-    if( deleteSelected ) {
-        deleteSelected.addEventListener('click', function(event) {
+    // Delete selected items
+    if (deleteSelected) {
+        deleteSelected.addEventListener('click', function() {
             let route = this.getAttribute('data-route');
             let selectedProjects = [];
 
@@ -21,85 +23,113 @@ document.addEventListener('DOMContentLoaded', function(event) {
             });
 
             if (selectedProjects.length === 0) {
-                alert("Aucune affaire sélectionnée.");
-                //pop up perso ?
+                Swal.fire({
+                    title: "Aucune affaire sélectionnée !",
+                    icon: "warning",
+                    timer: 1200,
+                    timerProgressBar: true
+                });
                 return;
             }
 
-            if (!confirm("Voulez-vous vraiment supprimer les affaires sélectionnées ?")) {
-                //confirm perso ?
-                return;
-            }
+            // Confirm delete
+            Swal.fire({
+                title: "Êtes-vous sûr ?",
+                text: "Cette action est irréversible !",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#0c9155",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Oui"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(route, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": window.csrf_token
+                        },
+                        body: JSON.stringify({ selected_projects: selectedProjects })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            // Remove deleted items in DOM
+                            selectedProjects.forEach(projectId => {
+                                let row = document.querySelector(`#project-row-${projectId}`);
+                                if (row) {
+                                    row.remove();
+                                }
+                            });
 
-            fetch(route, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({ selected_projects: selectedProjects })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    alert(data.message);
-                    location.reload();
-                })
-                .catch(error => console.error("Erreur lors de la suppression :", error));
+                            Swal.fire({
+                                title: "Affaires supprimées !",
+                                icon: "success",
+                                timer: 1200,
+                                timerProgressBar: true
+                            });
+                        })
+                        .catch(error => {
+                            console.error("Error deleting projects:", error);
+                            Swal.fire({
+                                title: "Erreur",
+                                text: "Quelque chose s'est mal passé.",
+                                icon: "error"
+                            });
+                        });
+                }
+            });
         });
     }
 
+    // Initialize select2
     $(document).ready(function() {
         $('#search-clients').select2({
-            placeholder: "Sélectionner des clients",
+            placeholder: "Select clients",
             allowClear: true,
-            closeOnSelect: false, // Ne pas fermer la liste après sélection
-            templateResult: formatOption, // Personnalisation de l'affichage des options
-            templateSelection: formatSelection, // Personnalisation de l'affichage des éléments sélectionnés
+            closeOnSelect: false,
+            templateResult: formatOption,
+            templateSelection: formatSelection,
             width: '100%'
         });
 
-        // Fonction pour afficher les checkboxes à côté de chaque client
         function formatOption(option) {
             if (!option.id) {
                 return option.text;
             }
-
-            // Création de la checkbox
-            var checkbox = $('<input type="checkbox" class="client-checkbox" style="margin-right: 8px;">');
+            let checkbox = $('<input type="checkbox" class="client-checkbox" style="margin-right: 8px;">');
             checkbox.val(option.id);
 
-            // Vérifie si l'option est déjà sélectionnée
             if ($('#search-clients').find('option[value="' + option.id + '"]').prop('selected')) {
                 checkbox.prop('checked', true);
             }
+            let $option = $('<span></span>').text(option.text);
 
-            var $option = $('<span></span>').text(option.text);
-            return $('<span style="display: flex; align-items: center;"></span>').append(checkbox).append($option);
+            return $('<span style="display: flex; align-items: center;"></span>')
+                .append(checkbox)
+                .append($option);
         }
 
-        // Fonction pour afficher correctement les éléments sélectionnés
         function formatSelection(selection) {
             return selection.text;
         }
 
-        // Gestion du clic sur les checkboxes
+        // Handle checkbox clicks
         $(document).on('click', '.client-checkbox', function(e) {
-            var value = $(this).val();
-
-            // Met à jour la sélection dans Select2
-            var isSelected = $('#search-clients').find('option[value="' + value + '"]').prop('selected');
-
+            let value = $(this).val();
+            let isSelected = $('#search-clients').find('option[value="' + value + '"]').prop('selected');
             $('#search-clients').find('option[value="' + value + '"]').prop('selected', !isSelected);
-            $('#search-clients').trigger('change'); // Met à jour Select2 visuellement
-
-            e.stopPropagation(); // Empêche la fermeture de Select2 lors du clic
+            $('#search-clients').trigger('change');
+            e.stopPropagation();
         });
 
-        // Met à jour les checkboxes lorsqu'un élément est sélectionné depuis Select2
+        // Update checkboxes when select2 changes
         $('#search-clients').on('select2:select select2:unselect', function() {
-        $('.client-checkbox').each(function() {
-                var value = $(this).val();
-                $(this).prop('checked', $('#search-clients').find('option[value="' + value + '"]').prop('selected'));
+            $('.client-checkbox').each(function() {
+                let value = $(this).val();
+                $(this).prop(
+                    'checked',
+                    $('#search-clients').find('option[value="' + value + '"]').prop('selected')
+                );
             });
         });
     });

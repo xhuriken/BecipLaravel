@@ -60,15 +60,22 @@ class ProjectController extends Controller
 
     /**
      * Delete all empty Project
-     * @return RedirectResponse
+     * @return JsonResponse
      */
-    public function deleteEmptyProject()
+    public function deleteEmptyProject(Request $request): JsonResponse
     {
-        Project::whereNull('referent_id')
+        $emptyProjects = Project::whereNull('referent_id')
             ->whereNull('company_id')
-            ->delete();
+            ->get(['id']);
 
-        return redirect()->back()->with('success', 'Les affaires vides ont été supprimées.');
+        $ids = $emptyProjects->pluck('id');
+
+        $emptyProjects->each->delete();
+
+        return response()->json([
+            'success' => true,
+            'deleted_ids' => $ids
+        ]);
     }
 
     /**
@@ -215,6 +222,22 @@ class ProjectController extends Controller
         }
 
         return response()->json(['success' => true, 'files' => $storedFiles]);
+    }
+
+    public function getFilesPartial(Project $project)
+    {
+        // Get list of files
+        $files = $project->files()->orderBy('created_at', 'desc')->get();
+
+        // return only tr html with partials view (Info ?? Partial view ?)
+        $renderedView = view('partials._project_files', [
+            'project' => $project,
+            'files'   => $files
+        ])->render();
+
+        return response()->json([
+            'html' => $renderedView
+        ]);
     }
 
     /**

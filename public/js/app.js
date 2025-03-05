@@ -14549,9 +14549,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _project_comment_modal__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(_project_comment_modal__WEBPACK_IMPORTED_MODULE_16__);
 /* harmony import */ var _profile_forgot_modal__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./profile/forgot_modal */ "./resources/js/profile/forgot_modal.js");
 /* harmony import */ var _profile_forgot_modal__WEBPACK_IMPORTED_MODULE_17___default = /*#__PURE__*/__webpack_require__.n(_profile_forgot_modal__WEBPACK_IMPORTED_MODULE_17__);
+/* harmony import */ var _home_delete_empty__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./home/delete_empty */ "./resources/js/home/delete_empty.js");
+/* harmony import */ var _home_delete_empty__WEBPACK_IMPORTED_MODULE_18___default = /*#__PURE__*/__webpack_require__.n(_home_delete_empty__WEBPACK_IMPORTED_MODULE_18__);
 
 
 window.bootstrap = bootstrap__WEBPACK_IMPORTED_MODULE_1__;
+
 
 
 
@@ -14702,9 +14705,11 @@ document.addEventListener('DOMContentLoaded', function () {
   \********************************************/
 /***/ (() => {
 
-document.addEventListener('DOMContentLoaded', function (event) {
-  var selectAll = document.querySelector("#select-all"),
-    deleteSelected = document.querySelector("#delete-selected");
+document.addEventListener('DOMContentLoaded', function () {
+  var selectAll = document.querySelector("#select-all");
+  var deleteSelected = document.querySelector("#delete-selected");
+
+  // Toggle all checkboxes
   if (selectAll) {
     selectAll.addEventListener('change', function () {
       var isChecked = this.checked;
@@ -14713,90 +14718,110 @@ document.addEventListener('DOMContentLoaded', function (event) {
       });
     });
   }
+
+  // Delete selected items
   if (deleteSelected) {
-    deleteSelected.addEventListener('click', function (event) {
+    deleteSelected.addEventListener('click', function () {
       var route = this.getAttribute('data-route');
       var selectedProjects = [];
       document.querySelectorAll(".delete-checkbox:checked").forEach(function (checkbox) {
         selectedProjects.push(checkbox.getAttribute('data-project-id'));
       });
       if (selectedProjects.length === 0) {
-        alert("Aucune affaire sélectionnée.");
-        //pop up perso ?
+        Swal.fire({
+          title: "Aucune affaire sélectionnée !",
+          icon: "warning",
+          timer: 1200,
+          timerProgressBar: true
+        });
         return;
       }
-      if (!confirm("Voulez-vous vraiment supprimer les affaires sélectionnées ?")) {
-        //confirm perso ?
-        return;
-      }
-      fetch(route, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify({
-          selected_projects: selectedProjects
-        })
-      }).then(function (response) {
-        return response.json();
-      }).then(function (data) {
-        alert(data.message);
-        location.reload();
-      })["catch"](function (error) {
-        return console.error("Erreur lors de la suppression :", error);
+
+      // Confirm delete
+      Swal.fire({
+        title: "Êtes-vous sûr ?",
+        text: "Cette action est irréversible !",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#0c9155",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Oui"
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          fetch(route, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRF-TOKEN": window.csrf_token
+            },
+            body: JSON.stringify({
+              selected_projects: selectedProjects
+            })
+          }).then(function (response) {
+            return response.json();
+          }).then(function (data) {
+            // Remove deleted items in DOM
+            selectedProjects.forEach(function (projectId) {
+              var row = document.querySelector("#project-row-".concat(projectId));
+              if (row) {
+                row.remove();
+              }
+            });
+            Swal.fire({
+              title: "Affaires supprimées !",
+              icon: "success",
+              timer: 1200,
+              timerProgressBar: true
+            });
+          })["catch"](function (error) {
+            console.error("Error deleting projects:", error);
+            Swal.fire({
+              title: "Erreur",
+              text: "Quelque chose s'est mal passé.",
+              icon: "error"
+            });
+          });
+        }
       });
     });
   }
+
+  // Initialize select2
   $(document).ready(function () {
     $('#search-clients').select2({
-      placeholder: "Sélectionner des clients",
+      placeholder: "Select clients",
       allowClear: true,
       closeOnSelect: false,
-      // Ne pas fermer la liste après sélection
       templateResult: formatOption,
-      // Personnalisation de l'affichage des options
       templateSelection: formatSelection,
-      // Personnalisation de l'affichage des éléments sélectionnés
       width: '100%'
     });
-
-    // Fonction pour afficher les checkboxes à côté de chaque client
     function formatOption(option) {
       if (!option.id) {
         return option.text;
       }
-
-      // Création de la checkbox
       var checkbox = $('<input type="checkbox" class="client-checkbox" style="margin-right: 8px;">');
       checkbox.val(option.id);
-
-      // Vérifie si l'option est déjà sélectionnée
       if ($('#search-clients').find('option[value="' + option.id + '"]').prop('selected')) {
         checkbox.prop('checked', true);
       }
       var $option = $('<span></span>').text(option.text);
       return $('<span style="display: flex; align-items: center;"></span>').append(checkbox).append($option);
     }
-
-    // Fonction pour afficher correctement les éléments sélectionnés
     function formatSelection(selection) {
       return selection.text;
     }
 
-    // Gestion du clic sur les checkboxes
+    // Handle checkbox clicks
     $(document).on('click', '.client-checkbox', function (e) {
       var value = $(this).val();
-
-      // Met à jour la sélection dans Select2
       var isSelected = $('#search-clients').find('option[value="' + value + '"]').prop('selected');
       $('#search-clients').find('option[value="' + value + '"]').prop('selected', !isSelected);
-      $('#search-clients').trigger('change'); // Met à jour Select2 visuellement
-
-      e.stopPropagation(); // Empêche la fermeture de Select2 lors du clic
+      $('#search-clients').trigger('change');
+      e.stopPropagation();
     });
 
-    // Met à jour les checkboxes lorsqu'un élément est sélectionné depuis Select2
+    // Update checkboxes when select2 changes
     $('#search-clients').on('select2:select select2:unselect', function () {
       $('.client-checkbox').each(function () {
         var value = $(this).val();
@@ -14808,40 +14833,133 @@ document.addEventListener('DOMContentLoaded', function (event) {
 
 /***/ }),
 
+/***/ "./resources/js/home/delete_empty.js":
+/*!*******************************************!*\
+  !*** ./resources/js/home/delete_empty.js ***!
+  \*******************************************/
+/***/ (() => {
+
+document.addEventListener('DOMContentLoaded', function () {
+  var deleteEmpty = document.querySelector("#delete-empty");
+  if (deleteEmpty) {
+    deleteEmpty.addEventListener('click', function () {
+      var route = this.getAttribute('data-route');
+      Swal.fire({
+        title: "Êtes-vous sûr ?",
+        text: "Tous les projets sans entreprise ni référent seront supprimés.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#0c9155",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Oui"
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          fetch(route, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRF-TOKEN": window.csrf_token
+            },
+            body: JSON.stringify({})
+          }).then(function (response) {
+            return response.json();
+          }).then(function (data) {
+            if (data.success) {
+              data.deleted_ids.forEach(function (id) {
+                var row = document.querySelector("#project-row-".concat(id));
+                if (row) row.remove();
+              });
+              Swal.fire({
+                title: "Affaires vides supprimées !",
+                icon: "success",
+                timer: 1200,
+                timerProgressBar: true
+              });
+            } else {
+              Swal.fire({
+                title: "Erreur",
+                text: "Impossible de supprimer les affaires vides.",
+                icon: "error"
+              });
+            }
+          })["catch"](function (error) {
+            console.error("Error deleting empty projects:", error);
+            Swal.fire({
+              title: "Erreur",
+              text: "Quelque chose s'est mal passé.",
+              icon: "error"
+            });
+          });
+        }
+      });
+    });
+  }
+});
+
+/***/ }),
+
 /***/ "./resources/js/home/delete_project.js":
 /*!*********************************************!*\
   !*** ./resources/js/home/delete_project.js ***!
   \*********************************************/
 /***/ (() => {
 
-document.addEventListener('DOMContentLoaded', function (event) {
+document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('.delete-project-btn').forEach(function (btn) {
     btn.addEventListener('click', function (e) {
       e.preventDefault();
       var deleteUrl = this.getAttribute('data-delete-url');
-      showConfirm("Êtes-vous sûr de vouloir supprimer cette affaire ?", function () {
-        fetch(deleteUrl, {
-          method: 'DELETE',
-          headers: {
-            'X-CSRF-TOKEN': window.csrf_token,
-            'Content-Type': 'application/json'
-          }
-        }).then(function (response) {
-          if (!response.ok) {
-            throw new Error("Erreur HTTP " + response.status);
-          }
-          return response.json();
-        }).then(function (data) {
-          if (data.success) {
-            showAlert("Affaire supprimée avec succès.", "success", 3000);
-            location.reload();
-          } else {
-            showAlert("Erreur lors de la suppression : " + (data.error || "Inconnue"), "error", 3000);
-          }
-        })["catch"](function (error) {
-          console.error("Erreur fetch:", error);
-          showAlert("Une erreur est survenue. Vérifiez votre connexion.", "error", 3000);
-        });
+
+      // SweetAlert de confirmation
+      Swal.fire({
+        title: "Êtes-vous sûr de vouloir supprimer cette affaire ?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#0c9155",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Oui",
+        cancelButtonText: "Non"
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          // Requête fetch pour supprimer l'affaire
+          fetch(deleteUrl, {
+            method: 'DELETE',
+            headers: {
+              'X-CSRF-TOKEN': window.csrf_token,
+              'Content-Type': 'application/json'
+            }
+          }).then(function (response) {
+            if (!response.ok) {
+              throw new Error("Erreur HTTP " + response.status);
+            }
+            return response.json();
+          }).then(function (data) {
+            if (data.success) {
+              // SweetAlert de succès
+              Swal.fire({
+                title: "Affaire supprimée avec succès.",
+                icon: "success",
+                timer: 3000,
+                timerProgressBar: true
+              }).then(function () {
+                location.reload();
+              });
+            } else {
+              Swal.fire({
+                title: "Erreur lors de la suppression",
+                text: data.error || "Cause inconnue",
+                icon: "error"
+              });
+            }
+          })["catch"](function (error) {
+            console.error("Erreur fetch:", error);
+            Swal.fire({
+              title: "Erreur",
+              text: "Une erreur est survenue. Vérifiez votre connexion.",
+              icon: "error"
+            });
+          });
+        }
       });
     });
   });
@@ -14874,8 +14992,7 @@ document.addEventListener('DOMContentLoaded', function () {
         dropdownParent: $('#editProjectModal'),
         width: '100%',
         templateResult: formatClient,
-        // Adds checkboxes to options
-        templateSelection: formatClientSelection // Clean display for selected option
+        templateSelection: formatClientSelection
       });
     });
   }
@@ -14886,9 +15003,8 @@ document.addEventListener('DOMContentLoaded', function () {
     editButtons.forEach(function (btn) {
       btn.addEventListener('click', function (e) {
         e.preventDefault();
-        // Retrieve data attributes from the clicked button
         var projectId = this.getAttribute('data-project-id');
-        var projectName = this.getAttribute('data-project-name'); // e.g. "B23.045"
+        var projectName = this.getAttribute('data-project-name'); // "B23.045"
         var companyId = this.getAttribute('data-company-id');
         var referentId = this.getAttribute('data-referent-id') || "";
         var address = this.getAttribute('data-address') || "";
@@ -14900,32 +15016,25 @@ document.addEventListener('DOMContentLoaded', function () {
           clients = [];
         }
 
-        // Split project name into year and number using regex
+        // Split project name BXX.XXX
         var match = projectName.match(/^B(\d{2})\.(\d{3})$/);
         var year = match ? match[1] : "";
         var number = match ? match[2] : "";
-
-        // Fill in the modal form fields if they exist
         document.getElementById('edit-project-id').value = projectId;
         document.getElementById('edit-project-year').value = year;
         document.getElementById('edit-project-number').value = number;
-        document.getElementById('edit-project-name').value = projectName; // Stocker le nom complet
-
+        document.getElementById('edit-project-name').value = projectName;
         document.getElementById('edit-project-company').value = companyId;
         document.getElementById('edit-project-referent').value = referentId;
         document.getElementById('edit-project-address').value = address;
         document.getElementById('edit-project-comment').value = comment;
-
-        // Set selected clients in the select2 element
         $('#edit-project-clients').val(clients).trigger('change');
-
-        // Show the modal
         editModal.show();
       });
     });
   }
 
-  // Update project name in edit modal when year/number fields change
+  // Update project name in edit modal
   function updateProjectName() {
     var yearInput = document.getElementById('edit-project-year');
     var numberInput = document.getElementById('edit-project-number');
@@ -14933,7 +15042,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!yearInput || !numberInput || !nameInput) return;
     var year = yearInput.value.padStart(2, '0');
     var number = numberInput.value.padStart(3, '0');
-    // Only update if both fields have the proper length
     if (yearInput.value.length === 2 && numberInput.value.length === 3) {
       nameInput.value = "B".concat(year, ".").concat(number);
     } else {
@@ -14949,17 +15057,23 @@ document.addEventListener('DOMContentLoaded', function () {
   var saveProjectBtn = document.getElementById('save-project-btn');
   if (saveProjectBtn) {
     saveProjectBtn.addEventListener('click', function () {
-      var projectId = document.getElementById('edit-project-id') ? document.getElementById('edit-project-id').value : "";
-      var projectName = document.getElementById('edit-project-name') ? document.getElementById('edit-project-name').value : "";
-      var companyId = document.getElementById('edit-project-company') ? document.getElementById('edit-project-company').value : null;
-      var referentId = document.getElementById('edit-project-referent') ? document.getElementById('edit-project-referent').value : null;
-      var address = document.getElementById('edit-project-address') ? document.getElementById('edit-project-address').value : null;
-      var comment = document.getElementById('edit-project-comment') ? document.getElementById('edit-project-comment').value : null;
+      var _document$getElementB, _document$getElementB2, _document$getElementB3, _document$getElementB4, _document$getElementB5, _document$getElementB6;
+      var projectId = ((_document$getElementB = document.getElementById('edit-project-id')) === null || _document$getElementB === void 0 ? void 0 : _document$getElementB.value) || "";
+      var projectName = ((_document$getElementB2 = document.getElementById('edit-project-name')) === null || _document$getElementB2 === void 0 ? void 0 : _document$getElementB2.value) || "";
+      var companyId = ((_document$getElementB3 = document.getElementById('edit-project-company')) === null || _document$getElementB3 === void 0 ? void 0 : _document$getElementB3.value) || null;
+      var referentId = ((_document$getElementB4 = document.getElementById('edit-project-referent')) === null || _document$getElementB4 === void 0 ? void 0 : _document$getElementB4.value) || null;
+      var address = ((_document$getElementB5 = document.getElementById('edit-project-address')) === null || _document$getElementB5 === void 0 ? void 0 : _document$getElementB5.value) || null;
+      var comment = ((_document$getElementB6 = document.getElementById('edit-project-comment')) === null || _document$getElementB6 === void 0 ? void 0 : _document$getElementB6.value) || null;
       var clients = $('#edit-project-clients').val() || [];
 
-      // Validate project name format "BXX.XXX"
+      // Validate name
       if (!projectName.match(/^B\d{2}\.\d{3}$/)) {
-        showAlert("Project name is invalid. Please fill it in correctly (e.g. B23.045).", "error", 3000);
+        Swal.fire({
+          title: "Nom de l'affaire invalide (ex: B23.045).",
+          icon: "error",
+          timer: 3000,
+          timerProgressBar: true
+        });
         return;
       }
       var data = {
@@ -14983,16 +15097,30 @@ document.addEventListener('DOMContentLoaded', function () {
         return response.json();
       }).then(function (response) {
         if (response.success) {
-          showAlert("Project updated successfully!", "success", 3000);
-          if (editModal) {
-            editModal.hide();
-          }
-          location.reload();
+          Swal.fire({
+            title: "Affaire mise à jour avec succès.",
+            icon: "success",
+            timer: 3000,
+            timerProgressBar: true
+          }).then(function () {
+            if (editModal) editModal.hide();
+            location.reload();
+          });
         } else {
-          showAlert("Error updating project.", "error", 3000);
+          Swal.fire({
+            title: "Erreur lors de la mise à jour de l'affaire.",
+            icon: "error",
+            timer: 3000,
+            timerProgressBar: true
+          });
         }
       })["catch"](function () {
-        showAlert("An error occurred while updating the project.", "error", 3000);
+        Swal.fire({
+          title: "Une erreur s'est produite lors de la mise à jour de l'affaire.",
+          icon: "error",
+          timer: 3000,
+          timerProgressBar: true
+        });
       });
     });
   }
@@ -15012,12 +15140,9 @@ document.addEventListener('DOMContentLoaded', function () {
       dropdownParent: $('#addProjectModal'),
       width: '100%',
       templateResult: formatClient,
-      // Add checkboxes to options
-      templateSelection: formatClientSelection // Clean display for selection
+      templateSelection: formatClientSelection
     });
   });
-
-  // Functions for formatting select2 options
   function formatClient(client) {
     if (!client.id) return client.text;
     return $('<span><input type="checkbox" class="select2-checkbox"> ' + client.text + '</span>');
@@ -15026,7 +15151,7 @@ document.addEventListener('DOMContentLoaded', function () {
     return client.text;
   }
 
-  // Toggle Add Project Modal when button is clicked
+  // Toggle Add Project Modal
   var toggleButton = document.getElementById('toggleButton');
   if (toggleButton && addProjectModal) {
     toggleButton.addEventListener('click', function (e) {
@@ -15035,7 +15160,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Update project name in add modal based on year and number inputs
+  // Update project name in add modal
   var yearA = document.getElementById("add-project-year");
   var numberA = document.getElementById("add-project-number");
   var projectNameA = document.getElementById("add-project-name");
@@ -15043,7 +15168,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!yearA || !numberA || !projectNameA) return;
     var yearVal = yearA.value;
     var numberVal = numberA.value;
-    // Only update if both fields have correct length
     if (yearVal.length !== 2 || numberVal.length !== 3) {
       projectNameA.value = "";
       return;
@@ -15065,16 +15189,22 @@ document.addEventListener('DOMContentLoaded', function () {
   var submitAddProjectBtn = document.getElementById('submit-add-project-btn');
   if (submitAddProjectBtn) {
     submitAddProjectBtn.addEventListener('click', function () {
-      var companyId = document.getElementById('add-project-company') ? document.getElementById('add-project-company').value : "";
-      var engineerId = document.getElementById('add-project-engineer') ? document.getElementById('add-project-engineer').value : "";
-      var yearVal = document.getElementById('add-project-year') ? document.getElementById('add-project-year').value : "";
-      var numberVal = document.getElementById('add-project-number') ? document.getElementById('add-project-number').value : "";
+      var _document$getElementB7, _document$getElementB8, _document$getElementB9, _document$getElementB10;
+      var companyId = ((_document$getElementB7 = document.getElementById('add-project-company')) === null || _document$getElementB7 === void 0 ? void 0 : _document$getElementB7.value) || "";
+      var engineerId = ((_document$getElementB8 = document.getElementById('add-project-engineer')) === null || _document$getElementB8 === void 0 ? void 0 : _document$getElementB8.value) || "";
+      var yearVal = ((_document$getElementB9 = document.getElementById('add-project-year')) === null || _document$getElementB9 === void 0 ? void 0 : _document$getElementB9.value) || "";
+      var numberVal = ((_document$getElementB10 = document.getElementById('add-project-number')) === null || _document$getElementB10 === void 0 ? void 0 : _document$getElementB10.value) || "";
       var clientsSelect = document.getElementById('add-project-clients');
       var clients = clientsSelect ? Array.from(clientsSelect.selectedOptions).map(function (opt) {
         return opt.value;
       }) : [];
       if (yearVal.length !== 2 || numberVal.length !== 3) {
-        showAlert("Project name is invalid. Please fill in correctly (e.g. B23.045).", "error", 3000);
+        Swal.fire({
+          title: "Nom de l'affaire invalide (ex: B23.045).",
+          icon: "error",
+          timer: 3000,
+          timerProgressBar: true
+        });
         return;
       }
       var projectName = "B".concat(yearVal, ".").concat(numberVal);
@@ -15096,239 +15226,54 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         body: JSON.stringify(data)
       }).then(function (response) {
-        return response.json().then(function (data) {
+        return response.json().then(function (r) {
           return {
             status: response.status,
-            body: data
+            body: r
           };
         });
       }).then(function (_ref) {
         var status = _ref.status,
           body = _ref.body;
         if (status === 200 && body.success) {
-          showAlert("Project added successfully!", "success", 3000);
-          if (addProjectModal) {
-            addProjectModal.hide();
-          }
-          location.reload();
+          Swal.fire({
+            title: "Affaire ajoutée avec succès.",
+            icon: "success",
+            timer: 3000,
+            timerProgressBar: true
+          }).then(function () {
+            if (addProjectModal) addProjectModal.hide();
+            location.reload();
+          });
         } else {
           if (body.error) {
-            showAlert(body.error, "error", 3000);
+            Swal.fire({
+              title: body.error,
+              icon: "error",
+              timer: 3000,
+              timerProgressBar: true
+            });
           } else {
-            showAlert("Error adding project.", "error", 3000);
+            Swal.fire({
+              title: "Erreur lors de l'ajout de l'affaire.",
+              icon: "error",
+              timer: 3000,
+              timerProgressBar: true
+            });
           }
         }
       })["catch"](function (error) {
         console.error("Fetch error:", error);
-        showAlert("An error occurred.", "error", 3000);
+        Swal.fire({
+          title: "Une erreur s'est produite.",
+          icon: "error",
+          timer: 3000,
+          timerProgressBar: true
+        });
       });
     });
   }
 });
-
-//document.addEventListener('DOMContentLoaded', function() {
-//
-//     const editModalEl = document.getElementById('editProjectModal');
-//     if(editModalEl){
-//         const editModal = new bootstrap.Modal(editModalEl);
-//     }
-//
-//     $('#editProjectModal').on('shown.bs.modal', function () {
-//         $('#edit-project-clients').select2({
-//             placeholder: "Sélectionner des clients",
-//             allowClear: true,
-//             dropdownParent: $('#editProjectModal'),
-//             width: '100%',
-//             templateResult: formatClient,  // Ajoute les checkboxes
-//             templateSelection: formatClientSelection // Garde l'affichage propre
-//         });
-//     });
-//     document.querySelectorAll('.edit-project').forEach(btn => {
-//         btn.addEventListener('click', function(e) {
-//             e.preventDefault();
-//
-//             const projectId = this.getAttribute('data-project-id');
-//             const projectName = this.getAttribute('data-project-name'); // Exemple: "B23.045"
-//             const companyId = this.getAttribute('data-company-id');
-//             const referentId = this.getAttribute('data-referent-id') || ""; // Si null, mettre ""
-//             const address = this.getAttribute('data-address') || ""; // Idem pour adresse
-//             const comment = this.getAttribute('data-comment') || ""; // Idem pour commentaire
-//             const clients = JSON.parse(this.getAttribute('data-clients')) || []; // Récupérer clients sous forme de tableau
-//
-//             // Décomposer le nom de l'affaire (B XX . XXX)
-//             let match = projectName.match(/^B(\d{2})\.(\d{3})$/);
-//             let year = match ? match[1] : "";
-//             let number = match ? match[2] : "";
-//
-//             // Remplir les champs
-//             document.getElementById('edit-project-id').value = projectId;
-//             document.getElementById('edit-project-year').value = year;
-//             document.getElementById('edit-project-number').value = number;
-//             document.getElementById('edit-project-name').value = projectName; // Stocker le nom complet
-//
-//             document.getElementById('edit-project-company').value = companyId;
-//             document.getElementById('edit-project-referent').value = referentId;
-//             document.getElementById('edit-project-address').value = address;
-//             document.getElementById('edit-project-comment').value = comment;
-//
-//             // Sélectionner les clients existants
-//             $('#edit-project-clients').val(clients).trigger('change');
-//
-//             // Afficher le modal
-//             editModal.show();
-//         });
-//     });
-//
-//     function updateProjectName() {
-//         const year = document.getElementById('edit-project-year').value.padStart(2, '0');
-//         const number = document.getElementById('edit-project-number').value.padStart(3, '0');
-//         document.getElementById('edit-project-name').value = B${year}.${number};
-//     }
-//
-//     if(editModalEl){
-//         document.getElementById('edit-project-year').addEventListener("input", updateProjectName);
-//         document.getElementById('edit-project-number').addEventListener("input", updateProjectName);
-//     }
-//
-//
-//     document.getElementById('save-project-btn').addEventListener('click', function() {
-//         const projectId = document.getElementById('edit-project-id').value;
-//         const projectName = document.getElementById('edit-project-name').value;
-//         const companyId = document.getElementById('edit-project-company').value || null;
-//         const referentId = document.getElementById('edit-project-referent').value || null;
-//         const address = document.getElementById('edit-project-address').value || null;
-//         const comment = document.getElementById('edit-project-comment').value || null;
-//         const clients = $('#edit-project-clients').val() || [];
-//
-//         if (!projectName.match(/^B\d{2}\.\d{3}$/)) {
-//             showAlert("Nom du projet mal renseigné.", "error", 3000);
-//             return;
-//         }
-//
-//         const data = {
-//             project_id: projectId,
-//             project_name: projectName,
-//             company_id: companyId,
-//             referent_id: referentId,
-//             address: address,
-//             comment: comment,
-//             clients: clients,
-//             _token: window.csrf_token
-//         };
-//
-//         fetch(window.updateProjectUrl, {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//                 'X-CSRF-TOKEN': window.csrf_token
-//             },
-//             body: JSON.stringify(data)
-//         })
-//             .then(response => response.json())
-//             .then(response => {
-//                 if (response.success) {
-//                     showAlert("Affaire mise à jour avec succès !", "success", 3000);
-//                     editModal.hide();
-//                     location.reload();
-//                 } else {
-//                     showAlert("Erreur lors de la mise à jour.", "error", 3000);
-//                 }
-//             })
-//             .catch(() => {
-//                 showAlert("Une erreur est survenue lors de la mise à jour.", "error", 3000);
-//             });
-//     });
-//
-//     const addProjectModalEl = document.getElementById('addProjectModal');
-//     const addProjectModal = new bootstrap.Modal(addProjectModalEl);
-//
-//     $('#addProjectModal').on('shown.bs.modal', function () {
-//         $('#add-project-clients').select2({
-//             placeholder: "Sélectionner des clients",
-//             allowClear: true,
-//             dropdownParent: $('#addProjectModal'),
-//             width: '100%',
-//             templateResult: formatClient,  // Ajoute les checkboxes
-//             templateSelection: formatClientSelection // Garde l'affichage propre
-//         });
-//     });
-//
-//     function formatClient(client) {
-//         if (!client.id) {
-//             return client.text;
-//         }
-//         return $('<span><input type="checkbox" class="select2-checkbox"> ' + client.text + '</span>');
-//     }
-//
-//     function formatClientSelection(client) {
-//         return client.text;
-//     }
-//
-//     const toggleButton = document.getElementById('toggleButton');
-//     toggleButton.addEventListener('click', function(e) {
-//         e.preventDefault();
-//         addProjectModal.show();
-//     });
-//
-//     // Buttun modal click
-//     const submitAddProjectBtn = document.getElementById('submit-add-project-btn');
-//     submitAddProjectBtn.addEventListener('click', function() {
-//         // get all input
-//         const companyId = document.getElementById('add-project-company').value;
-//         const engineerId = document.getElementById('add-project-engineer').value;
-//         const yearVal = document.getElementById('add-project-year').value;
-//         const numberVal = document.getElementById('add-project-number').value;
-//         const clientsSelect = document.getElementById('add-project-clients');
-//         const clients = Array.from(clientsSelect.selectedOptions).map(opt => opt.value);
-//
-//         if (yearVal.length !== 2 || numberVal.length !== 3) {
-//             showAlert("Nom du projet mal renseigné.", "error", 3000);
-//             return;
-//         }
-//
-//         // create project name
-//         const projectName = "B" + yearVal + "." + numberVal;
-//         document.getElementById('add-project-name').value = projectName;
-//
-//         // prepare data
-//         const data = {
-//             company_id: companyId,
-//             engineer_id: engineerId,
-//             project_name: projectName,
-//             clients: clients,
-//             _token: window.csrf_token
-//         };
-//
-//         // send request with fetch
-//         fetch(window.storeProjectUrl, {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//                 'X-CSRF-TOKEN': window.csrf_token
-//             },
-//             body: JSON.stringify(data)
-//         })
-//             .then(response => response.json().then(data => ({ status: response.status, body: data })))
-//             .then(({ status, body }) => {
-//                 if (status === 200 && body.success) {
-//                     showAlert("Affaire ajoutée avec succès !", "success", 3000);
-//                     addProjectModal.hide();
-//                     location.reload();
-//                 } else {
-//                     if (body.error) {
-//                         showAlert(body.error, "error", 3000);
-//                     } else {
-//                         showAlert("Erreur lors de l'ajout de l'affaire.", "error", 3000);
-//                     }
-//                 }
-//             })
-//             .catch(error => {
-//                 console.error("Erreur fetch:", error);
-//                 showAlert("Une erreur est survenue.", "error", 3000);
-//             });
-//
-//     });
-// });
 
 /***/ }),
 
@@ -15424,7 +15369,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var emailDisplay = document.getElementById('email-display');
   var emailInput = document.getElementById('email-input');
   if (nameEditBtn) {
-    // Toggle Edit mode for user name
+    // Toggle name editing
     var toggleNameEditMode = function toggleNameEditMode(editing) {
       if (editing) {
         nameDisplay.style.display = 'none';
@@ -15437,7 +15382,7 @@ document.addEventListener('DOMContentLoaded', function () {
         nameEditBtn.classList.remove('editing');
         nameEditBtn.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
       }
-    }; // Toggle Edit mode for email
+    }; // Toggle email editing
     var toggleEmailEditMode = function toggleEmailEditMode(editing) {
       if (editing) {
         emailDisplay.style.display = 'none';
@@ -15451,13 +15396,16 @@ document.addEventListener('DOMContentLoaded', function () {
         emailEditBtn.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
       }
     };
-    // Save Name
+    // Handle name edits
     nameEditBtn.addEventListener('click', function (event) {
-      // if already in edit mode, save
+      // If in editing mode, we save
       if (nameEditBtn.classList.contains('editing')) {
         var newName = nameInput.value.trim();
         if (newName === "") {
-          alert("Le nom ne peut pas être vide.");
+          Swal.fire({
+            title: "Le nom ne peut pas être vide.",
+            icon: "warning"
+          });
           return;
         }
         nameEditBtn.disabled = true;
@@ -15478,27 +15426,35 @@ document.addEventListener('DOMContentLoaded', function () {
             nameDisplay.textContent = newName;
             toggleNameEditMode(false);
           } else {
-            alert(data.message || "Erreur lors de la sauvegarde.");
+            Swal.fire({
+              title: data.message || "Erreur lors de la sauvegarde.",
+              icon: "error"
+            });
           }
         })["catch"](function () {
-          alert("Une erreur est survenue lors de la sauvegarde.");
+          Swal.fire({
+            title: "Une erreur est survenue lors de la sauvegarde.",
+            icon: "error"
+          });
         })["finally"](function () {
           nameEditBtn.disabled = false;
         });
       } else {
-        // Edit mode
+        // Switch to editing mode
         toggleNameEditMode(true);
-        // Si on clic sur l'icone + le bouton 2 event
-        // Alors Stop propagation
         event.stopImmediatePropagation();
       }
     });
-    //Save email
+
+    // Handle email edits
     emailEditBtn.addEventListener('click', function (event) {
       if (emailEditBtn.classList.contains('editing')) {
         var newEmail = emailInput.value.trim();
         if (newEmail === "") {
-          alert("L'email ne peut pas être vide.");
+          Swal.fire({
+            title: "L'email ne peut pas être vide.",
+            icon: "warning"
+          });
           return;
         }
         emailEditBtn.disabled = true;
@@ -15519,14 +15475,21 @@ document.addEventListener('DOMContentLoaded', function () {
             emailDisplay.textContent = newEmail;
             toggleEmailEditMode(false);
           } else {
-            alert(data.message || "Erreur lors de la sauvegarde.");
+            Swal.fire({
+              title: data.message || "Erreur lors de la sauvegarde.",
+              icon: "error"
+            });
           }
         })["catch"](function () {
-          alert("Une erreur est survenue lors de la sauvegarde.");
+          Swal.fire({
+            title: "Une erreur est survenue lors de la sauvegarde.",
+            icon: "error"
+          });
         })["finally"](function () {
           emailEditBtn.disabled = false;
         });
       } else {
+        // Switch to editing mode
         toggleEmailEditMode(true);
         event.stopImmediatePropagation();
       }
@@ -15564,34 +15527,61 @@ document.addEventListener('DOMContentLoaded', function () {
   \*********************************************/
 /***/ (() => {
 
-document.addEventListener('DOMContentLoaded', function (event) {
+document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('.delete-file-btn').forEach(function (btn) {
     btn.addEventListener('click', function (e) {
       e.preventDefault();
       var deleteUrl = this.getAttribute('data-delete-url');
-      showConfirm("Êtes-vous sûr de vouloir supprimer ce fichier ?", function () {
-        fetch(deleteUrl, {
-          method: 'DELETE',
-          headers: {
-            'X-CSRF-TOKEN': window.csrf_token,
-            'Content-Type': 'application/json'
-          }
-        }).then(function (response) {
-          if (!response.ok) {
-            throw new Error("Erreur HTTP " + response.status);
-          }
-          return response.json();
-        }).then(function (data) {
-          if (data.success) {
-            showAlert("fichier supprimé avec succès.", "success", 3000);
-            location.reload();
-          } else {
-            showAlert("Erreur lors de la suppression : " + (data.error || "Inconnue"), "error", 3000);
-          }
-        })["catch"](function (error) {
-          console.error("Erreur fetch:", error);
-          showAlert("Une erreur est survenue. Vérifiez votre connexion.", "error", 3000);
-        });
+
+      // Confirm with SweetAlert
+      Swal.fire({
+        title: "Êtes-vous sûr de vouloir supprimer ce fichier ?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#0c9155",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Oui",
+        cancelButtonText: "Non"
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          fetch(deleteUrl, {
+            method: 'DELETE',
+            headers: {
+              'X-CSRF-TOKEN': window.csrf_token,
+              'Content-Type': 'application/json'
+            }
+          }).then(function (response) {
+            if (!response.ok) {
+              throw new Error("HTTP error " + response.status);
+            }
+            return response.json();
+          }).then(function (data) {
+            if (data.success) {
+              Swal.fire({
+                title: "Fichier supprimé avec succès.",
+                icon: "success",
+                timer: 3000,
+                timerProgressBar: true
+              }).then(function () {
+                // let row = document.querySelector(`tr[data-id="${fileId}"]`);
+                // if (row) row.remove();
+              });
+            } else {
+              Swal.fire({
+                title: "Erreur lors de la suppression",
+                text: data.error || "Inconnue",
+                icon: "error"
+              });
+            }
+          })["catch"](function (error) {
+            console.error("Fetch error:", error);
+            Swal.fire({
+              title: "Une erreur est survenue.",
+              text: "Vérifiez votre connexion.",
+              icon: "error"
+            });
+          });
+        }
       });
     });
   });

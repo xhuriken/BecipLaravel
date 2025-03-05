@@ -22,6 +22,8 @@ Route::group(['middleware' => 'auth'], function () {
     //
     Route::get('projects/generate/{quantity}/{year}', [ProjectController::class, 'generate'])->name('projects.generate');
     Route::get('projects/project/{id}', [ProjectController::class, 'index'])->middleware(CheckProjectAccess::class)->name('projects.project');
+//    Route::get('projects/{project}/files-partial', [ProjectController::class, 'getFilesPartial'])
+//        ->name('projects.filesPartial');
     Route::delete('projects/delete/{project}', [ProjectController::class, 'delete'])->name('projects.delete');
     Route::post('projects/delete-selected', [ProjectController::class, 'deleteSelected'])->name('projects.delete-selected');
     Route::post('projects/delete-empty', [ProjectController::class, 'deleteEmptyProject'])->name('projects.delete-empty');

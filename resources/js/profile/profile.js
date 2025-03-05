@@ -8,15 +8,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const emailEditBtn = document.getElementById('email-edit-btn');
     const emailDisplay = document.getElementById('email-display');
     const emailInput = document.getElementById('email-input');
-    if(nameEditBtn){
 
-        // Save Name
+    if (nameEditBtn) {
+
+        // Handle name edits
         nameEditBtn.addEventListener('click', function(event) {
-            // if already in edit mode, save
+            // If in editing mode, we save
             if (nameEditBtn.classList.contains('editing')) {
                 const newName = nameInput.value.trim();
                 if (newName === "") {
-                    alert("Le nom ne peut pas être vide.");
+                    Swal.fire({
+                        title: "Le nom ne peut pas être vide.",
+                        icon: "warning"
+                    });
                     return;
                 }
                 nameEditBtn.disabled = true;
@@ -38,32 +42,42 @@ document.addEventListener('DOMContentLoaded', function() {
                             nameDisplay.textContent = newName;
                             toggleNameEditMode(false);
                         } else {
-                            alert(data.message || "Erreur lors de la sauvegarde.");
+                            Swal.fire({
+                                title: data.message || "Erreur lors de la sauvegarde.",
+                                icon: "error"
+                            });
                         }
                     })
                     .catch(() => {
-                        alert("Une erreur est survenue lors de la sauvegarde.");
+                        Swal.fire({
+                            title: "Une erreur est survenue lors de la sauvegarde.",
+                            icon: "error"
+                        });
                     })
                     .finally(() => {
                         nameEditBtn.disabled = false;
                     });
+
             } else {
-                // Edit mode
+                // Switch to editing mode
                 toggleNameEditMode(true);
-                // Si on clic sur l'icone + le bouton 2 event
-                // Alors Stop propagation
                 event.stopImmediatePropagation();
             }
         });
-        //Save email
+
+        // Handle email edits
         emailEditBtn.addEventListener('click', function(event) {
             if (emailEditBtn.classList.contains('editing')) {
                 const newEmail = emailInput.value.trim();
                 if (newEmail === "") {
-                    alert("L'email ne peut pas être vide.");
+                    Swal.fire({
+                        title: "L'email ne peut pas être vide.",
+                        icon: "warning"
+                    });
                     return;
                 }
                 emailEditBtn.disabled = true;
+
                 fetch(window.updateProfileUrl, {
                     method: 'POST',
                     headers: {
@@ -81,22 +95,30 @@ document.addEventListener('DOMContentLoaded', function() {
                             emailDisplay.textContent = newEmail;
                             toggleEmailEditMode(false);
                         } else {
-                            alert(data.message || "Erreur lors de la sauvegarde.");
+                            Swal.fire({
+                                title: data.message || "Erreur lors de la sauvegarde.",
+                                icon: "error"
+                            });
                         }
                     })
                     .catch(() => {
-                        alert("Une erreur est survenue lors de la sauvegarde.");
+                        Swal.fire({
+                            title: "Une erreur est survenue lors de la sauvegarde.",
+                            icon: "error"
+                        });
                     })
                     .finally(() => {
                         emailEditBtn.disabled = false;
                     });
+
             } else {
+                // Switch to editing mode
                 toggleEmailEditMode(true);
                 event.stopImmediatePropagation();
             }
         });
 
-        // Toggle Edit mode for user name
+        // Toggle name editing
         function toggleNameEditMode(editing) {
             if (editing) {
                 nameDisplay.style.display = 'none';
@@ -111,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // Toggle Edit mode for email
+        // Toggle email editing
         function toggleEmailEditMode(editing) {
             if (editing) {
                 emailDisplay.style.display = 'none';
