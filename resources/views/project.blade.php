@@ -243,6 +243,8 @@
 
         <button id="distribute-btn" class="btn btn-warning">Distribute</button>
     </header>
+
+    {{--Comment 'Voir Plus' Modal--}}
     <div class="modal fade" id="commentModal">
         <div class="modal-dialog">
             <div class="modal-content">

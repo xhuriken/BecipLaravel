@@ -7,7 +7,11 @@
                 {{ session('success') }}
             </div>
         @endif
-
+        @if (session('status'))
+            <div class="alert alert-success" role="alert">
+                {{ session('status') }}
+            </div>
+        @endif
         <a href="{{ route('home') }}" class="btn-return">
             <i class="fa-solid fa-arrow-left"></i> Retour
         </a>
@@ -46,6 +50,20 @@
         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
             @csrf
         </form>
+    </div>
+
+    <div id="changePasswordModal" class="modal fade">
+        <div class="modal-dialog" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Changer le mot de passe</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    @include('auth.passwords.email_content')
+                </div>
+            </div>
+        </div>
     </div>
     <script>
         window.updateProfileUrl = '{{ route("profile.update") }}';

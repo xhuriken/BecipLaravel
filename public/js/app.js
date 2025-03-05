@@ -14547,9 +14547,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _project_distribution_checkbox__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(_project_distribution_checkbox__WEBPACK_IMPORTED_MODULE_15__);
 /* harmony import */ var _project_comment_modal__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./project/comment_modal */ "./resources/js/project/comment_modal.js");
 /* harmony import */ var _project_comment_modal__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(_project_comment_modal__WEBPACK_IMPORTED_MODULE_16__);
+/* harmony import */ var _profile_forgot_modal__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./profile/forgot_modal */ "./resources/js/profile/forgot_modal.js");
+/* harmony import */ var _profile_forgot_modal__WEBPACK_IMPORTED_MODULE_17___default = /*#__PURE__*/__webpack_require__.n(_profile_forgot_modal__WEBPACK_IMPORTED_MODULE_17__);
 
 
 window.bootstrap = bootstrap__WEBPACK_IMPORTED_MODULE_1__;
+
 
 
 
@@ -15383,6 +15386,24 @@ document.addEventListener('DOMContentLoaded', function () {
     numberE.addEventListener("input", updateProjectNameE);
     yearE.addEventListener("keypress", enforceNumericInput);
     numberE.addEventListener("keypress", enforceNumericInput);
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/profile/forgot_modal.js":
+/*!**********************************************!*\
+  !*** ./resources/js/profile/forgot_modal.js ***!
+  \**********************************************/
+/***/ (() => {
+
+document.addEventListener("DOMContentLoaded", function () {
+  var openModalBtn = document.getElementById("open-change-password");
+  if (openModalBtn) {
+    openModalBtn.addEventListener("click", function () {
+      var modal = new bootstrap.Modal(document.getElementById('changePasswordModal'));
+      modal.show();
+    });
   }
 });
 
