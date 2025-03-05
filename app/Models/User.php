@@ -14,6 +14,10 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
     use PasswordlessLogin;
 
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new \App\Notifications\MailResetPasswordToken($token));
+    }
     public function getGuardNameAttribute(): string
     {
         return config('laravel-passwordless-login.user_guard');

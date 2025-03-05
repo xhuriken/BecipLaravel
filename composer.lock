@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "94b28f7a0d0aac7bd72621cacf873ba7",
+    "content-hash": "bf038348fea237700531627fe0563ec7",
     "packages": [
         {
             "name": "archtechx/enums",
@@ -2039,16 +2039,16 @@
         },
         {
             "name": "laravel-lang/lang",
-            "version": "15.15.0",
+            "version": "15.19.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Laravel-Lang/lang.git",
-                "reference": "f17718e233d3f97adac597a3d3e426f77b4dac36"
+                "reference": "fde46e06f8e36ef5c93c48a97d89a879cc95f415"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Laravel-Lang/lang/zipball/f17718e233d3f97adac597a3d3e426f77b4dac36",
-                "reference": "f17718e233d3f97adac597a3d3e426f77b4dac36",
+                "url": "https://api.github.com/repos/Laravel-Lang/lang/zipball/fde46e06f8e36ef5c93c48a97d89a879cc95f415",
+                "reference": "fde46e06f8e36ef5c93c48a97d89a879cc95f415",
                 "shasum": ""
             },
             "require": {
@@ -2061,7 +2061,7 @@
             },
             "require-dev": {
                 "laravel-lang/status-generator": "^2.11",
-                "phpunit/phpunit": "^10.0",
+                "phpunit/phpunit": "^10.0 || ^11.0 || ^12.0",
                 "symfony/var-dumper": "^7.0"
             },
             "type": "library",
@@ -2098,7 +2098,7 @@
                 "issues": "https://github.com/Laravel-Lang/lang/issues",
                 "source": "https://github.com/Laravel-Lang/lang"
             },
-            "time": "2025-02-18T07:29:32+00:00"
+            "time": "2025-03-03T22:50:34+00:00"
         },
         {
             "name": "laravel-lang/locale-list",
