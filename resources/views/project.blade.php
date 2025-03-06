@@ -52,57 +52,21 @@
                         </th>
                     @endif
                     <th>
-                        <span class="tooltip">
-                            <button type="button" id="sort-index-btn" class="sort-button">
-                                <!-- Rev -->
-                                <span class="icon-container">
-                                    <i class="fa-solid fa-arrow-up-wide-short icon-visible"></i>
-                                    <i class="fa-solid fa-arrow-down-short-wide icon-hidden"></i>
-                                </span>
-                            </button>
-                            <span class="tooltiptext">Dernière indice de révision</span>
-                        </span>
+                        Rev
                     </th>
                     <th>
                         Nom
                     </th>
                     <th>
-                        <div class="flexname">
-                            <button type="button" id="filter-type-btn" class="type-button">
-                                Type
-                                <span class="icon-container">
-                                        <i class="fa-solid fa-filter icon-visible"></i>
-                                        <i class="fa-solid fa-filter-circle-xmark icon-hidden"></i>
-                                    </span>
-                            </button>
-                            <select class="filter-type-select transition-hidden form-control">
-                                <option value="all">Tout</option>
-                                <option value="undefine">Undefine</option>
-                                <option value="coffrage">Coffrage</option>
-                                <option value="ferraillage">Ferraillage</option>
-                                <option value="divers">Divers</option>
-                            </select>
-                        </div>
+                        Type
                     </th>
                     <th>Commentaire</th>
                     <th>Déposé par</th>
                     <th>
-                        <button type="button" id="sort-date-btn" class="sort-button">
-                            Date
-                            <span class="icon-container">
-                                    <i class="fa-solid fa-arrow-up-wide-short icon-visible"></i>
-                                    <i class="fa-solid fa-arrow-down-short-wide icon-hidden"></i>
-                                </span>
-                        </button>
+                        Date
                     </th>
                     <th>
-                        <button type="button" id="sort-valide-btn" class="sort-button">
-                            Validé
-                            <span class="icon-container">
-                                    <i class="fa-solid fa-arrow-up-wide-short icon-visible"></i>
-                                    <i class="fa-solid fa-arrow-down-short-wide icon-hidden"></i>
-                                </span>
-                        </button>
+                        Validé
                     </th>
                     <th data-label="Télécharger">
                         <i class="fa-solid fa-download"></i>
@@ -213,7 +177,6 @@
                                 @endif
                             </td>
                             <td data-label="Impressions">
-                                {{--Rendre ce chiffre dynamique avec la checkbox distribute--}}
                                 {{$file->distribution_count}}
                             </td>
                         @endif

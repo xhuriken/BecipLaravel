@@ -88,10 +88,6 @@ class ProjectController extends Controller
     {
         \Log::info('Tentative de suppression du projet : ', ['project_id' => $project->id]);
 
-//        if (!$project) {
-//            return response()->json(['error' => 'Projet introuvable.'], 404);
-//        }
-
         //delete folder too
         $projectFolder = storage_path('app/public/' . $project->id);
 
@@ -177,10 +173,26 @@ class ProjectController extends Controller
             'selected_projects.*' => 'exists:projects,id'
         ]);
 
-        Project::whereIn('id', $request->selected_projects)->delete();
+        $projects = Project::whereIn('id', $request->selected_projects)->get();
 
-        return response()->json(['message' => 'Les affaires sélectionnée ont été supprimées !']);
+        foreach ($projects as $project) {
+            // Delete folder if exists
+            $projectFolder = storage_path('app/public/' . $project->id);
+            if (is_dir($projectFolder)) {
+                \Log::info("Dossier trouvé pour l'affaire {$project->id}, suppression en cours : $projectFolder");
+                $this->deleteFolder($projectFolder);
+                \Log::info("Dossier de l'affaire {$project->id} supprimé : $projectFolder");
+            } else {
+                \Log::warning("Dossier non trouvé pour l'affaire {$project->id} : $projectFolder");
+            }
+
+            // Delete the project
+            $project->delete();
+        }
+
+        return response()->json(['message' => 'Les affaires sélectionnées ont été supprimées !']);
     }
+
 
     /**
      * Upload Files in storage and BDD in a project
@@ -224,24 +236,8 @@ class ProjectController extends Controller
         return response()->json(['success' => true, 'files' => $storedFiles]);
     }
 
-    public function getFilesPartial(Project $project)
-    {
-        // Get list of files
-        $files = $project->files()->orderBy('created_at', 'desc')->get();
-
-        // return only tr html with partials view (Info ?? Partial view ?)
-        $renderedView = view('partials._project_files', [
-            'project' => $project,
-            'files'   => $files
-        ])->render();
-
-        return response()->json([
-            'html' => $renderedView
-        ]);
-    }
-
     /**
-     * Update fields of an specific project id
+     * Update fields of a specific project id
      * @param Request $request
      * @return JsonResponse
      */
