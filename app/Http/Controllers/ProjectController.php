@@ -149,7 +149,7 @@ class ProjectController extends Controller
         $project = Project::create([
             'company_id' => $validated['company_id'],
             'name' => $validated['project_name'],
-            'referent_id' => $validated['engineer_id'] ?? auth()->id(),
+            'referent_id' => $validated['engineer_id'],
         ]);
 
         if (!empty($validated['clients'])) {
