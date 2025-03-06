@@ -15758,8 +15758,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }).then(function (data) {
       if (data.success) {
         console.log("Mask validated updated");
-        //reload useless because it's only for client view
-        //location.reload();
       }
     })["catch"](function (error) {
       return console.error("Error updating mask validated:", error);
@@ -15780,7 +15778,6 @@ document.addEventListener('DOMContentLoaded', function () {
       return response.json();
     }).then(function (data) {
       if (data.success) {
-        console.log("Mask distributed updated");
         location.reload();
       }
     })["catch"](function (error) {
@@ -15801,36 +15798,37 @@ document.addEventListener('DOMContentLoaded', function () {
   \*************************************************/
 /***/ (() => {
 
-//
-// Download And Distribute button
-//
 document.addEventListener('DOMContentLoaded', function () {
+  // Download button functionality
   var downloadBtn = document.getElementById('download-btn');
-  // Dodge error
   if (downloadBtn) {
-    //Download button functionality
     downloadBtn.addEventListener('click', function (e) {
       e.preventDefault();
-      //get all checkbox checked
+      // Get all checked download file checkboxes
       var fileCheckboxes = document.querySelectorAll('input[name="download_files[]"]:checked');
       var fileIds = [];
       fileCheckboxes.forEach(function (checkbox) {
         fileIds.push(checkbox.value);
       });
 
-      // if no one file selected, make alert
+      // If no file is selected, show error alert
       if (fileIds.length === 0) {
-        showAlert("Please select at least one file to download.", "error", 3000);
+        Swal.fire({
+          title: "Veuillez sélectionner au moins un fichier à télécharger.",
+          icon: "error",
+          timer: 3000,
+          timerProgressBar: true
+        });
         return;
       }
 
-      // make data{}
+      // Build data object for download request
       var projectContainer = document.getElementById('project-container');
       var projectId = projectContainer.getAttribute('data-project-id');
       var data = {
         project_id: projectId,
         file_ids: fileIds,
-        _token: window.csrf_token // je sais plus pourquoi
+        _token: window.csrf_token
       };
 
       // Send POST request to download files route
@@ -15842,27 +15840,34 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         body: JSON.stringify(data)
       }).then(function (response) {
-        // If a ZIP file is returned, we redirect the browser to download it.
-        // For single file download, we may use window.location.href
         if (response.status === 200) {
           return response.blob();
         }
         throw new Error("Download failed.");
       }).then(function (blob) {
-        // Create a temporary URL and download the file
+        // Create a temporary URL and trigger download
         var url = window.URL.createObjectURL(blob);
         var a = document.createElement('a');
         a.style.display = 'none';
         a.href = url;
-        // Name the file as Date-ProjectName.zip or use original name for single file
         a.download = "Download_".concat(new Date().toISOString().slice(0, 10), "_Project").concat(projectId, ".zip");
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
-        showAlert("Download started.", "success", 3000);
+        Swal.fire({
+          title: "Le téléchargement a démarré.",
+          icon: "success",
+          timer: 3000,
+          timerProgressBar: true
+        });
       })["catch"](function (error) {
         console.error("Download error:", error);
-        showAlert("An error occurred during download.", "error", 3000);
+        Swal.fire({
+          title: "Une erreur est survenue lors du téléchargement.",
+          icon: "error",
+          timer: 3000,
+          timerProgressBar: true
+        });
       });
     });
   }
@@ -15879,7 +15884,12 @@ document.addEventListener('DOMContentLoaded', function () {
         fileIds.push(checkbox.value);
       });
       if (fileIds.length === 0) {
-        showAlert("Please select at least one file to distribute.", "error", 3000);
+        Swal.fire({
+          title: "Veuillez sélectionner au moins un fichier à distribuer.",
+          icon: "error",
+          timer: 3000,
+          timerProgressBar: true
+        });
         return;
       }
 
@@ -15904,14 +15914,30 @@ document.addEventListener('DOMContentLoaded', function () {
         return response.json();
       }).then(function (response) {
         if (response.success) {
-          location.reload();
-          showAlert("Distribution email sent successfully!", "success", 3000);
+          Swal.fire({
+            title: "Email de distribution envoyé avec succès !",
+            icon: "success",
+            timer: 3000,
+            timerProgressBar: true
+          }).then(function () {
+            location.reload();
+          });
         } else {
-          showAlert(response.error || "Error during distribution.", "error", 3000);
+          Swal.fire({
+            title: response.error || "Erreur lors de la distribution.",
+            icon: "error",
+            timer: 3000,
+            timerProgressBar: true
+          });
         }
       })["catch"](function (error) {
         console.error("Distribution error:", error);
-        showAlert("An error occurred during distribution.", "error", 3000);
+        Swal.fire({
+          title: "Une erreur est survenue lors de la distribution.",
+          icon: "error",
+          timer: 3000,
+          timerProgressBar: true
+        });
       });
     });
   }

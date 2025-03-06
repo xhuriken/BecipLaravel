@@ -24,8 +24,6 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 if (data.success) {
                     console.log("Mask validated updated");
-                    //reload useless because it's only for client view
-                    //location.reload();
                 }
             }).catch(error => console.error("Error updating mask validated:", error));
     }
@@ -41,13 +39,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 project_id: projectId,
                 is_mask_distributed: maskDistributedCheckbox.checked ? 1 : 0
             })
-        }).then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    console.log("Mask distributed updated");
-                    location.reload();
-                }
-            }).catch(error => console.error("Error updating mask distributed:", error));
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            }
+        }).catch(error => console.error("Error updating mask distributed:", error));
     }
 
     //update when click
