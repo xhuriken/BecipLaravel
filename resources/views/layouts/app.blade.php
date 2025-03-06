@@ -26,6 +26,7 @@
     {{--    multiselect2--}}
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
+    <link href="{{ asset('css/datatable.css') }}" rel="stylesheet">
     <script>
         window.csrf_token = "{{ csrf_token() }}";
     </script>
@@ -40,8 +41,8 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-{{--                    {{ config('app.name', 'Becip') }}--}}
-                    Becip
+                    <img src="{{asset('imgs/beciplogo.svg')}}" alt="Logo Becip" style="width: 3.5rem; padding-right: 1rem"/>
+                    {{ config('app.name', 'Becip') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>

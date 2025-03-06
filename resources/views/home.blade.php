@@ -26,7 +26,7 @@
                     <th>Nom de l'affaire</th>
                     <th>Actions</th>
                     @if (auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
-                        <th data-label="Delete"><i class="fa-solid fa-trash"></i></th>
+                        <th data-label="Delete"><i class="fa-solid fa-trash delete-icon"></i></th>
                         <th><input type="checkbox" id="select-all"></th>
                     @endif
                 </tr>
@@ -80,18 +80,20 @@
         </table>
 
         @if (auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
-            <button
-                id="delete-selected"
-                class="btn-filter"
-                data-route="{{ route('projects.delete-selected') }}">
-                Supprimer les affaires sélectionnées
-            </button>
-            <button
-                id="delete-empty"
-                class="btn-filter"
-                data-route="{{ route('projects.delete-empty') }}">
-                Supprimer les affaires vides
-            </button>
+            <div class="button-container">
+                <button
+                    id="delete-selected"
+                    class="btn-filter"
+                    data-route="{{ route('projects.delete-selected') }}">
+                    Supprimer les affaires sélectionnées
+                </button>
+                <button
+                    id="delete-empty"
+                    class="btn-filter"
+                    data-route="{{ route('projects.delete-empty') }}">
+                    Supprimer les affaires vides
+                </button>
+            </div>
         @endif
     </div>
 
