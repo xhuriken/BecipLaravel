@@ -15563,8 +15563,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 timer: 3000,
                 timerProgressBar: true
               }).then(function () {
-                // let row = document.querySelector(`tr[data-id="${fileId}"]`);
-                // if (row) row.remove();
+                location.reload();
               });
             } else {
               Swal.fire({
@@ -15634,11 +15633,14 @@ document.addEventListener('DOMContentLoaded', function () {
   if (dropzone) {
     var uploadFiles = function uploadFiles(files) {
       if (files.length === 0) {
-        alert('Veuillez sélectionner au moins un fichier.');
+        Swal.fire({
+          title: "Veuillez sélectionner au moins un fichier.",
+          icon: "warning"
+        });
         return;
       }
 
-      // get route
+      // Get the upload route from the project container
       var projectContainer = document.getElementById('project-container');
       var route = projectContainer.getAttribute('data-route');
       var formData = new FormData();
@@ -15656,36 +15658,54 @@ document.addEventListener('DOMContentLoaded', function () {
         return response.json();
       }).then(function (data) {
         if (data.success) {
-          showAlert('Fichiers uploadés avec succès !', 'success', 3000);
-          location.reload();
+          Swal.fire({
+            title: "Fichiers uploadés avec succès !",
+            icon: "success",
+            timer: 3000,
+            timerProgressBar: true
+          }).then(function () {
+            location.reload();
+          });
         } else {
-          alert(data.message || "Erreur lors de l'upload des fichiers.");
+          Swal.fire({
+            title: data.message || "Erreur lors de l'upload des fichiers.",
+            icon: "error"
+          }).then(function () {
+            location.reload();
+          });
         }
       })["catch"](function (error) {
         console.error("Erreur lors de l'upload :", error);
-        showAlert('Une erreur est survenue', 'error', 3000);
+        Swal.fire({
+          title: "Une erreur est survenue",
+          icon: "error",
+          timer: 3000,
+          timerProgressBar: true
+        }).then(function () {
+          location.reload();
+        });
       });
     };
-    //dropzone clic, hidden input launch
+    // When dropzone is clicked, trigger hidden file input
     dropzone.addEventListener('click', function () {
       fileInput.click();
     });
 
-    //change style on dragover
+    // Change style on dragover
     dropzone.addEventListener('dragover', function (e) {
       e.preventDefault();
       e.stopPropagation();
       dropzone.style.backgroundColor = "#f0f0f0";
     });
 
-    // re init style on leave
+    // Reset style on dragleave
     dropzone.addEventListener('dragleave', function (e) {
       e.preventDefault();
       e.stopPropagation();
       dropzone.style.backgroundColor = "";
     });
 
-    //launch upload file when drop
+    // On drop, start file upload
     dropzone.addEventListener('drop', function (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -15695,6 +15715,8 @@ document.addEventListener('DOMContentLoaded', function () {
         uploadFiles(files);
       }
     });
+
+    // When files are selected via input
     fileInput.addEventListener('change', function () {
       if (fileInput.files.length > 0) {
         uploadFiles(fileInput.files);

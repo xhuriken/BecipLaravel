@@ -23,39 +23,38 @@ document.addEventListener('DOMContentLoaded', function() {
                             'Content-Type': 'application/json'
                         }
                     })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error("HTTP error " + response.status);
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            if (data.success) {
-                                Swal.fire({
-                                    title: "Fichier supprimé avec succès.",
-                                    icon: "success",
-                                    timer: 3000,
-                                    timerProgressBar: true
-                                }).then(() => {
-                                    // let row = document.querySelector(`tr[data-id="${fileId}"]`);
-                                    // if (row) row.remove();
-                                });
-                            } else {
-                                Swal.fire({
-                                    title: "Erreur lors de la suppression",
-                                    text: data.error || "Inconnue",
-                                    icon: "error"
-                                });
-                            }
-                        })
-                        .catch(error => {
-                            console.error("Fetch error:", error);
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("HTTP error " + response.status);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
                             Swal.fire({
-                                title: "Une erreur est survenue.",
-                                text: "Vérifiez votre connexion.",
+                                title: "Fichier supprimé avec succès.",
+                                icon: "success",
+                                timer: 3000,
+                                timerProgressBar: true
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                title: "Erreur lors de la suppression",
+                                text: data.error || "Inconnue",
                                 icon: "error"
                             });
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Fetch error:", error);
+                        Swal.fire({
+                            title: "Une erreur est survenue.",
+                            text: "Vérifiez votre connexion.",
+                            icon: "error"
                         });
+                    });
                 }
             });
         });

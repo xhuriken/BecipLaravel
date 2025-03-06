@@ -2,28 +2,29 @@ document.addEventListener('DOMContentLoaded', function() {
     const dropzone = document.getElementById('dropzone');
     const fileInput = document.getElementById('file-input');
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    if(dropzone){
 
-        //dropzone clic, hidden input launch
+    if (dropzone) {
+
+        // When dropzone is clicked, trigger hidden file input
         dropzone.addEventListener('click', function() {
             fileInput.click();
         });
 
-        //change style on dragover
+        // Change style on dragover
         dropzone.addEventListener('dragover', function(e) {
             e.preventDefault();
             e.stopPropagation();
             dropzone.style.backgroundColor = "#f0f0f0";
         });
 
-        // re init style on leave
+        // Reset style on dragleave
         dropzone.addEventListener('dragleave', function(e) {
             e.preventDefault();
             e.stopPropagation();
             dropzone.style.backgroundColor = "";
         });
 
-        //launch upload file when drop
+        // On drop, start file upload
         dropzone.addEventListener('drop', function(e) {
             e.preventDefault();
             e.stopPropagation();
@@ -34,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-
+        // When files are selected via input
         fileInput.addEventListener('change', function() {
             if (fileInput.files.length > 0) {
                 uploadFiles(fileInput.files);
@@ -43,11 +44,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function uploadFiles(files) {
             if (files.length === 0) {
-                alert('Veuillez sélectionner au moins un fichier.');
+                Swal.fire({
+                    title: "Veuillez sélectionner au moins un fichier.",
+                    icon: "warning"
+                });
                 return;
             }
 
-            // get route
+            // Get the upload route from the project container
             const projectContainer = document.getElementById('project-container');
             const route = projectContainer.getAttribute('data-route');
 
@@ -67,15 +71,33 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        showAlert('Fichiers uploadés avec succès !', 'success', 3000)
-                        location.reload();
+                        Swal.fire({
+                            title: "Fichiers uploadés avec succès !",
+                            icon: "success",
+                            timer: 3000,
+                            timerProgressBar: true
+                        }).then(() => {
+                            location.reload();
+                        });
                     } else {
-                        alert(data.message || "Erreur lors de l'upload des fichiers.");
+                        Swal.fire({
+                            title: data.message || "Erreur lors de l'upload des fichiers.",
+                            icon: "error"
+                        }).then(() => {
+                            location.reload();
+                        });
                     }
                 })
                 .catch(error => {
                     console.error("Erreur lors de l'upload :", error);
-                    showAlert('Une erreur est survenue', 'error', 3000)
+                    Swal.fire({
+                        title: "Une erreur est survenue",
+                        icon: "error",
+                        timer: 3000,
+                        timerProgressBar: true
+                    }).then(() => {
+                        location.reload();
+                    });
                 });
         }
     }
