@@ -72,8 +72,12 @@
                     <td>{{ $company->id }}</td>
                     <td class="company-name">{{ $company->name }}</td>
                     <td>
-                        <button class="btn btn-sm btn-primary edit-company" data-route="{{ route('usermanager.updatecompany') }}"><i class="fa fa-pencil"></i></button>
-                        <button class="btn btn-sm btn-danger delete-company" data-route="{{ route('usermanager.deletecompany') }}"><i class="fa fa-trash"></i></button>
+                        <button class="btn btn-sm btn-primary edit-company" data-route="{{ route('usermanager.updatecompany') }}">
+                            <i class="fa fa-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger delete-company" data-route="{{ route('usermanager.deletecompany') }}">
+                            <i class="fa fa-trash"></i>
+                        </button>
                     </td>
                 </tr>
             @endforeach
@@ -98,7 +102,14 @@
                     <td>{{ $user->id }}</td>
                     <td class="user-name">{{ $user->name }}</td>
                     <td class="user-email">{{ $user->email }}</td>
-                    <td class="user-role">{{ $user->role }}</td>
+                    <td class="user-role" data-role="{{ $user->role }}">
+                        {{ [
+                            'engineer' => 'Ingénieur',
+                            'drawer' => 'Dessinateur',
+                            'secretary' => 'Secrétaire',
+                            'client' => 'Client'
+                        ][$user->role] ?? $user->role }}
+                    </td>
                     <td class="user-company">
                         @if($user->company_id)
                             {{ $user->getCompanyName($user->company_id) }}
@@ -107,16 +118,26 @@
                         @endif
                     </td>
                     <td>
-                        <button class="btn btn-sm btn-primary edit-user" data-route="{{ route('usermanager.updateuser') }}"><i class="fa fa-pencil"></i></button>
-                        <button class="btn btn-sm btn-danger delete-user" data-route="{{ route('usermanager.deleteuser') }}"><i class="fa fa-trash"></i></button>
+                        <button class="btn btn-sm btn-primary edit-user" data-route="{{ route('usermanager.updateuser') }}">
+                            <i class="fa fa-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger delete-user" data-route="{{ route('usermanager.deleteuser') }}">
+                            <i class="fa fa-trash"></i>
+                        </button>
                     </td>
                 </tr>
             @endforeach
             </tbody>
         </table>
     </div>
+
     <script>
         window.allCompanies = @json($companies);
-        window.allRoles = ['engineer', 'drawer', 'secretary', 'client'];
+        window.allRoles = {
+            'engineer': 'Ingénieur',
+            'drawer': 'Dessinateur',
+            'secretary': 'Secrétaire',
+            'client': 'Client'
+        };
     </script>
 @endsection

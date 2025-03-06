@@ -151,35 +151,38 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const currentName = $nameCell.text().trim();
             const currentEmail = $emailCell.text().trim();
-            const currentRole = $roleCell.text().trim();
+            const currentRole = $roleCell.attr('data-role'); // Get current role (in english)
             const currentCompany = $companyCell.text().trim();
 
-            // Change in edit input
+            // Check if the current role exist
+            if (!currentRole) {
+                console.error("Problème avec currentRole, valeur vide :", $roleCell);
+            }
+
+            // Change input mode
             $nameCell.html(`<input type="text" class="form-control" value="${currentName}" />`);
             $emailCell.html(`<input type="text" class="form-control" value="${currentEmail}" />`);
 
-
-            //TODO: replace by french word roles
-
-            // Role Select
-            const roleOptions = roles.map(role =>
-                `<option value="${role}" ${role === currentRole ? 'selected' : ''}>${role}</option>`
+            // Replace with Select and 'select' current role Option
+            const roleOptions = Object.keys(window.allRoles).map(role =>
+                `<option value="${role}" ${role === currentRole ? 'selected' : ''}>${window.allRoles[role]}</option>`
             ).join('');
             $roleCell.html(`<select class="form-control">${roleOptions}</select>`);
 
-            //Company Select
+            // Replace with Company Select
             let companyOptions = `<option value="">Aucune</option>`;
             allCompanies.forEach(c => {
                 companyOptions += `<option value="${c.id}" ${c.name === currentCompany ? 'selected' : ''}>${c.name}</option>`;
             });
             $companyCell.html(`<select class="form-control">${companyOptions}</select>`);
 
-            // Change btn to saveMode
+            // Change btn save
             btn.classList.remove('edit-user', 'btn-primary');
             btn.classList.add('save-user', 'btn-warning');
             btn.innerHTML = '<i class="fa fa-floppy-o"></i>';
         }
     });
+
 
     // Save User
     document.addEventListener('click', function(event) {
@@ -217,7 +220,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (data.success) {
                         $row.find('.user-name').text(newName);
                         $row.find('.user-email').text(newEmail);
-                        $row.find('.user-role').text(newRole);
+                        $row.find('.user-role')
+                            .text(window.allRoles[newRole]) //FR
+                            .attr('data-role', newRole); // STOCK EN
+
                         const selectedCompany = allCompanies.find(c => c.id == newCompanyId);
                         $row.find('.user-company').text(selectedCompany ? selectedCompany.name : 'Aucune');
 
