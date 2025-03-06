@@ -41,6 +41,7 @@ $(document).ready(function() {
         }
     });
 });
+
 document.addEventListener('DOMContentLoaded', function() {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     const roles = window.allRoles;
@@ -75,6 +76,14 @@ document.addEventListener('DOMContentLoaded', function() {
             const companyId = $row.data('company-id');
             const newName = $row.find('.company-name input').val();
 
+            if (newName === "") {
+                Swal.fire({
+                    title: "Le nom ne peut pas être vide.",
+                    icon: "warning"
+                });
+                return;
+            }
+
             fetch(route, {
                 method: 'POST',
                 headers: {
@@ -86,17 +95,34 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // Change again mode
                         $row.find('.company-name').text(newName);
                         btn.classList.remove('save-company', 'btn-warning');
                         btn.classList.add('edit-company', 'btn-primary');
                         btn.innerHTML = '<i class="fa fa-pencil"></i>';
+                        Swal.fire({
+                            title: "Entreprise modifiée avec succès.",
+                            icon: "success",
+                            timer: 2000,
+                            timerProgressBar: true
+                        }).then(() => {
+                            location.reload();
+                        });
                     } else {
-                        alert(data.message || 'Erreur inconnue');
+                        Swal.fire({
+                            title: data.message || 'Erreur inconnue',
+                            icon: "error"
+                        }).then(() => {
+                            location.reload();
+                        });
                     }
                 })
                 .catch(() => {
-                    alert('Une erreur est survenue lors de la sauvegarde.');
+                    Swal.fire({
+                        title: "Une erreur est survenue lors de la sauvegarde.",
+                        icon: "error"
+                    }).then(() => {
+                        location.reload();
+                    });
                 });
         }
     });
@@ -104,35 +130,62 @@ document.addEventListener('DOMContentLoaded', function() {
     // Delete Company
     document.addEventListener('click', function(event) {
         if(event.target.closest('.delete-company')) {
-
-            if(!confirm('Supprimer cette entreprise ?')) return;
-
+            event.stopImmediatePropagation();
             const btn = event.target.closest('.delete-company');
             const route = btn.getAttribute('data-route');
             const $row = $(btn).closest('tr');
             const companyId = $row.data('company-id');
 
-            fetch(route, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken
-                },
-                body: JSON.stringify({ company_id: companyId })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        //Delete line in datatable
-                        const companiesTable = $('#companies-table').DataTable();
-                        companiesTable.row($row).remove().draw();
-                    } else {
-                        alert(data.message || 'Erreur inconnue');
-                    }
-                })
-                .catch(() => {
-                    alert('Une erreur est survenue lors de la suppression.');
-                });
+            Swal.fire({
+                title: "Supprimer cette entreprise ?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#0c9155",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Oui",
+                cancelButtonText: "Non"
+            }).then((result) => {
+                if(result.isConfirmed) {
+                    fetch(route, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        body: JSON.stringify({ company_id: companyId })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                const companiesTable = $('#companies-table').DataTable();
+                                companiesTable.row($row).remove().draw();
+                                Swal.fire({
+                                    title: "Entreprise supprimée avec succès.",
+                                    icon: "success",
+                                    timer: 2000,
+                                    timerProgressBar: true
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: data.message || 'Erreur inconnue',
+                                    icon: "error"
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            }
+                        })
+                        .catch(() => {
+                            Swal.fire({
+                                title: "Une erreur est survenue lors de la suppression.",
+                                icon: "error"
+                            }).then(() => {
+                                location.reload();
+                            });
+                        });
+                }
+            });
         }
     });
 
@@ -154,16 +207,15 @@ document.addEventListener('DOMContentLoaded', function() {
             const currentRole = $roleCell.attr('data-role'); // Get current role (in english)
             const currentCompany = $companyCell.text().trim();
 
-            // Check if the current role exist
             if (!currentRole) {
                 console.error("Problème avec currentRole, valeur vide :", $roleCell);
             }
 
-            // Change input mode
+            // Change to edit input mode
             $nameCell.html(`<input type="text" class="form-control" value="${currentName}" />`);
             $emailCell.html(`<input type="text" class="form-control" value="${currentEmail}" />`);
 
-            // Replace with Select and 'select' current role Option
+            // Replace with Select and pre-select current role
             const roleOptions = Object.keys(window.allRoles).map(role =>
                 `<option value="${role}" ${role === currentRole ? 'selected' : ''}>${window.allRoles[role]}</option>`
             ).join('');
@@ -176,13 +228,12 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             $companyCell.html(`<select class="form-control">${companyOptions}</select>`);
 
-            // Change btn save
+            // Change btn to save mode
             btn.classList.remove('edit-user', 'btn-primary');
             btn.classList.add('save-user', 'btn-warning');
             btn.innerHTML = '<i class="fa fa-floppy-o"></i>';
         }
     });
-
 
     // Save User
     document.addEventListener('click', function(event) {
@@ -194,10 +245,29 @@ document.addEventListener('DOMContentLoaded', function() {
             const $row = $(btn).closest('tr');
             const userId = $row.data('user-id');
 
-            const newName = $row.find('.user-name input').val();
-            const newEmail = $row.find('.user-email input').val();
+            const newName = $row.find('.user-name input').val().trim();
+            const newEmail = $row.find('.user-email input').val().trim();
             const newRole = $row.find('.user-role select').val();
             const newCompanyId = $row.find('.user-company select').val();
+
+            // verify if name isnt empty
+            if (newName === "") {
+                Swal.fire({
+                    title: "Le nom ne peut pas être vide.",
+                    icon: "warning"
+                });
+                return;
+            }
+
+            // verify email valid
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(newEmail)) {
+                Swal.fire({
+                    title: "Veuillez entrer une adresse email valide (exemple : x@x.x).",
+                    icon: "warning"
+                });
+                return;
+            }
 
             const data = {
                 user_id: userId,
@@ -221,21 +291,39 @@ document.addEventListener('DOMContentLoaded', function() {
                         $row.find('.user-name').text(newName);
                         $row.find('.user-email').text(newEmail);
                         $row.find('.user-role')
-                            .text(window.allRoles[newRole]) //FR
-                            .attr('data-role', newRole); // STOCK EN
-
+                            .text(window.allRoles[newRole])
+                            .attr('data-role', newRole);
                         const selectedCompany = allCompanies.find(c => c.id == newCompanyId);
                         $row.find('.user-company').text(selectedCompany ? selectedCompany.name : 'Aucune');
 
                         btn.classList.remove('save-user', 'btn-warning');
                         btn.classList.add('edit-user', 'btn-primary');
                         btn.innerHTML = '<i class="fa fa-pencil"></i>';
+
+                        Swal.fire({
+                            title: "Utilisateur modifié avec succès.",
+                            icon: "success",
+                            timer: 2000,
+                            timerProgressBar: true
+                        }).then(() => {
+                            location.reload();
+                        });
                     } else {
-                        alert(data.message || 'Erreur inconnue');
+                        Swal.fire({
+                            title: data.message || 'Erreur inconnue',
+                            icon: "error"
+                        }).then(() => {
+                            location.reload();
+                        });
                     }
                 })
                 .catch(() => {
-                    alert('Une erreur est survenue lors de la sauvegarde.');
+                    Swal.fire({
+                        title: "Une erreur est survenue lors de la sauvegarde.",
+                        icon: "error"
+                    }).then(() => {
+                        location.reload();
+                    });
                 });
         }
     });
@@ -243,32 +331,62 @@ document.addEventListener('DOMContentLoaded', function() {
     // Delete User
     document.addEventListener('click', function(event) {
         if(event.target.closest('.delete-user')) {
-            if(!confirm('Supprimer cet utilisateur ?')) return;
+            event.stopImmediatePropagation();
             const btn = event.target.closest('.delete-user');
             const route = btn.getAttribute('data-route');
             const $row = $(btn).closest('tr');
             const userId = $row.data('user-id');
 
-            fetch(route, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken
-                },
-                body: JSON.stringify({ user_id: userId })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const usersTable = $('#users-table').DataTable();
-                        usersTable.row($row).remove().draw();
-                    } else {
-                        alert(data.message || 'Erreur inconnue');
-                    }
-                })
-                .catch(() => {
-                    alert('Une erreur est survenue lors de la suppression.');
-                });
+            Swal.fire({
+                title: "Supprimer cet utilisateur ?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#0c9155",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Oui",
+                cancelButtonText: "Non"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(route, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        body: JSON.stringify({ user_id: userId })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                const usersTable = $('#users-table').DataTable();
+                                usersTable.row($row).remove().draw();
+                                Swal.fire({
+                                    title: "Utilisateur supprimé avec succès.",
+                                    icon: "success",
+                                    timer: 2000,
+                                    timerProgressBar: true
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: data.message || 'Erreur inconnue',
+                                    icon: "error"
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            }
+                        })
+                        .catch(() => {
+                            Swal.fire({
+                                title: "Une erreur est survenue lors de la suppression.",
+                                icon: "error"
+                            }).then(() => {
+                                location.reload();
+                            });
+                        });
+                }
+            });
         }
     });
 });

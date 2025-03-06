@@ -16025,6 +16025,13 @@ document.addEventListener('DOMContentLoaded', function () {
       var $row = $(btn).closest('tr');
       var companyId = $row.data('company-id');
       var newName = $row.find('.company-name input').val();
+      if (newName === "") {
+        Swal.fire({
+          title: "Le nom ne peut pas être vide.",
+          icon: "warning"
+        });
+        return;
+      }
       fetch(route, {
         method: 'POST',
         headers: {
@@ -16039,16 +16046,33 @@ document.addEventListener('DOMContentLoaded', function () {
         return response.json();
       }).then(function (data) {
         if (data.success) {
-          // Change again mode
           $row.find('.company-name').text(newName);
           btn.classList.remove('save-company', 'btn-warning');
           btn.classList.add('edit-company', 'btn-primary');
           btn.innerHTML = '<i class="fa fa-pencil"></i>';
+          Swal.fire({
+            title: "Entreprise modifiée avec succès.",
+            icon: "success",
+            timer: 2000,
+            timerProgressBar: true
+          }).then(function () {
+            location.reload();
+          });
         } else {
-          alert(data.message || 'Erreur inconnue');
+          Swal.fire({
+            title: data.message || 'Erreur inconnue',
+            icon: "error"
+          }).then(function () {
+            location.reload();
+          });
         }
       })["catch"](function () {
-        alert('Une erreur est survenue lors de la sauvegarde.');
+        Swal.fire({
+          title: "Une erreur est survenue lors de la sauvegarde.",
+          icon: "error"
+        }).then(function () {
+          location.reload();
+        });
       });
     }
   });
@@ -16056,32 +16080,61 @@ document.addEventListener('DOMContentLoaded', function () {
   // Delete Company
   document.addEventListener('click', function (event) {
     if (event.target.closest('.delete-company')) {
-      if (!confirm('Supprimer cette entreprise ?')) return;
+      event.stopImmediatePropagation();
       var btn = event.target.closest('.delete-company');
       var route = btn.getAttribute('data-route');
       var $row = $(btn).closest('tr');
       var companyId = $row.data('company-id');
-      fetch(route, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': csrfToken
-        },
-        body: JSON.stringify({
-          company_id: companyId
-        })
-      }).then(function (response) {
-        return response.json();
-      }).then(function (data) {
-        if (data.success) {
-          //Delete line in datatable
-          var companiesTable = $('#companies-table').DataTable();
-          companiesTable.row($row).remove().draw();
-        } else {
-          alert(data.message || 'Erreur inconnue');
+      Swal.fire({
+        title: "Supprimer cette entreprise ?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#0c9155",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Oui",
+        cancelButtonText: "Non"
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          fetch(route, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify({
+              company_id: companyId
+            })
+          }).then(function (response) {
+            return response.json();
+          }).then(function (data) {
+            if (data.success) {
+              var companiesTable = $('#companies-table').DataTable();
+              companiesTable.row($row).remove().draw();
+              Swal.fire({
+                title: "Entreprise supprimée avec succès.",
+                icon: "success",
+                timer: 2000,
+                timerProgressBar: true
+              }).then(function () {
+                location.reload();
+              });
+            } else {
+              Swal.fire({
+                title: data.message || 'Erreur inconnue',
+                icon: "error"
+              }).then(function () {
+                location.reload();
+              });
+            }
+          })["catch"](function () {
+            Swal.fire({
+              title: "Une erreur est survenue lors de la suppression.",
+              icon: "error"
+            }).then(function () {
+              location.reload();
+            });
+          });
         }
-      })["catch"](function () {
-        alert('Une erreur est survenue lors de la suppression.');
       });
     }
   });
@@ -16100,17 +16153,15 @@ document.addEventListener('DOMContentLoaded', function () {
       var currentEmail = $emailCell.text().trim();
       var currentRole = $roleCell.attr('data-role'); // Get current role (in english)
       var currentCompany = $companyCell.text().trim();
-
-      // Check if the current role exist
       if (!currentRole) {
         console.error("Problème avec currentRole, valeur vide :", $roleCell);
       }
 
-      // Change input mode
+      // Change to edit input mode
       $nameCell.html("<input type=\"text\" class=\"form-control\" value=\"".concat(currentName, "\" />"));
       $emailCell.html("<input type=\"text\" class=\"form-control\" value=\"".concat(currentEmail, "\" />"));
 
-      // Replace with Select and 'select' current role Option
+      // Replace with Select and pre-select current role
       var roleOptions = Object.keys(window.allRoles).map(function (role) {
         return "<option value=\"".concat(role, "\" ").concat(role === currentRole ? 'selected' : '', ">").concat(window.allRoles[role], "</option>");
       }).join('');
@@ -16123,7 +16174,7 @@ document.addEventListener('DOMContentLoaded', function () {
       });
       $companyCell.html("<select class=\"form-control\">".concat(companyOptions, "</select>"));
 
-      // Change btn save
+      // Change btn to save mode
       btn.classList.remove('edit-user', 'btn-primary');
       btn.classList.add('save-user', 'btn-warning');
       btn.innerHTML = '<i class="fa fa-floppy-o"></i>';
@@ -16138,10 +16189,29 @@ document.addEventListener('DOMContentLoaded', function () {
       var route = btn.getAttribute('data-route');
       var $row = $(btn).closest('tr');
       var userId = $row.data('user-id');
-      var newName = $row.find('.user-name input').val();
-      var newEmail = $row.find('.user-email input').val();
+      var newName = $row.find('.user-name input').val().trim();
+      var newEmail = $row.find('.user-email input').val().trim();
       var newRole = $row.find('.user-role select').val();
       var newCompanyId = $row.find('.user-company select').val();
+
+      // verify if name isnt empty
+      if (newName === "") {
+        Swal.fire({
+          title: "Le nom ne peut pas être vide.",
+          icon: "warning"
+        });
+        return;
+      }
+
+      // verify email valid
+      var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(newEmail)) {
+        Swal.fire({
+          title: "Veuillez entrer une adresse email valide (exemple : x@x.x).",
+          icon: "warning"
+        });
+        return;
+      }
       var data = {
         user_id: userId,
         name: newName,
@@ -16162,9 +16232,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (data.success) {
           $row.find('.user-name').text(newName);
           $row.find('.user-email').text(newEmail);
-          $row.find('.user-role').text(window.allRoles[newRole]) //FR
-          .attr('data-role', newRole); // STOCK EN
-
+          $row.find('.user-role').text(window.allRoles[newRole]).attr('data-role', newRole);
           var selectedCompany = allCompanies.find(function (c) {
             return c.id == newCompanyId;
           });
@@ -16172,11 +16240,29 @@ document.addEventListener('DOMContentLoaded', function () {
           btn.classList.remove('save-user', 'btn-warning');
           btn.classList.add('edit-user', 'btn-primary');
           btn.innerHTML = '<i class="fa fa-pencil"></i>';
+          Swal.fire({
+            title: "Utilisateur modifié avec succès.",
+            icon: "success",
+            timer: 2000,
+            timerProgressBar: true
+          }).then(function () {
+            location.reload();
+          });
         } else {
-          alert(data.message || 'Erreur inconnue');
+          Swal.fire({
+            title: data.message || 'Erreur inconnue',
+            icon: "error"
+          }).then(function () {
+            location.reload();
+          });
         }
       })["catch"](function () {
-        alert('Une erreur est survenue lors de la sauvegarde.');
+        Swal.fire({
+          title: "Une erreur est survenue lors de la sauvegarde.",
+          icon: "error"
+        }).then(function () {
+          location.reload();
+        });
       });
     }
   });
@@ -16184,31 +16270,61 @@ document.addEventListener('DOMContentLoaded', function () {
   // Delete User
   document.addEventListener('click', function (event) {
     if (event.target.closest('.delete-user')) {
-      if (!confirm('Supprimer cet utilisateur ?')) return;
+      event.stopImmediatePropagation();
       var btn = event.target.closest('.delete-user');
       var route = btn.getAttribute('data-route');
       var $row = $(btn).closest('tr');
       var userId = $row.data('user-id');
-      fetch(route, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': csrfToken
-        },
-        body: JSON.stringify({
-          user_id: userId
-        })
-      }).then(function (response) {
-        return response.json();
-      }).then(function (data) {
-        if (data.success) {
-          var usersTable = $('#users-table').DataTable();
-          usersTable.row($row).remove().draw();
-        } else {
-          alert(data.message || 'Erreur inconnue');
+      Swal.fire({
+        title: "Supprimer cet utilisateur ?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#0c9155",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Oui",
+        cancelButtonText: "Non"
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          fetch(route, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify({
+              user_id: userId
+            })
+          }).then(function (response) {
+            return response.json();
+          }).then(function (data) {
+            if (data.success) {
+              var usersTable = $('#users-table').DataTable();
+              usersTable.row($row).remove().draw();
+              Swal.fire({
+                title: "Utilisateur supprimé avec succès.",
+                icon: "success",
+                timer: 2000,
+                timerProgressBar: true
+              }).then(function () {
+                location.reload();
+              });
+            } else {
+              Swal.fire({
+                title: data.message || 'Erreur inconnue',
+                icon: "error"
+              }).then(function () {
+                location.reload();
+              });
+            }
+          })["catch"](function () {
+            Swal.fire({
+              title: "Une erreur est survenue lors de la suppression.",
+              icon: "error"
+            }).then(function () {
+              location.reload();
+            });
+          });
         }
-      })["catch"](function () {
-        alert('Une erreur est survenue lors de la suppression.');
       });
     }
   });
