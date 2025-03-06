@@ -70,13 +70,26 @@ class ProjectController extends Controller
 
         $ids = $emptyProjects->pluck('id');
 
-        $emptyProjects->each->delete();
+        foreach ($emptyProjects as $project) {
+            $projectFolder = storage_path('app/public/' . $project->id);
+            if (is_dir($projectFolder)) {
+                \Log::info("Dossier trouvé pour l'affaire vide {$project->id}, suppression en cours : $projectFolder");
+                $this->deleteFolder($projectFolder);
+                \Log::info("Dossier de l'affaire vide {$project->id} supprimé : $projectFolder");
+            } else {
+                \Log::warning("Dossier non trouvé pour l'affaire vide {$project->id} : $projectFolder");
+            }
+
+            // Delete the project
+            $project->delete();
+        }
 
         return response()->json([
             'success' => true,
             'deleted_ids' => $ids
         ]);
     }
+
 
     /**
      * Delete specific Project AND files inside (BDD and Storage)
