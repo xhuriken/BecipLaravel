@@ -11,51 +11,68 @@
 
         <a href="{{route("home")}}" class="btn-return"><i class="fa-solid fa-arrow-left"></i> Retour</a>
 
-        {{-- Formulaire d'ajout d'utilisateur --}}
-        <form action="{{ route('usermanager.adduser') }}" method="POST">
-            @csrf
-            <h2>Ajouter un utilisateur</h2>
+        <div class="flex">
+            {{-- Formulaire d'ajout d'utilisateur --}}
+            <form action="{{ route('usermanager.adduser') }}" method="POST" class="form-becip">
+                @csrf
+                <h2 class="mb-2">Ajouter un utilisateur</h2>
 
-            <label>Nom et Prénom</label>
-            <input type="text" name="name" required>
+                <div class="mb-2">
+                    <label for="name" class="form-label">Nom et Prénom</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Nom Prénom..." required>
+                </div>
 
-            <label>Email</label>
-            <input type="email" name="email" required>
+                <div class="mb-2">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Email valide..." required>
+                </div>
 
-            <label>
-            <span class="tooltip">Mot de passe ⓘ
-                <span class="tooltiptext">Ce mot de passe a été généré automatiquement. Vous pouvez le modifier si vous le souhaitez.</span>
-            </span>
-            </label>
-            <input type="password" name="password" value="{{ $newPasswordGenerated }}" required>
+                <div class="mb-2">
+                    <label for="password" class="form-label">
+                      Mot de passe
+                    </label>
+                    <input type="password" class="form-control" id="password" name="password"
+                           value="{{ $newPasswordGenerated }}" placeholder="SuperMot2Passe!" required>
+                </div>
 
-            <label>Rôle</label>
-            <select name="role" required>
-                <option value="engineer">Ingénieur</option>
-                <option value="drawer">Dessinateur</option>
-                <option value="secretary">Secrétaire</option>
-                <option value="client">Client</option>
-            </select>
+                <div class="mb-2">
+                    <label for="role" class="form-label">Rôle</label>
+                    <select name="role" id="role" class="form-select" required>
+                        <option value="engineer">Ingénieur</option>
+                        <option value="drawer">Dessinateur</option>
+                        <option value="secretary">Secrétaire</option>
+                        <option value="client">Client</option>
+                    </select>
+                </div>
 
-            <label>Entreprise</label>
-            <select name="company_id">
-                <option value="">Aucune</option>
-                @foreach($companies as $company)
-                    <option value="{{$company->id}}">{{$company->name}}</option>
-                @endforeach
-            </select>
+                <div class="mb-2">
+                    <label for="company_id" class="form-label">Entreprise</label>
+                    <select name="company_id" id="company_id" class="form-select">
+                        <option value="">Aucune</option>
+                        @foreach($companies as $company)
+                            <option value="{{ $company->id }}">{{ $company->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-            <input type="submit" value="Ajouter">
-        </form>
+                <input type="submit" value="Ajouter" class="large-btn">
+            </form>
 
-        {{-- Formulaire d'ajout d'entreprise --}}
-        <form action="{{ route('usermanager.addcompany') }}" method="POST">
-            @csrf
-            <h2>Ajouter une nouvelle entreprise</h2>
-            <label>Nom de l'entreprise</label>
-            <input type="text" name="name" required>
-            <input type="submit" value="Ajouter">
-        </form>
+            {{-- Formulaire d'ajout d'entreprise --}}
+            <form action="{{ route('usermanager.addcompany') }}" method="POST" class="form-becip">
+                @csrf
+                <div class="mb-2">
+                    <h2>Ajouter une entreprise</h2>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Nom de l'entreprise</label>
+                    <input class="form-control" type="text" name="name" placeholder="SuperEntreprise" required>
+                </div>
+                <div class="mb-2">
+                    <input type="submit" value="Ajouter" class="large-btn">
+                </div>
+            </form>
+        </div>
 
         <h2>Modifier les entreprises</h2>
         <table id="companies-table" class="table-responsive table table-striped">

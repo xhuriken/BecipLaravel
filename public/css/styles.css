@@ -18,11 +18,30 @@ body {
     display: flex;
     justify-content: center;
 }
+
+.form-becip{
+    min-width: 25rem;
+}
+
+input.large-btn{
+    margin: auto;
+    display: flex;
+    padding: 0.3rem 5rem !important;
+}
+
+.flex{
+    display: flex;
+    justify-content: space-between;
+
+}
+
 .container-page {
     background-color: #fff;
     padding: 1.25rem 1.25rem;
     border-radius: 0.625rem;
     box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+    /*Sinon il est éééénooooorme*/
+    min-width: 60rem;
 }
 .container-profile {
     background-color: #fff;
@@ -206,7 +225,7 @@ button:hover {
     align-items: start;
 }
 .items-container button {
- margin: inherit;
+    margin: inherit;
 }
 
 .items-container a{
