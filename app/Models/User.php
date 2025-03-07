@@ -103,12 +103,15 @@ class User extends Authenticatable
      * @return mixed
      */
     public function projects() {
-        $projects = Project::from('projects as P')
-                        ->leftJoin('project_user as PU', 'P.id', '=', 'PU.project_id');
-
-        if( !$this->isBecip() ) $projects->where('PU.user_id', $this->id);
-
-        return $projects->select('P.*')->get();
+        if ($this->isBecip()) {
+            return Project::all();
+        } else {
+            return Project::from('projects as P')
+                ->join('project_user as PU', 'P.id', '=', 'PU.project_id')
+                ->where('PU.user_id', $this->id)
+                ->select('P.*')
+                ->get();
+        }
     }
 
     public function projectsRelation() //honnêtement j'ai pas compris
