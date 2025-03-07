@@ -1,1 +1,11 @@
 /*Changer style datatable ici !important*/
+.page-link.active, .active > .page-link {
+    background-color: #0c9155;
+    border-color: #0a7a48;
+}
+.page-link.active, .active > .page-link button{
+    outline: none;
+}
+.page-link {
+    color: #0c9155;
+}

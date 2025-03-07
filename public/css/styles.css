@@ -11,6 +11,7 @@ body {
     ),
     url("../imgs/backgroundw.png");
 }
+
 .container{
     min-width: 55rem;
 }
@@ -73,7 +74,6 @@ input.large-btn{
     color: #0c9155;
 }
 
-/*field container*/
 
 .field-container {
     margin-top: 1rem;
@@ -135,6 +135,10 @@ input.large-btn{
     padding: 2rem;
 }
 
+input[type="text"]{
+    outline-color: #0c9155 !important;
+}
+
 input[type="submit"]{
     border: none;
     color: #fff;
@@ -156,9 +160,7 @@ select{
     border-radius: 0.3rem;
 }
 select:focus{
-    padding: 0.3rem;
     outline: 0.15rem solid #0c9155;
-    border-radius: 0.3rem;
 }
 input{
     padding: 0.3rem;
@@ -167,9 +169,7 @@ input{
     border-radius: 0.3rem;
 }
 input:focus{
-    padding: 0.3rem;
     outline: 0.15rem solid #0c9155;
-    border-radius: 0.3rem;
 }
 #project_year{
     width: 2rem;

@@ -53,11 +53,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     })
                         .then(response => response.json())
                         .then(data => {
+
+                            let projectTable = $('#project-table').DataTable();
+
                             // Remove deleted items in DOM
                             selectedProjects.forEach(projectId => {
                                 let row = document.querySelector(`#project-row-${projectId}`);
                                 if (row) {
-                                    row.remove();
+                                    projectTable.row(row).remove().draw();
                                 }
                             });
 

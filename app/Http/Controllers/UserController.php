@@ -126,10 +126,11 @@ class UserController extends Controller
             $request->validate([
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|unique:users,email',
-                'password' => \Illuminate\Validation\Rules\Password::defaults(),
+                'password' => 'required|string|min:6',
                 'role' => 'required|in:engineer,drawer,secretary,client',
                 'company_id' => 'nullable|exists:companies,id'
             ]);
+//            'password' => \Illuminate\Validation\Rules\Password::defaults(),
 
             $user = User::create([
                 'name' => $request->name,

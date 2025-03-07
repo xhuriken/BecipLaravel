@@ -37,6 +37,26 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // 2) GESTION TYPE (file-type-select)
+
+    //
+    //
+    //
+    //CHANGE ALL
+    //
+    //
+    //
+
+    document.addEventListener('change', function(event) {
+        let target = event.target;
+
+        // console.log( target );
+
+        if( !target.classList.contains('file-type-select') ) return;
+
+        alert('e');
+    });
+
+
     document.querySelectorAll('.file-type-select').forEach(select => {
         select.addEventListener('change', function() {
             const row = this.closest('tr');

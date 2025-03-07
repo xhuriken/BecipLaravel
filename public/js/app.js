@@ -5504,14 +5504,14 @@ function buildURL(url, params, options) {
   if (!params) {
     return url;
   }
-
+  
   const _encode = options && options.encode || encode;
 
   if (_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].isFunction(options)) {
     options = {
       serialize: options
     };
-  }
+  } 
 
   const serializeFn = options && options.serialize;
 
@@ -14521,39 +14521,42 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_universal_alerts__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_utils_universal_alerts__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _utils_datatables__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils/datatables */ "./resources/js/utils/datatables.js");
 /* harmony import */ var _utils_datatables__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_utils_datatables__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _usercontroller_usercontroller__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./usercontroller/usercontroller */ "./resources/js/usercontroller/usercontroller.js");
-/* harmony import */ var _usercontroller_usercontroller__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_usercontroller_usercontroller__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _home_checkboxtable__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./home/checkboxtable */ "./resources/js/home/checkboxtable.js");
-/* harmony import */ var _home_checkboxtable__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_home_checkboxtable__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _project_dropzone__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./project/dropzone */ "./resources/js/project/dropzone.js");
-/* harmony import */ var _project_dropzone__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_project_dropzone__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _profile_profile__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./profile/profile */ "./resources/js/profile/profile.js");
-/* harmony import */ var _profile_profile__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_profile_profile__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _home_modals__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./home/modals */ "./resources/js/home/modals.js");
-/* harmony import */ var _home_modals__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_home_modals__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _home_project_name__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./home/project_name */ "./resources/js/home/project_name.js");
-/* harmony import */ var _home_project_name__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_home_project_name__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var _file_update_file__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./file/update_file */ "./resources/js/file/update_file.js");
-/* harmony import */ var _file_update_file__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_file_update_file__WEBPACK_IMPORTED_MODULE_10__);
-/* harmony import */ var _home_delete_project__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./home/delete_project */ "./resources/js/home/delete_project.js");
-/* harmony import */ var _home_delete_project__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(_home_delete_project__WEBPACK_IMPORTED_MODULE_11__);
-/* harmony import */ var _project_delete_file__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./project/delete_file */ "./resources/js/project/delete_file.js");
-/* harmony import */ var _project_delete_file__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(_project_delete_file__WEBPACK_IMPORTED_MODULE_12__);
-/* harmony import */ var _project_project_actions__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./project/project_actions */ "./resources/js/project/project_actions.js");
-/* harmony import */ var _project_project_actions__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(_project_project_actions__WEBPACK_IMPORTED_MODULE_13__);
-/* harmony import */ var _project_masks__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./project/masks */ "./resources/js/project/masks.js");
-/* harmony import */ var _project_masks__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(_project_masks__WEBPACK_IMPORTED_MODULE_14__);
-/* harmony import */ var _project_distribution_checkbox__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./project/distribution_checkbox */ "./resources/js/project/distribution_checkbox.js");
-/* harmony import */ var _project_distribution_checkbox__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(_project_distribution_checkbox__WEBPACK_IMPORTED_MODULE_15__);
-/* harmony import */ var _project_comment_modal__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./project/comment_modal */ "./resources/js/project/comment_modal.js");
-/* harmony import */ var _project_comment_modal__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(_project_comment_modal__WEBPACK_IMPORTED_MODULE_16__);
-/* harmony import */ var _profile_forgot_modal__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./profile/forgot_modal */ "./resources/js/profile/forgot_modal.js");
-/* harmony import */ var _profile_forgot_modal__WEBPACK_IMPORTED_MODULE_17___default = /*#__PURE__*/__webpack_require__.n(_profile_forgot_modal__WEBPACK_IMPORTED_MODULE_17__);
-/* harmony import */ var _home_delete_empty__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./home/delete_empty */ "./resources/js/home/delete_empty.js");
-/* harmony import */ var _home_delete_empty__WEBPACK_IMPORTED_MODULE_18___default = /*#__PURE__*/__webpack_require__.n(_home_delete_empty__WEBPACK_IMPORTED_MODULE_18__);
+/* harmony import */ var _usercontroller_edit_save__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./usercontroller/edit_save */ "./resources/js/usercontroller/edit_save.js");
+/* harmony import */ var _usercontroller_edit_save__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_usercontroller_edit_save__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _usercontroller_add__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./usercontroller/add */ "./resources/js/usercontroller/add.js");
+/* harmony import */ var _usercontroller_add__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_usercontroller_add__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _home_checkboxtable__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./home/checkboxtable */ "./resources/js/home/checkboxtable.js");
+/* harmony import */ var _home_checkboxtable__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_home_checkboxtable__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _project_dropzone__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./project/dropzone */ "./resources/js/project/dropzone.js");
+/* harmony import */ var _project_dropzone__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_project_dropzone__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _profile_profile__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./profile/profile */ "./resources/js/profile/profile.js");
+/* harmony import */ var _profile_profile__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_profile_profile__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _home_modals__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./home/modals */ "./resources/js/home/modals.js");
+/* harmony import */ var _home_modals__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_home_modals__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _home_project_name__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./home/project_name */ "./resources/js/home/project_name.js");
+/* harmony import */ var _home_project_name__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_home_project_name__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var _file_update_file__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./file/update_file */ "./resources/js/file/update_file.js");
+/* harmony import */ var _file_update_file__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(_file_update_file__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var _home_delete_project__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./home/delete_project */ "./resources/js/home/delete_project.js");
+/* harmony import */ var _home_delete_project__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(_home_delete_project__WEBPACK_IMPORTED_MODULE_12__);
+/* harmony import */ var _project_delete_file__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./project/delete_file */ "./resources/js/project/delete_file.js");
+/* harmony import */ var _project_delete_file__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(_project_delete_file__WEBPACK_IMPORTED_MODULE_13__);
+/* harmony import */ var _project_project_actions__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./project/project_actions */ "./resources/js/project/project_actions.js");
+/* harmony import */ var _project_project_actions__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(_project_project_actions__WEBPACK_IMPORTED_MODULE_14__);
+/* harmony import */ var _project_masks__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./project/masks */ "./resources/js/project/masks.js");
+/* harmony import */ var _project_masks__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(_project_masks__WEBPACK_IMPORTED_MODULE_15__);
+/* harmony import */ var _project_distribution_checkbox__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./project/distribution_checkbox */ "./resources/js/project/distribution_checkbox.js");
+/* harmony import */ var _project_distribution_checkbox__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(_project_distribution_checkbox__WEBPACK_IMPORTED_MODULE_16__);
+/* harmony import */ var _project_comment_modal__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./project/comment_modal */ "./resources/js/project/comment_modal.js");
+/* harmony import */ var _project_comment_modal__WEBPACK_IMPORTED_MODULE_17___default = /*#__PURE__*/__webpack_require__.n(_project_comment_modal__WEBPACK_IMPORTED_MODULE_17__);
+/* harmony import */ var _profile_forgot_modal__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./profile/forgot_modal */ "./resources/js/profile/forgot_modal.js");
+/* harmony import */ var _profile_forgot_modal__WEBPACK_IMPORTED_MODULE_18___default = /*#__PURE__*/__webpack_require__.n(_profile_forgot_modal__WEBPACK_IMPORTED_MODULE_18__);
+/* harmony import */ var _home_delete_empty__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./home/delete_empty */ "./resources/js/home/delete_empty.js");
+/* harmony import */ var _home_delete_empty__WEBPACK_IMPORTED_MODULE_19___default = /*#__PURE__*/__webpack_require__.n(_home_delete_empty__WEBPACK_IMPORTED_MODULE_19__);
 
 
 window.bootstrap = bootstrap__WEBPACK_IMPORTED_MODULE_1__;
+
 
 
 
@@ -14664,6 +14667,23 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   // 2) GESTION TYPE (file-type-select)
+
+  //
+  //
+  //
+  //CHANGE ALL
+  //
+  //
+  //
+
+  document.addEventListener('change', function (event) {
+    var target = event.target;
+
+    // console.log( target );
+
+    if (!target.classList.contains('file-type-select')) return;
+    alert('e');
+  });
   document.querySelectorAll('.file-type-select').forEach(function (select) {
     select.addEventListener('change', function () {
       var row = this.closest('tr');
@@ -14760,11 +14780,13 @@ document.addEventListener('DOMContentLoaded', function () {
           }).then(function (response) {
             return response.json();
           }).then(function (data) {
+            var projectTable = $('#project-table').DataTable();
+
             // Remove deleted items in DOM
             selectedProjects.forEach(function (projectId) {
               var row = document.querySelector("#project-row-".concat(projectId));
               if (row) {
-                row.remove();
+                projectTable.row(row).remove().draw();
               }
             });
             Swal.fire({
@@ -15945,10 +15967,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
 /***/ }),
 
-/***/ "./resources/js/usercontroller/usercontroller.js":
-/*!*******************************************************!*\
+/***/ "./resources/js/usercontroller/add.js":
+/*!********************************************!*\
+  !*** ./resources/js/usercontroller/add.js ***!
+  \********************************************/
+/***/ (() => {
+
+document.addEventListener('DOMContentLoaded', function () {
+  document.addEventListener('click', function (event) {});
+});
+
+/***/ }),
+
+/***/ "./resources/js/usercontroller/edit_save.js":
+/*!**************************************************!*\
   !*** ./resources/js/usercontroller/edit_save.js ***!
-  \*******************************************************/
+  \**************************************************/
 /***/ (() => {
 
 $(document).ready(function () {
@@ -15994,7 +16028,6 @@ $(document).ready(function () {
   });
 });
 document.addEventListener('DOMContentLoaded', function () {
-  var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
   var roles = window.allRoles;
 
   // Edit Company
@@ -16099,7 +16132,7 @@ document.addEventListener('DOMContentLoaded', function () {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'X-CSRF-TOKEN': csrfToken
+              'X-CSRF-TOKEN': window.csrf_token
             },
             body: JSON.stringify({
               company_id: companyId
@@ -16223,7 +16256,7 @@ document.addEventListener('DOMContentLoaded', function () {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': csrfToken
+          'X-CSRF-TOKEN': window.csrf_token
         },
         body: JSON.stringify(data)
       }).then(function (response) {
@@ -16289,7 +16322,7 @@ document.addEventListener('DOMContentLoaded', function () {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'X-CSRF-TOKEN': csrfToken
+              'X-CSRF-TOKEN': window.csrf_token
             },
             body: JSON.stringify({
               user_id: userId
@@ -16339,7 +16372,7 @@ document.addEventListener('DOMContentLoaded', function () {
 /***/ (() => {
 
 jQuery(document).ready(function ($) {
-  var table = $('#project-table').DataTable({
+  var project_table = $('#project-table').DataTable({
     destroy: true,
     responsive: true,
     language: {
@@ -16347,7 +16380,7 @@ jQuery(document).ready(function ($) {
       "thousands": ".",
       "sProcessing": "Traitement en cours...",
       "sSearch": "Rechercher :",
-      "sLengthMenu": "Afficher _MENU_ éléments",
+      "sLengthMenu": "_MENU_",
       "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ éléments",
       "sInfoEmpty": "Affichage de 0 à 0 sur 0 éléments",
       "sInfoFiltered": "(filtré à partir de _MAX_ éléments au total)",
@@ -16361,14 +16394,10 @@ jQuery(document).ready(function ($) {
       }
     }
   });
-  table.on('draw', function () {
-    if ($('#project-table tbody tr').length === 1 && $('#project-table tbody .no-data').length) {
-      $('#project-table tbody .no-data td').attr('colspan', $('#project-table thead th').length);
-    }
-  });
   $('#files-table').DataTable({
     destroy: true,
     responsive: true,
+    ordering: true,
     language: {
       "decimal": ",",
       "thousands": ".",
@@ -16463,7 +16492,7 @@ __webpack_require__.r(__webpack_exports__);
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/
+/******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -16477,17 +16506,17 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/
+/******/ 	
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/
+/******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
+/******/ 	
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = __webpack_modules__;
-/******/
+/******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/chunk loaded */
 /******/ 	(() => {
@@ -16520,7 +16549,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 			return result;
 /******/ 		};
 /******/ 	})();
-/******/
+/******/ 	
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	(() => {
 /******/ 		// getDefaultExport function for compatibility with non-harmony modules
@@ -16532,7 +16561,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 			return getter;
 /******/ 		};
 /******/ 	})();
-/******/
+/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -16544,7 +16573,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 			}
 /******/ 		};
 /******/ 	})();
-/******/
+/******/ 	
 /******/ 	/* webpack/runtime/global */
 /******/ 	(() => {
 /******/ 		__webpack_require__.g = (function() {
@@ -16556,12 +16585,12 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 			}
 /******/ 		})();
 /******/ 	})();
-/******/
+/******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
-/******/
+/******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -16572,11 +16601,11 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
 /******/ 	})();
-/******/
+/******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
 /******/ 	(() => {
 /******/ 		// no baseURI
-/******/
+/******/ 		
 /******/ 		// object to store loaded and loading chunks
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
@@ -16584,19 +16613,19 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 			"/js/app": 0,
 /******/ 			"css/app": 0
 /******/ 		};
-/******/
+/******/ 		
 /******/ 		// no chunk on demand loading
-/******/
+/******/ 		
 /******/ 		// no prefetching
-/******/
+/******/ 		
 /******/ 		// no preloaded
-/******/
+/******/ 		
 /******/ 		// no HMR
-/******/
+/******/ 		
 /******/ 		// no HMR manifest
-/******/
+/******/ 		
 /******/ 		__webpack_require__.O.j = (chunkId) => (installedChunks[chunkId] === 0);
-/******/
+/******/ 		
 /******/ 		// install a JSONP callback for chunk loading
 /******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
 /******/ 			var [chunkIds, moreModules, runtime] = data;
@@ -16621,20 +16650,20 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 			}
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
-/******/
+/******/ 		
 /******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
-/******/
+/******/ 	
 /************************************************************************/
-/******/
+/******/ 	
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
 /******/ 	__webpack_require__.O(undefined, ["css/app"], () => (__webpack_require__("./resources/js/app.js")))
 /******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/app"], () => (__webpack_require__("./resources/sass/app.scss")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
-/******/
+/******/ 	
 /******/ })()
 ;
