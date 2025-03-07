@@ -3,7 +3,8 @@ import * as bootstrap from 'bootstrap';
 window.bootstrap = bootstrap;
 import './utils/universal_alerts';
 import './utils/datatables';
-import './usercontroller/usercontroller';
+import './usercontroller/edit_save';
+import './usercontroller/add';
 import './home/checkboxtable';
 import './project/dropzone';
 import './profile/profile'

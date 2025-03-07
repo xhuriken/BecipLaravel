@@ -126,7 +126,7 @@ class UserController extends Controller
             $request->validate([
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|unique:users,email',
-                'password' => 'required|string|min:8',
+                'password' => \Illuminate\Validation\Rules\Password::defaults(),
                 'role' => 'required|in:engineer,drawer,secretary,client',
                 'company_id' => 'nullable|exists:companies,id'
             ]);
@@ -138,12 +138,6 @@ class UserController extends Controller
                 'role' => $request->role,
                 'company_id' => $request->company_id,
             ]);
-
-            //
-            //
-            //BUG, COMPANY ID IS ALWAYS NULL
-            //
-            //
 
             //Magic link Connexion
             $generator = new LoginUrl($user);

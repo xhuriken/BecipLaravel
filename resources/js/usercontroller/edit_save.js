@@ -43,7 +43,6 @@ $(document).ready(function() {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     const roles = window.allRoles;
 
     // Edit Company
@@ -150,7 +149,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': csrfToken
+                            'X-CSRF-TOKEN': window.csrf_token
                         },
                         body: JSON.stringify({ company_id: companyId })
                     })
@@ -281,7 +280,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken
+                    'X-CSRF-TOKEN': window.csrf_token
                 },
                 body: JSON.stringify(data)
             })
@@ -351,7 +350,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': csrfToken
+                            'X-CSRF-TOKEN': window.csrf_token
                         },
                         body: JSON.stringify({ user_id: userId })
                     })
