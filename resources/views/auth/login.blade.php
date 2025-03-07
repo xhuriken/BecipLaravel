@@ -58,14 +58,31 @@
                                 </button>
 
                                 @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        {{ __('Forgot Your Password?') }}
-                                    </a>
+{{--                                    <a class="btn btn-link" href="{{ route('password.request') }}">--}}
+{{--                                        {{ __('Forgot Your Password?') }}--}}
+{{--                                    </a>--}}
                                 @endif
                             </div>
                         </div>
                     </form>
+                    <div class="forgot-btn" id="password-change-container">
+                        <button id="open-change-password" class="btn-filter">{{ __('Forgot Your Password?') }}</button>
+                    </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="changePasswordModal" class="modal fade">
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Changer le mot de passe</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body">
+                @include('auth.passwords.email_content')
             </div>
         </div>
     </div>

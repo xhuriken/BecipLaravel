@@ -249,3 +249,9 @@ h2{
     display: flex;
     justify-content: space-around;
 }
+
+.forgot-btn{
+    padding-top: 1rem;
+    display: flex;
+    justify-content: center;
+}
