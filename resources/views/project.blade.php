@@ -13,7 +13,7 @@
 
     <h1>Détails de l'affaire</h1>
     <header>
-        <div class="affinfo"> <!-- Pour le css plus tard -->
+        <div class="affinfo"><!-- Pour le css plus tard -->
             <p><strong>Entreprise : </strong>
                 {{$company}}
             </p>
@@ -33,14 +33,16 @@
                 </div>
             </div>
         @endif
-        <div id="project-container" data-project-id="{{ $project->id }}" data-route="{{ route('projects.upload', $project->id) }}">
-            <h2>Upload de fichiers</h2>
-            <!-- Drag & Drop -->
-            <div id="dropzone" class="dropzone" style="border: 2px dashed #ccc; padding: 20px; text-align: center; cursor: pointer;">
-                Glissez-déposez vos fichiers ici ou cliquez pour sélectionner.
-                <input type="file" id="file-input" name="files[]" multiple style="display: none;">
+        @if(auth()->user()->isBecip())
+            <div id="project-container" data-project-id="{{ $project->id }}" data-route="{{ route('projects.upload', $project->id) }}">
+                <h2>Upload de fichiers</h2>
+                <!-- Drag & Drop -->
+                <div id="dropzone" class="dropzone" style="border: 2px dashed #ccc; padding: 20px; text-align: center; cursor: pointer;">
+                    Glissez-déposez vos fichiers ici ou cliquez pour sélectionner.
+                    <input type="file" id="file-input" name="files[]" multiple style="display: none;">
+                </div>
             </div>
-        </div>
+        @endif
 
 
         <table id="files-table" class="table-responsive table table-striped" style="width:100%">
