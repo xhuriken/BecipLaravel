@@ -19,7 +19,7 @@
             </p>
             <p><strong>Nom de l'affaire : </strong>{{$project->name}}</p>
             <p><strong>Ingénieur référent : </strong>{{$referent}}</p>
-            <p><strong>Clients : </strong>{{ $clients !== null ? $clients->pluck('name')->join(', ') : 'Aucun'}}</p>
+            <p><strong>Clients : </strong>{{ $clients && !$clients->isEmpty() ? $clients->pluck('name')->join(', ') : 'Aucun' }}</p>
         </div>
         @if(auth()->user()->role == 'engineer')
             <div class="masks"> <!--need flex-->
