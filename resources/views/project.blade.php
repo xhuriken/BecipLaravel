@@ -19,7 +19,7 @@
             </p>
             <p><strong>Nom de l'affaire : </strong>{{$project->name}}</p>
             <p><strong>Ingénieur référent : </strong>{{$referent}}</p>
-            <p><strong>Clients : </strong>{{ $clients->pluck('name')->join(', ') }}</p>
+            <p><strong>Clients : </strong>{{ $clients !== null ? $clients->pluck('name')->join(', ') : 'Aucun'}}</p>
         </div>
         @if(auth()->user()->role == 'engineer')
             <div class="masks"> <!--need flex-->
@@ -208,7 +208,7 @@
         </table>
         <button id="download-btn" class="btn btn-primary">Download</button>
 
-        <button id="distribute-btn" class="btn btn-warning">Distribute</button>
+        <button id="distribute-btn" class="btn btn-primary">Distribute</button>
     </header>
 
     {{--Comment 'Voir Plus' Modal--}}

@@ -41,7 +41,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 text: 'Le mot de passe doit contenir au moins 8 caractères.',
             });
         }
-        alert(window.addUserRoute);
         //If everithing is good, SEND !
         fetch(window.addUserRoute, {
             method: 'POST',

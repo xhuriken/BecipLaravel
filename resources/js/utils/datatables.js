@@ -44,6 +44,9 @@ jQuery(document).ready(function($) {
                 "sSortAscending": ": activer pour trier la colonne par ordre croissant",
                 "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
             }
-        }
+        },
+        columnDefs: [
+            { orderable: false, targets: [0, 3, 4, 8, 9, 10] }
+        ]
     });
 });
