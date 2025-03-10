@@ -1,11 +1,13 @@
 $(document).ready(function() {
     let companiesTable = $('#companies-table').DataTable({
+        destroy: true,
+        responsive: true,
         language: {
             "decimal": ",",
             "thousands": ".",
             "sProcessing": "Traitement en cours...",
             "sSearch": "Rechercher :",
-            "sLengthMenu": "Afficher _MENU_ éléments",
+            "sLengthMenu": "_MENU_",
             "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ éléments",
             "sInfoEmpty": "Affichage de 0 à 0 sur 0 éléments",
             "sInfoFiltered": "(filtré à partir de _MAX_ éléments au total)",
@@ -21,12 +23,14 @@ $(document).ready(function() {
     });
 
     let usersTable = $('#users-table').DataTable({
+        destroy: true,
+        responsive: true,
         language: {
             "decimal": ",",
             "thousands": ".",
             "sProcessing": "Traitement en cours...",
             "sSearch": "Rechercher :",
-            "sLengthMenu": "Afficher _MENU_ éléments",
+            "sLengthMenu": "_MENU_",
             "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ éléments",
             "sInfoEmpty": "Affichage de 0 à 0 sur 0 éléments",
             "sInfoFiltered": "(filtré à partir de _MAX_ éléments au total)",

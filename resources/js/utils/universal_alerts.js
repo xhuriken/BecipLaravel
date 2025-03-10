@@ -1,3 +1,9 @@
+//
+//
+// USELESS NOW (Thanks Sweetalert)
+//
+//
+
 function showAlert(message, type = 'info', duration = 5000) {
     const alertEl = document.getElementById('universal-alert');
     const messageEl = document.getElementById('universal-alert-message');

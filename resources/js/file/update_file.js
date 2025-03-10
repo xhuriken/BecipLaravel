@@ -1,8 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
-
     // update specific fields of specific fileId
     function updateFileField(fileId, field, value) {
-        // Construit l'URL en insérant l'ID du fichier
         const updateUrl = `${window.fileUpdateRoute.replace('FILE_ID', fileId)}`;
 
         fetch(updateUrl, {
@@ -25,71 +23,43 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-    // 1) GESTION REVISION (is_last_index)
-    document.querySelectorAll('.update-last-index').forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            const row = this.closest('tr');
-            const fileId = row.getAttribute('data-id');
-            const newValue = this.checked;
-
-            updateFileField(fileId, 'is_last_index', newValue);
-        });
-    });
-
-    // 2) GESTION TYPE (file-type-select)
-
-    //
-    //
-    //
-    //CHANGE ALL
-    //
-    //
-    //
-
     document.addEventListener('change', function(event) {
         let target = event.target;
 
-        // console.log( target );
-
-        if( !target.classList.contains('file-type-select') ) return;
-
-        alert('e');
-    });
-
-
-    document.querySelectorAll('.file-type-select').forEach(select => {
-        select.addEventListener('change', function() {
-            const row = this.closest('tr');
+        // 1) GESTION REVISION (is_last_index)
+        if (target.classList.contains('update-last-index')) {
+            const row = target.closest('tr');
             const fileId = row.getAttribute('data-id');
-            const newValue = this.value;
-
+            const newValue = target.checked;
+            updateFileField(fileId, 'is_last_index', newValue);
+        }
+        // 2) GESTION TYPE (file-type-select)
+        if (target.classList.contains('file-type-select')) {
+            const row = target.closest('tr');
+            const fileId = row.getAttribute('data-id');
+            const newValue = target.value;
             updateFileField(fileId, 'type', newValue);
-        });
+        }
+        // 4) GESTION VALIDATION (is-validated-checkbox)
+        if (target.classList.contains('is-validated-checkbox')) {
+            const row = target.closest('tr');
+            const fileId = row.getAttribute('data-id');
+            const newValue = target.checked;
+            updateFileField(fileId, 'is_validated', newValue);
+        }
     });
 
-    // 3) GESTION COMMENTAIRE (comment-textarea)
-    document.querySelectorAll('.comment-textarea').forEach(textarea => {
-        //blur = perte de focus du comm
-        textarea.addEventListener('blur', function() {
-            const row = this.closest('tr');
+    document.addEventListener('blur', function(event) {
+        let target = event.target;
+        // 2) GESTION TYPE (file-type-select)
+        if (target.classList.contains('comment-textarea')) {
+            const row = target.closest('tr');
             const fileId = row.getAttribute('data-id');
-            const newValue = this.value;
+            const newValue = target.value;
 
-            if(newValue !== ""){
+            if(newValue !== "") {
                 updateFileField(fileId, 'comment', newValue);
             }
-        });
-    });
-
-    // 4) GESTION VALIDATION (is-validated-checkbox)
-    document.querySelectorAll('.is-validated-checkbox').forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            const row = this.closest('tr');
-            const fileId = row.getAttribute('data-id');
-            const newValue = this.checked;
-
-            updateFileField(fileId, 'is_validated', newValue);
-        });
-    });
-
+        }
+    }, true);
 });

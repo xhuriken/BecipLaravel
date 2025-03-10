@@ -1,5 +1,5 @@
 jQuery(document).ready(function($) {
-    let project_table = $('#project-table').DataTable({
+    $('#project-table').DataTable({
         destroy: true,
         responsive: true,
         language: {
@@ -23,7 +23,6 @@ jQuery(document).ready(function($) {
     });
 
 
-
     $('#files-table').DataTable({
         destroy: true,
         responsive: true,
@@ -33,7 +32,7 @@ jQuery(document).ready(function($) {
             "thousands": ".",
             "sProcessing": "Traitement en cours...",
             "sSearch": "Rechercher :",
-            "sLengthMenu": "Afficher _MENU_ éléments",
+            "sLengthMenu": "_MENU_",
             "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ éléments",
             "sInfoEmpty": "Affichage de 0 à 0 sur 0 éléments",
             "sInfoFiltered": "(filtré à partir de _MAX_ éléments au total)",
@@ -47,6 +46,4 @@ jQuery(document).ready(function($) {
             }
         }
     });
-
-
 });

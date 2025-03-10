@@ -14632,7 +14632,6 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 document.addEventListener('DOMContentLoaded', function () {
   // update specific fields of specific fileId
   function updateFileField(fileId, field, value) {
-    // Construit l'URL en insérant l'ID du fichier
     var updateUrl = "".concat(window.fileUpdateRoute.replace('FILE_ID', fileId));
     fetch(updateUrl, {
       method: 'POST',
@@ -14655,66 +14654,43 @@ document.addEventListener('DOMContentLoaded', function () {
       alert("Une erreur s'est produite.");
     });
   }
-
-  // 1) GESTION REVISION (is_last_index)
-  document.querySelectorAll('.update-last-index').forEach(function (checkbox) {
-    checkbox.addEventListener('change', function () {
-      var row = this.closest('tr');
-      var fileId = row.getAttribute('data-id');
-      var newValue = this.checked;
-      updateFileField(fileId, 'is_last_index', newValue);
-    });
-  });
-
-  // 2) GESTION TYPE (file-type-select)
-
-  //
-  //
-  //
-  //CHANGE ALL
-  //
-  //
-  //
-
   document.addEventListener('change', function (event) {
     var target = event.target;
 
-    // console.log( target );
-
-    if (!target.classList.contains('file-type-select')) return;
-    alert('e');
-  });
-  document.querySelectorAll('.file-type-select').forEach(function (select) {
-    select.addEventListener('change', function () {
-      var row = this.closest('tr');
+    // 1) GESTION REVISION (is_last_index)
+    if (target.classList.contains('update-last-index')) {
+      var row = target.closest('tr');
       var fileId = row.getAttribute('data-id');
-      var newValue = this.value;
-      updateFileField(fileId, 'type', newValue);
-    });
+      var newValue = target.checked;
+      updateFileField(fileId, 'is_last_index', newValue);
+    }
+    // 2) GESTION TYPE (file-type-select)
+    if (target.classList.contains('file-type-select')) {
+      var _row = target.closest('tr');
+      var _fileId = _row.getAttribute('data-id');
+      var _newValue = target.value;
+      updateFileField(_fileId, 'type', _newValue);
+    }
+    // 4) GESTION VALIDATION (is-validated-checkbox)
+    if (target.classList.contains('is-validated-checkbox')) {
+      var _row2 = target.closest('tr');
+      var _fileId2 = _row2.getAttribute('data-id');
+      var _newValue2 = target.checked;
+      updateFileField(_fileId2, 'is_validated', _newValue2);
+    }
   });
-
-  // 3) GESTION COMMENTAIRE (comment-textarea)
-  document.querySelectorAll('.comment-textarea').forEach(function (textarea) {
-    //blur = perte de focus du comm
-    textarea.addEventListener('blur', function () {
-      var row = this.closest('tr');
+  document.addEventListener('blur', function (event) {
+    var target = event.target;
+    // 2) GESTION TYPE (file-type-select)
+    if (target.classList.contains('comment-textarea')) {
+      var row = target.closest('tr');
       var fileId = row.getAttribute('data-id');
-      var newValue = this.value;
+      var newValue = target.value;
       if (newValue !== "") {
         updateFileField(fileId, 'comment', newValue);
       }
-    });
-  });
-
-  // 4) GESTION VALIDATION (is-validated-checkbox)
-  document.querySelectorAll('.is-validated-checkbox').forEach(function (checkbox) {
-    checkbox.addEventListener('change', function () {
-      var row = this.closest('tr');
-      var fileId = row.getAttribute('data-id');
-      var newValue = this.checked;
-      updateFileField(fileId, 'is_validated', newValue);
-    });
-  });
+    }
+  }, true);
 });
 
 /***/ }),
@@ -15987,12 +15963,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
 $(document).ready(function () {
   var companiesTable = $('#companies-table').DataTable({
+    destroy: true,
+    responsive: true,
     language: {
       "decimal": ",",
       "thousands": ".",
       "sProcessing": "Traitement en cours...",
       "sSearch": "Rechercher :",
-      "sLengthMenu": "Afficher _MENU_ éléments",
+      "sLengthMenu": "_MENU_",
       "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ éléments",
       "sInfoEmpty": "Affichage de 0 à 0 sur 0 éléments",
       "sInfoFiltered": "(filtré à partir de _MAX_ éléments au total)",
@@ -16007,12 +15985,14 @@ $(document).ready(function () {
     }
   });
   var usersTable = $('#users-table').DataTable({
+    destroy: true,
+    responsive: true,
     language: {
       "decimal": ",",
       "thousands": ".",
       "sProcessing": "Traitement en cours...",
       "sSearch": "Rechercher :",
-      "sLengthMenu": "Afficher _MENU_ éléments",
+      "sLengthMenu": "_MENU_",
       "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ éléments",
       "sInfoEmpty": "Affichage de 0 à 0 sur 0 éléments",
       "sInfoFiltered": "(filtré à partir de _MAX_ éléments au total)",
@@ -16372,7 +16352,7 @@ document.addEventListener('DOMContentLoaded', function () {
 /***/ (() => {
 
 jQuery(document).ready(function ($) {
-  var project_table = $('#project-table').DataTable({
+  $('#project-table').DataTable({
     destroy: true,
     responsive: true,
     language: {
@@ -16403,7 +16383,7 @@ jQuery(document).ready(function ($) {
       "thousands": ".",
       "sProcessing": "Traitement en cours...",
       "sSearch": "Rechercher :",
-      "sLengthMenu": "Afficher _MENU_ éléments",
+      "sLengthMenu": "_MENU_",
       "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ éléments",
       "sInfoEmpty": "Affichage de 0 à 0 sur 0 éléments",
       "sInfoFiltered": "(filtré à partir de _MAX_ éléments au total)",
@@ -16426,6 +16406,12 @@ jQuery(document).ready(function ($) {
   !*** ./resources/js/utils/universal_alerts.js ***!
   \************************************************/
 /***/ (() => {
+
+//
+//
+// USELESS NOW (Thanks Sweetalert)
+//
+//
 
 function showAlert(message) {
   var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'info';
