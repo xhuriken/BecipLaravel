@@ -9,3 +9,14 @@
 .page-link {
     color: #0c9155;
 }
+
+
+/*cursor pointer for sorting*/
+th.dt-orderable-asc,
+th.dt-orderable-desc {
+    cursor: pointer;
+}
+
+th.dt-orderable-none {
+    cursor: default;
+}

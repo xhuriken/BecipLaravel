@@ -15982,7 +15982,11 @@ $(document).ready(function () {
         "sSortAscending": ": activer pour trier la colonne par ordre croissant",
         "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
       }
-    }
+    },
+    columnDefs: [{
+      orderable: false,
+      targets: 2
+    }]
   });
   var usersTable = $('#users-table').DataTable({
     destroy: true,
@@ -16004,7 +16008,11 @@ $(document).ready(function () {
         "sSortAscending": ": activer pour trier la colonne par ordre croissant",
         "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
       }
-    }
+    },
+    columnDefs: [{
+      orderable: false,
+      targets: 5
+    }]
   });
 });
 document.addEventListener('DOMContentLoaded', function () {
