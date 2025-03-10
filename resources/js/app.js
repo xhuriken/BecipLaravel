@@ -4,7 +4,6 @@ window.bootstrap = bootstrap;
 import './utils/universal_alerts';
 import './utils/datatables';
 import './usercontroller/edit_save';
-import './usercontroller/add';
 import './home/checkboxtable';
 import './project/dropzone';
 import './profile/profile'
@@ -19,3 +18,4 @@ import './project/distribution_checkbox'
 import './project/comment_modal'
 import './profile/forgot_modal'
 import './home/delete_empty'
+import './usercontroller/add';

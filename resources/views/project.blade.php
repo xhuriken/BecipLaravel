@@ -195,8 +195,10 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td></td>
-                        <td></td>
+                        @if(!$project->is_mask_distributed)
+                            <td></td>
+                            <td></td>
+                        @endif
                         @if(auth()->user()->isBecip())
                             <td></td>
                         @endif

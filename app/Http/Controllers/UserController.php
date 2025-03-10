@@ -123,45 +123,50 @@ class UserController extends Controller
     public function adduser(Request $request)
     {
         if ($request->isMethod('post')) {
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|email|unique:users,email',
-                'password' => 'required|string|min:6',
-                'role' => 'required|in:engineer,drawer,secretary,client',
-                'company_id' => 'nullable|exists:companies,id'
-            ]);
-//            'password' => \Illuminate\Validation\Rules\Password::defaults(),
+            // Vérification si c'est une requête AJAX
+                $validatedData = $request->validate([
+                    'name' => 'required|string|max:255',
+                    'email' => 'required|email|unique:users,email',
+                    'password' => 'required|string|min:8',
+                    'role' => 'required|in:engineer,drawer,secretary,client',
+                    'company_id' => 'nullable|exists:companies,id'
+                ]);
 
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'role' => $request->role,
-                'company_id' => $request->company_id,
-            ]);
+                // Création de l'utilisateur
+                $user = User::create([
+                    'name' => $validatedData['name'],
+                    'email' => $validatedData['email'],
+                    'password' => Hash::make($validatedData['password']),
+                    'role' => $validatedData['role'],
+                    'company_id' => $validatedData['company_id'],
+                ]);
 
-            //Magic link Connexion
-            $generator = new LoginUrl($user);
-            $generator->setRedirectUrl('/');
-            $url = $generator->generate();
+                // Magic link Connexion
+                $generator = new LoginUrl($user);
+                $generator->setRedirectUrl('/');
+                $url = $generator->generate();
 
-            //Link Change Password
-            $token = Password::createToken($user);
+                // Link Change Password
+                $token = Password::createToken($user);
 
-            $urlPassword = url(route('password.reset', [
-                'token' => $token,
-                'email' => $user->email,
-            ]));
+                $urlPassword = url(route('password.reset', [
+                    'token' => $token,
+                    'email' => $user->email,
+                ]));
 
-            Mail::to($user->email)->send(new NewUser(
-                $user->name,
-                $url,
-                $request->password,
-                $urlPassword
-            ));
+                // Envoi de l'email
+                Mail::to($user->email)->send(new NewUser(
+                    $user->name,
+                    $url,
+                    $validatedData['password'],
+                    $urlPassword
+                ));
 
-            return redirect()->back()->with('success', 'Utilisateur ajouté avec succès.');
-
+                // Réponse JSON pour l'AJAX
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Utilisateur ajouté avec succès.'
+                ]);
         }
 
         $companies = Company::all();

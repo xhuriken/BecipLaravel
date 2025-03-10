@@ -13,18 +13,18 @@
 
         <div class="flex">
             {{-- Formulaire d'ajout d'utilisateur --}}
-            <form action="{{ route('usermanager.adduser') }}" method="POST" class="form-becip">
+            <form action="" method="POST" class="form-becip">
                 @csrf
                 <h2 class="mb-2">Ajouter un utilisateur</h2>
 
                 <div class="mb-2">
                     <label for="name" class="form-label">Nom et Prénom</label>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="Nom Prénom..." required>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Nom Prénom...">
                 </div>
 
                 <div class="mb-2">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" placeholder="Email valide..." required>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Email valide...">
                 </div>
 
                 <div class="mb-2">
@@ -32,7 +32,7 @@
                       Mot de passe
                     </label>
                     <input type="password" class="form-control" id="password" name="password"
-                           value="{{ $newPasswordGenerated }}" placeholder="SuperMot2Passe!" required>
+                           value="{{ $newPasswordGenerated }}" placeholder="SuperMot2Passe!">
                 </div>
 
                 <div class="mb-2">
@@ -149,6 +149,7 @@
     </div>
 
     <script>
+        window.addUserRoute = "{{ route('usermanager.adduser') }}";
         window.allCompanies = @json($companies);
         window.allRoles = {
             'engineer': 'Ingénieur',

@@ -99,7 +99,7 @@
         <div class="cta-button">
             <a href="{{$urlHome}}">Accéder à mon compte</a>
         </div>
-        <p class="small">Ce lien est valable 2 jours après l'envoie de ce mail.</p>
+        <p class="small">Ce lien est valable 2 jours après l'envoi de ce mail.</p>
         <p>
             Si vous avez des questions ou besoin d'assistance, n'hésitez pas à nous contacter.
             Nous sommes ravis de vous compter parmi nos utilisateurs.
