@@ -14,6 +14,8 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('email:daily')->dailyAt('01:00');
         $schedule->command('email:daily_client')->dailyAt('06:00');
+//        $schedule->command('email:daily')->everyMinute();
+//        $schedule->command('email:daily_client')->everyMinute();
     }
 
     /**

@@ -80,7 +80,7 @@
 <div class="email-container">
     <!-- HEADER -->
     <div class="header">
-        <img src="https://your-logo-url.png" alt="Becip Logo">
+        <img src="https://le-de.cdn-website.com/b7431e42b28841b09fa117548a4c9df2/dms3rep/multi/opt/fc3a2624c1b2473b81b16556bfff7f37-139h.jpg" alt="Becip Logo">
         <h1>🚀 Nouveaux Plans Validés</h1>
     </div>
 
