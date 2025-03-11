@@ -22,10 +22,14 @@ class SendDailyEmail extends Command
             $ownProjects = Project::where('referent_id', $user->id)
                 ->with(['files' => function($query) {
                     $query->where('is_validated', false)
-                        ->select('id', 'name', 'project_id', 'created_at')
+                        ->select('id', 'name', 'project_id', 'user_id', 'created_at')
+                        ->with(['uploadedBy' => function($query) {
+                            $query->select('id', 'name');
+                        }])
                         ->get()
                         ->each(function ($file) {
-                            $file->uploaded_recently = Carbon::parse($file->created_at)->gt(Carbon::now()->subDay());
+                            $file->setAttribute('uploaded_recently', $file->created_at->diffInHours(Carbon::now()) <= 24);
+                            $file->setAttribute('uploader_name', $file->uploadedBy ? $file->uploadedBy->name : 'Utilisateur inconnu');
                         });
                 }])
                 ->get();
@@ -33,10 +37,14 @@ class SendDailyEmail extends Command
             $otherProjects = Project::where('referent_id', '!=', $user->id)
                 ->with(['files' => function($query) {
                     $query->where('is_validated', false)
-                        ->select('id', 'name', 'project_id', 'created_at')
+                        ->select('id', 'name', 'project_id', 'user_id', 'created_at')
+                        ->with(['uploadedBy' => function($query) {
+                            $query->select('id', 'name');
+                        }])
                         ->get()
                         ->each(function ($file) {
-                            $file->uploaded_recently = Carbon::parse($file->created_at)->gt(Carbon::now()->subDay());
+                            $file->setAttribute('uploaded_recently', $file->created_at->diffInHours(Carbon::now()) <= 24);
+                            $file->setAttribute('uploader_name', $file->uploadedBy ? $file->uploadedBy->name : 'Utilisateur inconnu');
                         });
                 }])
                 ->get();
@@ -52,10 +60,11 @@ class SendDailyEmail extends Command
                 $generator->setRedirectUrl("/projects/project/{$project->id}");
                 $project->passwordless_url = $generator->generate();
             }
-
             Mail::to($user->email)->send(new DailyEmail($user, $ownProjects, $otherProjects));
         }
 
         $this->info('Emails envoyés avec succès avec les liens passwordless.');
     }
+
+
 }

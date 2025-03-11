@@ -43,24 +43,32 @@
             font-size: 20px;
             margin-bottom: 10px;
         }
-        .content p {
-            margin: 10px 0;
+        .project-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #0c9155;
+            margin-top: 15px;
         }
-        .cta-button {
-            display: block;
-            text-align: center;
-            margin: 20px 0;
-        }
-        .cta-button a {
-            background-color: #0c9155;
-            color: #ffffff;
+        .project-title a {
             text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 16px;
+            color: #0c9155;
         }
-        .cta-button a:hover {
-            background-color: #0a7a48;
+        .file-item {
+            margin: 5px 0;
+        }
+        .file-item a {
+            color: #333;
+            text-decoration: none;
+            font-weight: normal;
+        }
+        .new-file {
+            color: #0c9155;
+            font-weight: bold;
+        }
+        .file-info {
+            font-size: 14px;
+            color: #808080;
+            margin-left: 5px;
         }
         .footer {
             background-color: #f5f5f5;
@@ -69,40 +77,6 @@
             font-size: 12px;
             padding: 10px;
             border-top: 1px solid #dddddd;
-        }
-        .file-list {
-            margin-top: 20px;
-        }
-        .file-item {
-            margin: 10px 0;
-        }
-        .file-item a {
-            color: #0c9155;
-            text-decoration: none;
-        }
-        .new-file {
-            color: #0c9155;
-            font-weight: bold;
-        }
-        .old-file {
-            color: #333333;
-        }
-        .file-info {
-            font-size: 14px;
-            color: #999999;
-        }
-        ul {
-            margin: 0;
-        }
-        .name {
-            font-size: 14px;
-            color: #808080;
-        }
-        .filename {
-            font-weight: bold;
-        }
-        a {
-            color: #333333;
         }
     </style>
 </head>
@@ -113,53 +87,76 @@
         <img src="https://le-de.cdn-website.com/b7431e42b28841b09fa117548a4c9df2/dms3rep/multi/opt/fc3a2624c1b2473b81b16556bfff7f37-139h.jpg" alt="Becip Logo">
         <h1>Rapport Quotidien des Plans</h1>
     </div>
+
     <div class="content">
         <p>Bonjour {{ $user->name }},</p>
 
-        @if($ownProjects->isNotEmpty())
-            <h3>Vos projets :</h3>
-            <ul>
-                @foreach($ownProjects as $project)
-                    <li>
-                        <a href="{{ $project->passwordless_url }}" class="project-link">{{ $project->name }}</a>
-                        <ul>
-                            @foreach($project->files as $file)
-                                <li>
-                                    {{ $file->name }}
-                                    @if($file->uploaded_recently)
-                                        <span class="new-file">Nouveau</span>
-                                    @endif
-                                </li>
-                            @endforeach
-                        </ul>
-                    </li>
-                @endforeach
-            </ul>
+        @if($ownProjects->isEmpty() && $otherProjects->isEmpty())
+            <p style="text-align: center; font-size: 18px; font-weight: bold; color: #0c9155;">
+                ✅ Tout va bien, aucun plan non validé. Reposez-vous bien ! 😊
+            </p>
         @else
-            <p>Vous n'êtes référent d'aucun projet.</p>
-        @endif
-
-        @if($otherProjects->isNotEmpty())
-            <h3>Projets d'autres ingénieurs :</h3>
-            <ul>
-                @foreach($otherProjects as $project)
-                    <li class="file-item">
-                        <a href="{{ $project->passwordless_url }}">{{ $project->name }}</a>
+            @if($ownProjects->isNotEmpty())
+                <h3>📌 Plans où vous êtes l'ingénieur référent :</h3>
+                @php $hasOwnFiles = false; @endphp
+                @foreach($ownProjects as $project)
+                    @if($project->files->isNotEmpty())
+                        @php $hasOwnFiles = true; @endphp
+                        <p class="project-title">
+                            📁 <a href="{{ $project->passwordless_url }}">{{ $project->name }} - voir</a>
+                        </p>
                         <ul>
                             @foreach($project->files as $file)
-                                <li>
-                                    {{ $file->name }}
+                                @php
+                                    $shortName = strlen($file->name) > 30 ? substr($file->name, 0, 28) . '...' : $file->name;
+                                @endphp
+                                <li class="file-item">
                                     @if($file->uploaded_recently)
-                                        <span class="new-file">Nouveau</span>
+                                        <span class="new-file">Nouveau,</span>
+                                    @endif
+                                    <a href="#">{{ $shortName }}</a>
+                                    @if(isset($file->uploader_name))
+                                        <span class="file-info" style="color: #808080; font-size: 12px;">| {{ $file->uploader_name }}</span>
                                     @endif
                                 </li>
                             @endforeach
                         </ul>
-                    </li>
+                    @endif
                 @endforeach
-            </ul>
+                @if(!$hasOwnFiles)
+                    <p>Aucun plan non validé dans vos projets.</p>
+                @endif
+            @endif
+
+            @if($otherProjects->isNotEmpty())
+                <h3>📌 Plans non validés des autres affaires :</h3>
+                @foreach($otherProjects as $project)
+                    @if($project->files->isNotEmpty())
+                        <p class="project-title">
+                            📁 <a href="{{ $project->passwordless_url }}">{{ $project->name }} - voir</a>
+                        </p>
+                        <ul>
+                            @foreach($project->files as $file)
+                                @php
+                                    $shortName = strlen($file->name) > 30 ? substr($file->name, 0, 28) . '...' : $file->name;
+                                @endphp
+                                <li class="file-item">
+                                    @if($file->uploaded_recently)
+                                        <span class="new-file">Nouveau,</span>
+                                    @endif
+                                    <a href="#">{{ $shortName }}</a>
+                                    @if(isset($file->uploader_name))
+                                        <span class="file-info" style="color: #808080; font-size: 12px;">| {{ $file->uploader_name }}</span>
+                                    @endif
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
+                @endforeach
+            @endif
         @endif
     </div>
+
     <!-- FOOTER -->
     <div class="footer">
         Cet email vous a été envoyé par Becip.<br>
