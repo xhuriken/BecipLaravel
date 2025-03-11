@@ -9,11 +9,10 @@ class File extends Model
 {
     protected $table = 'files';
     protected $fillable =  ['project_id', 'user_id', 'name', 'extension', 'comment',
-                            'is_validated', 'validate_time', 'type', 'is_last_index',
+                            'is_validated', 'validated_time', 'type', 'is_last_index',
                             'distribution_count', 'created_at', 'updated_at'];
 
     protected $appends = ['uploaded_recently', 'uploader_name'];
-
     public function getUploadedRecentlyAttribute()
     {
         return $this->created_at->diffInHours(Carbon::now()) <= 24;

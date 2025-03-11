@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Models\User;
 use App\Models\Project;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\URL;
 use Grosv\LaravelPasswordlessLogin\LoginUrl;
 
 class SendDailyEmail extends Command
@@ -48,7 +49,7 @@ class SendDailyEmail extends Command
                         });
                 }])
                 ->get();
-
+            \URL::forceRootUrl(config('app.url'));
             foreach ($ownProjects as $project) {
                 $generator = new LoginUrl($user);
                 $generator->setRedirectUrl("/projects/project/{$project->id}");

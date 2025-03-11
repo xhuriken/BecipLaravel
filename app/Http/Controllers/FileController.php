@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\File;
 use App\Models\Project;
 use Carbon\Carbon;
+use Carbon\Traits\Date;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -57,6 +58,7 @@ class FileController extends Controller
                     return response()->json(['error' => 'Non autorisé à valider'], 403);
                 }
                 $file->is_validated = $data['value'] == 'true';
+                $file->validated_time = Carbon::now();
                 break;
         }
 
