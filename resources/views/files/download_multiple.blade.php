@@ -5,9 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Téléchargement des fichiers</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: Poppins, sans-serif;
             background-color: #f5f5f5;
             color: #333;
             margin: 0;
@@ -16,6 +19,13 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
+            background-image: linear-gradient(
+                to bottom,
+                rgba(228, 228, 228, 0.5),
+                rgba(228, 228, 228, 0.5)
+            ),
+            url("../../../imgs/backgroundw.png"); /*make error but working*/
+            /*url("../../../public/imgs/backgroundw.png");*/ /*no errors but didnt work*/
         }
 
         .container {
@@ -86,6 +96,26 @@
             100% { transform: rotate(360deg); }
         }
 
+        .close-button {
+            margin-top: 20px;
+            display: block;
+            background-color: #c0392b;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+            text-align: center;
+        }
+
+        .close-button:hover {
+            background-color: #e74c3c;
+        }
+
     </style>
 </head>
 <body>
@@ -103,11 +133,12 @@
             @endphp
             <li>
                 <a href="{{ $filePath }}" download>
-                    <span class="file-icon">📂</span> {{ $file->name }}
+                    <span class="file-icon">📃</span> {{ $file->name }}
                 </a>
             </li>
         @endforeach
     </ul>
+    <button class="close-button" onclick="closePage()">❌ Fermer la page</button>
 </div>
 
 <script>
@@ -138,6 +169,9 @@
             alert("Aucun fichier disponible pour le téléchargement.");
         }
     });
+    function closePage() {
+        window.close();
+    }
 </script>
 
 </body>

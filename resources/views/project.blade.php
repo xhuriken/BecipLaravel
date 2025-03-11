@@ -33,16 +33,16 @@
                 </div>
             </div>
         @endif
-        @if(auth()->user()->isBecip())
             <div id="project-container" data-project-id="{{ $project->id }}" data-route="{{ route('projects.upload', $project->id) }}">
                 <h2>Upload de fichiers</h2>
                 <!-- Drag & Drop -->
-                <div id="dropzone" class="dropzone" style="border: 2px dashed #ccc; padding: 20px; text-align: center; cursor: pointer;">
-                    Glissez-déposez vos fichiers ici ou cliquez pour sélectionner.
-                    <input type="file" id="file-input" name="files[]" multiple style="display: none;">
-                </div>
+                @if(auth()->user()->isBecip())
+                    <div id="dropzone" class="dropzone" style="border: 2px dashed #ccc; padding: 20px; text-align: center; cursor: pointer;">
+                        Glissez-déposez vos fichiers ici ou cliquez pour sélectionner.
+                        <input type="file" id="file-input" name="files[]" multiple style="display: none;">
+                    </div>
+                 @endif
             </div>
-        @endif
 
 
         <table id="files-table" class="table-responsive table table-striped" style="width:100%">
