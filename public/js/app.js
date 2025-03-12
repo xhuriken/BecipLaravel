@@ -14906,7 +14906,9 @@ document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('.delete-project-btn').forEach(function (btn) {
     btn.addEventListener('click', function (e) {
       e.preventDefault();
+      e.stopPropagation();
       var deleteUrl = this.getAttribute('data-delete-url');
+      var projectId = this.getAttribute('data-project-id');
 
       // SweetAlert de confirmation
       Swal.fire({
@@ -14934,13 +14936,19 @@ document.addEventListener('DOMContentLoaded', function () {
           }).then(function (data) {
             if (data.success) {
               // SweetAlert de succès
+              var projectTable = $('#project-table').DataTable();
+              var row = document.querySelector("#project-row-".concat(projectId));
+              if (row) {
+                console.log("Suppression de la ligne: project-row-".concat(projectId));
+                projectTable.row($(row)).remove().draw(false);
+              } else {
+                console.warn("Ligne non trouv\xE9e pour projectId: ".concat(projectId));
+              }
               Swal.fire({
                 title: "Affaire supprimée avec succès.",
                 icon: "success",
                 timer: 3000,
                 timerProgressBar: true
-              }).then(function () {
-                location.reload();
               });
             } else {
               Swal.fire({

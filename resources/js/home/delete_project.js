@@ -2,8 +2,10 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.delete-project-btn').forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
+            e.stopPropagation();
 
             const deleteUrl = this.getAttribute('data-delete-url');
+            const projectId = this.getAttribute('data-project-id');
 
             // SweetAlert de confirmation
             Swal.fire({
@@ -33,13 +35,20 @@ document.addEventListener('DOMContentLoaded', function() {
                         .then(data => {
                             if (data.success) {
                                 // SweetAlert de succès
+                                let projectTable = $('#project-table').DataTable();
+                                let row = document.querySelector(`#project-row-${projectId}`);
+                                if (row) {
+                                    console.log(`Suppression de la ligne: project-row-${projectId}`);
+                                    projectTable.row($(row)).remove().draw(false);
+                                } else {
+                                    console.warn(`Ligne non trouvée pour projectId: ${projectId}`);
+                                }
+
                                 Swal.fire({
                                     title: "Affaire supprimée avec succès.",
                                     icon: "success",
                                     timer: 3000,
                                     timerProgressBar: true
-                                }).then(() => {
-                                    location.reload();
                                 });
                             } else {
                                 Swal.fire({
@@ -62,3 +71,4 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+

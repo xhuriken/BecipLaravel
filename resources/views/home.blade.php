@@ -55,7 +55,7 @@
                         </td>
                         @if (auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
                             <td class="icon-cell">
-                                <a href="#" class="delete-project-btn" data-delete-url="{{ route('projects.delete', $project) }}">
+                                <a href="javascript:void(0);" class="delete-project-btn" data-delete-url="{{ route('projects.delete', $project) }}" data-project-id="{{ $project->id }}">
                                     <i class="fa-solid fa-trash delete-icon"></i>
                                 </a>
                             </td>
