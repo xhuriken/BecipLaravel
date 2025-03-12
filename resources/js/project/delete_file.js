@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
 
             const deleteUrl = this.getAttribute('data-delete-url');
+            const fileId = this.getAttribute('data-file-id');
+            console.log(fileId);
 
             // Confirm with SweetAlert
             Swal.fire({
@@ -31,13 +33,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     })
                     .then(data => {
                         if (data.success) {
+                            let fileTable = $('#files-table').DataTable();
+                            let row = document.querySelector(`tr[data-id="${fileId}"]`);
+                            if (row) {
+                                fileTable.row($(row)).remove().draw(false)
+                            }
                             Swal.fire({
                                 title: "Fichier supprimé avec succès.",
                                 icon: "success",
                                 timer: 3000,
                                 timerProgressBar: true
-                            }).then(() => {
-                                location.reload();
                             });
                         } else {
                             Swal.fire({

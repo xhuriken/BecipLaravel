@@ -15542,6 +15542,8 @@ document.addEventListener('DOMContentLoaded', function () {
     btn.addEventListener('click', function (e) {
       e.preventDefault();
       var deleteUrl = this.getAttribute('data-delete-url');
+      var fileId = this.getAttribute('data-file-id');
+      console.log(fileId);
 
       // Confirm with SweetAlert
       Swal.fire({
@@ -15567,13 +15569,16 @@ document.addEventListener('DOMContentLoaded', function () {
             return response.json();
           }).then(function (data) {
             if (data.success) {
+              var fileTable = $('#files-table').DataTable();
+              var row = document.querySelector("tr[data-id=\"".concat(fileId, "\"]"));
+              if (row) {
+                fileTable.row($(row)).remove().draw(false);
+              }
               Swal.fire({
                 title: "Fichier supprimé avec succès.",
                 icon: "success",
                 timer: 3000,
                 timerProgressBar: true
-              }).then(function () {
-                location.reload();
               });
             } else {
               Swal.fire({

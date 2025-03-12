@@ -93,7 +93,7 @@
                     <tr data-id="{{$file->id}}">
                         @if(auth()->user()->isBecip())
                             <td data-label="Delete" class="icon-cell">
-                                <a href="#" class="delete-file-btn" data-delete-url="{{ route('file.delete', $file) }}">
+                                <a href="javascript:void(0);" class="delete-file-btn" data-delete-url="{{ route('file.delete', $file) }}" data-file-id="{{$file->id}}">
                                     <i class="fa-solid fa-trash delete-icon"></i>
                                 </a>
                             </td>
