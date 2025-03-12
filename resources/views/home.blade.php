@@ -24,10 +24,10 @@
                 <tr>
                     <th>Entreprise</th>
                     <th>Nom de l'affaire</th>
-                    <th>Actions</th>
+                    <th data-orderable="false">Actions</th>
                     @if (auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
-                        <th data-label="Delete"><i class="fa-solid fa-trash delete-icon"></i></th>
-                        <th><input type="checkbox" id="select-all"></th>
+                        <th data-label="Delete" data-orderable="false"><i class="fa-solid fa-trash delete-icon"></i></th>
+                        <th data-orderable="false"><input type="checkbox" id="select-all"></th>
                     @endif
                 </tr>
             </thead>

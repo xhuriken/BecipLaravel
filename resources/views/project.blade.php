@@ -49,7 +49,7 @@
             <thead>
                 <tr>
                     @if(auth()->user()->isBecip())
-                        <th data-label="Delete">
+                        <th data-label="Delete" data-orderable="false">
                             <i class="fa-solid fa-trash"></i>
                         </th>
                     @endif
@@ -59,10 +59,10 @@
                     <th>
                         Nom
                     </th>
-                    <th>
+                    <th data-orderable="false">
                         Type
                     </th>
-                    <th>Commentaire</th>
+                    <th data-orderable="false">Commentaire</th>
                     <th>Déposé par</th>
                     <th>
                         Date
@@ -70,14 +70,14 @@
                     <th>
                         Validé
                     </th>
-                    <th data-label="Télécharger">
+                    <th data-label="Télécharger" data-orderable="false">
                         <i class="fa-solid fa-download"></i>
                     </th>
                     @if(!$project->is_mask_distributed)
-                        <th data-label="Distribuer">
+                        <th data-label="Distribuer" data-orderable="false">
                             <i class="fa-solid fa-print"></i>
                         </th>
-                        <th data-label="Impressions">
+                        <th data-label="Impressions" data-orderable="false">
                             <i class="fa-solid fa-sheet-plastic"></i>
                         </th>
                     @endif

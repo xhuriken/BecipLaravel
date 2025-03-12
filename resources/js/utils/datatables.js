@@ -1,4 +1,15 @@
 jQuery(document).ready(function($) {
+
+    function getNonOrderableColumns(tableSelector) {
+        let nonOrderable = [];
+        $(`${tableSelector} thead th`).each(function(index) {
+            if ($(this).attr("data-orderable") === "false") {
+                nonOrderable.push(index);
+            }
+        });
+        return nonOrderable;
+    }
+
     $('#project-table').DataTable({
         destroy: true,
         responsive: true,
@@ -21,7 +32,7 @@ jQuery(document).ready(function($) {
             }
         },
         columnDefs: [
-            { orderable: false, targets: [2] }
+            { orderable: false, targets: getNonOrderableColumns("#project-table") }
         ]
     });
 
@@ -49,7 +60,7 @@ jQuery(document).ready(function($) {
             }
         },
         columnDefs: [
-            { orderable: false, targets: [0, 3, 4, 8, 9, 10] }
+            { orderable: false, targets: getNonOrderableColumns("#files-table") }
         ]
     });
 });
