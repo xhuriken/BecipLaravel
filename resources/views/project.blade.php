@@ -53,21 +53,27 @@
                             <i class="fa-solid fa-trash"></i>
                         </th>
                     @endif
-                    <th>
+                    <th data-label="Rev">
                         Rev
                     </th>
-                    <th>
+                    <th data-label="Nom">
                         Nom
                     </th>
-                    <th data-orderable="false">
+                    <th data-orderable="false"
+                        data-label="Type">
                         Type
                     </th>
-                    <th data-orderable="false">Commentaire</th>
-                    <th>Déposé par</th>
-                    <th>
+                    <th data-orderable="false"
+                        data-label="Commentaire">
+                        Commentaire
+                    </th>
+                    <th data-label="Déposé par">
+                        Déposé par
+                    </th>
+                    <th data-label="Date">
                         Date
                     </th>
-                    <th>
+                    <th data-label="Validé">
                         Validé
                     </th>
                     <th data-label="Télécharger" data-orderable="false">
@@ -98,7 +104,7 @@
                                 </a>
                             </td>
                         @endif
-                        <td data-label="Révision">
+                        <td data-label="Rev">
                             @if(auth()->user()->role == 'drawer' || auth()->user()->role == 'engineer')
                                 <input
                                     type="checkbox"
@@ -143,6 +149,7 @@
                                 {{ $shortComment }}
 
                                 @if(strlen($comment) > 10)
+                                    <br/>
                                     <a href="#" class="view-comment" data-comment="{{ $comment }}">Voir plus</a>
                                 @endif
                             @endif
@@ -151,7 +158,7 @@
                             {{--Seulement si l'utilisateur est supprimé--}}
                             {{ $file->uploadedBy ? $file->uploadedBy->name : 'Inconnu' }}
                         </td>
-                        <td>
+                        <td data-label="Date">
                             {{date('d/m/Y', strtotime($file->created_at))}}
                         </td>
                         <td data-label="Validé">
@@ -161,13 +168,17 @@
                             <input type="checkbox" class="is-validated-checkbox" {{ $file->is_validated ? 'checked' : ''}} disabled>
                             @endif
                         </td>
-                        <td data-label="Télécharger">
-                            @if(auth()->user()->role == 'engineer' || $file->is_validated)
-                                <input type="checkbox" name="download_files[]" value="{{$file->id}}">
-                            @else
-                                <input type="checkbox" name="download_files[]" value="{{$file->id}}" disabled>
-                            @endif
-                        </td>
+                            <td data-label="Télécharger">
+                                @if(auth()->user()->role == 'engineer' || $file->is_validated)
+                                    <input type="checkbox" name="download_files[]"
+                                           value="{{ $file->id }}"
+                                           data-file-path="{{ asset("storage/{$file->project_id}/{$file->extension}/" . urlencode($file->name)) }}"
+                                           data-filename="{{ $file->name }}"
+                                    >
+                                @else
+                                    <input type="checkbox" name="download_files[]" value="{{$file->id}}" disabled>
+                                @endif
+                            </td>
                         @if(!$project->is_mask_distributed)
                             <td data-label="Distribuer">
                                 <input type="checkbox" name="print_files[]" value="{{$file->id}}"
@@ -185,24 +196,6 @@
                     </tr>
                     @endif
                 @empty
-                    <tr class="no-data">
-{{--                        <td colspan="{{ auth()->user()->isBecip() ? 12 : 11 }}">Aucun fichier</td>--}}
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        @if(!$project->is_mask_distributed)
-                            <td></td>
-                            <td></td>
-                        @endif
-                        @if(auth()->user()->isBecip())
-                            <td></td>
-                        @endif
-                    </tr>
                 @endforelse
             </tbody>
         </table>
@@ -226,12 +219,21 @@
         </div>
     </div>
 </div>
-
+<!-- Overlay popup -->
+<div id="download-overlay" class="download-overlay">
+    <div class="overlay-content">
+        <h2>Veuillez patienter...</h2>
+        <p>Le téléchargement de vos fichiers est en cours. Ne fermez pas la page avant la fin.</p>
+        <div class="loader"></div>
+        <button id="close-overlay-btn" class="close-overlay-btn">Fermer</button>
+    </div>
+</div>
     <script>
         window.fileUpdateRoute = '{{ route("files.update", ["file" => "FILE_ID"]) }}';
         window.downloadProjectUrl = '{{ route("projects.download") }}';
         window.distributeProjectUrl = '{{ route("projects.distribute") }}';
         window.maskValidedRoute = '{{ route("projects.updateMaskValidated") }}';
         window.maskDistributedRoute = '{{ route("projects.updateMaskDistributed") }}';
+        window.downloadMultiplePageUrl = "{{ route('projects.downloadMultiplePage') }}";
     </script>
 @endsection

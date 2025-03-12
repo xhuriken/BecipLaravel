@@ -20,3 +20,78 @@ th.dt-orderable-desc {
 th.dt-orderable-none {
     cursor: default;
 }
+
+
+th[data-label="Delete"],
+td[data-label="Delete"] {
+    max-width: 3rem !important;
+    text-align: center;
+}
+
+th[data-label="Rev"],
+td[data-label="Rev"] {
+    max-width: 5rem !important;
+    /*white-space: nowrap; !* Empêche le retour à la ligne *!*/
+    /*overflow: hidden; !* Cache tout dépassement *!*/
+    /*text-overflow: ellipsis; !* Ajoute ... si besoin *!*/
+    text-align: center;
+}
+th[data-label="Type"],
+td[data-label="Type"] {
+    /*white-space: nowrap; !* Empêche le retour à la ligne *!*/
+    /*overflow: hidden; !* Cache tout dépassement *!*/
+    /*text-overflow: ellipsis; !* Ajoute ... si besoin *!*/
+    width: 8rem !important;
+}
+
+
+th[data-label="Validé"],
+td[data-label="Validé"] {
+    max-width: 5rem !important;
+    text-align: center;
+}
+th[data-label="Commentaire"],
+td[data-label="Commentaire"] {
+    min-width: 10rem !important;
+    max-width: 15rem !important;
+    text-align: center;
+}
+
+th[data-label="Date"],
+td[data-label="Date"] {
+    max-width: 3rem !important;
+}
+
+th[data-label="Déposé par"],
+td[data-label="Déposé par"] {
+    max-width: 10rem !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+th[data-label="Nom"],
+td[data-label="Nom"] {
+    max-width: 40rem !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+th[data-label="Télécharger"],
+td[data-label="Télécharger"] {
+    max-width: 4rem !important;
+    text-align: center;
+}
+th[data-label="Distribuer"],
+td[data-label="Distribuer"] {
+    max-width: 3rem !important;
+    text-align: center;
+}
+
+th[data-label="Impressions"],
+td[data-label="Impressions"] {
+    max-width: 3rem !important;
+    text-align: center;
+}

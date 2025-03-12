@@ -9,6 +9,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use \Illuminate\Http\JsonResponse;
@@ -285,59 +286,94 @@ class ProjectController extends Controller
         return response()->json(['success' => true]);
     }
 
-    /**
-     * Download file in project in ZipArchive
-     * @param Request $request
-     * @return JsonResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
-     */
     public function downloadFiles(Request $request)
     {
-        $fileIds = $request->input('file_ids');
+        // 1) Récupération des infos
+        $fileIds   = $request->input('file_ids', []);
         $projectId = $request->input('project_id');
 
-        if (empty($fileIds) || empty($projectId)) {
-            return response()->json(['error' => 'No files selected.'], 422);
+        if (empty($fileIds) || !$projectId) {
+            return response()->json(['error' => 'No files selected or project missing.'], 422);
         }
 
-        $files = \App\Models\File::whereIn('id', $fileIds)->where('project_id', $projectId)->get();
-        \Log::info("Download initiated with " . $files->count() . " file(s)");
+        // 2) Récupérer les fichiers en base
+        $files = File::where('project_id', $projectId)
+            ->whereIn('id', $fileIds)
+            ->get();
 
-        if ($files->count() == 0) {
-            return response()->json(['error' => 'files not found.'], 404);
+        if ($files->isEmpty()) {
+            return response()->json(['error' => 'No files found.'], 404);
         }
+
+        // 3) Créer un Zip en mémoire (fichier temporaire)
+        $zipName = 'Download_' . now()->format('Ymd_His') . '_Project' . $projectId . '.zip';
+        $tmpZipPath = tempnam(sys_get_temp_dir(), 'zip'); // ex: /tmp/zip1234
 
         $zip = new ZipArchive();
-        $zipName = 'files_' . now()->format('Y-m-d_H-i-s') . '_' . $projectId . '.zip';
-        $zipPath = storage_path('app/public/' . $zipName);
-
-        if ($zip->open($zipPath, ZipArchive::CREATE) !== TRUE) {
-            return response()->json(['error' => 'Error creating ZIP file.'], 500);
+        if ($zip->open($tmpZipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== TRUE) {
+            Log::error("Cannot create ZIP at $tmpZipPath");
+            return response()->json(['error' => 'Cannot create ZIP.'], 500);
         }
 
-        $addedFiles = 0;
-
+        // 4) Ajouter les fichiers dans le ZIP
         foreach ($files as $file) {
-            $relativePath = $file->project_id . '/' . $file->extension . '/' . $file->name;
-            $absolutePath = storage_path('app/public/' . $relativePath);
+            $relPath = $file->project_id . '/' . $file->extension . '/' . $file->name;
+            $absPath = storage_path('app/public/' . $relPath);
 
-            if (file_exists($absolutePath)) {
-                $zip->addFile($absolutePath, $file->name);
-                $addedFiles++;
-                \Log::info("Added to ZIP: " . $relativePath);
+            if (file_exists($absPath)) {
+                // Nettoie les caractères spéciaux si besoin
+                $safeName = preg_replace('/[^\w\-.]/', '_', $file->name);
+                $zip->addFile($absPath, $safeName);
+                Log::info("Added to ZIP: $absPath as $safeName");
             } else {
-                \Log::warning("File not found: " . $absolutePath);
+                Log::warning("File not found: $absPath");
             }
         }
 
+        // 5) Fermer le ZIP
         $zip->close();
 
-        if ($addedFiles == 0) {
-            \Log::error("ZIP creation failed: No valid files.");
-            return response()->json(['error' => 'No valid files to download.'], 404);
+        // 6) Vérifier que le ZIP n’est pas vide
+        if (!filesize($tmpZipPath)) {
+            Log::error("ZIP is empty or not created properly.");
+            return response()->json(['error' => 'ZIP is empty.'], 500);
         }
 
-        return response()->download($zipPath)->deleteFileAfterSend(true);
+        Log::info("ZIP created at $tmpZipPath, size = " . filesize($tmpZipPath));
+
+        // 7) Renvoyer le ZIP en binaire avec headers corrects
+        return response()->file($tmpZipPath, [
+            'Content-Type'        => 'application/zip',
+            'Content-Disposition' => 'attachment; filename="'.$zipName.'"',
+        ])->deleteFileAfterSend(true);
     }
+
+    public function multipleDownloadPage(Request $request)
+    {
+        $fileIds   = $request->input('file_ids', []);
+        $projectId = $request->input('project_id');
+
+        // Vérifier si rien n'a été envoyé
+        if (empty($fileIds) || !$projectId) {
+            return back()->with('error', 'Aucun fichier sélectionné ou projet manquant.');
+        }
+
+        // Récupérer les fichiers correspondants
+        $files = File::where('project_id', $projectId)
+            ->whereIn('id', $fileIds)
+            ->get();
+
+        if ($files->isEmpty()) {
+            return back()->with('error', 'Aucun fichier trouvé.');
+        }
+
+        // On peut loguer pour debug
+        Log::info("Multiple download page with ".count($files)." file(s).");
+
+        // Retourner la vue qui déclenche les téléchargements un par un
+        return view('download', compact('files'));
+    }
+
 
     /**
      * Send mail to all secretary user with download link

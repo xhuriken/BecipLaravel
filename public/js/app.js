@@ -15814,20 +15814,24 @@ document.addEventListener('DOMContentLoaded', function () {
 /***/ (() => {
 
 document.addEventListener('DOMContentLoaded', function () {
-  // Download button functionality
   var downloadBtn = document.getElementById('download-btn');
+  var overlay = document.getElementById('download-overlay');
+  var closeOverlayBtn = document.getElementById('close-overlay-btn');
+  var loader = document.querySelector('.loader');
+
+  // Fermer manuellement l'overlay
+  if (closeOverlayBtn) {
+    closeOverlayBtn.addEventListener('click', function () {
+      overlay.style.display = 'none';
+    });
+  }
   if (downloadBtn) {
     downloadBtn.addEventListener('click', function (e) {
       e.preventDefault();
-      // Get all checked download file checkboxes
-      var fileCheckboxes = document.querySelectorAll('input[name="download_files[]"]:checked');
-      var fileIds = [];
-      fileCheckboxes.forEach(function (checkbox) {
-        fileIds.push(checkbox.value);
-      });
 
-      // If no file is selected, show error alert
-      if (fileIds.length === 0) {
+      // Récupère toutes les checkboxes cochées
+      var checkedBoxes = document.querySelectorAll('input[name="download_files[]"]:checked');
+      if (checkedBoxes.length === 0) {
         Swal.fire({
           title: "Veuillez sélectionner au moins un fichier à télécharger.",
           icon: "error",
@@ -15837,53 +15841,45 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
 
-      // Build data object for download request
-      var projectContainer = document.getElementById('project-container');
-      var projectId = projectContainer.getAttribute('data-project-id');
-      var data = {
-        project_id: projectId,
-        file_ids: fileIds,
-        _token: window.csrf_token
-      };
-
-      // Send POST request to download files route
-      fetch(window.downloadProjectUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': window.csrf_token
-        },
-        body: JSON.stringify(data)
-      }).then(function (response) {
-        if (response.status === 200) {
-          return response.blob();
-        }
-        throw new Error("Download failed.");
-      }).then(function (blob) {
-        // Create a temporary URL and trigger download
-        var url = window.URL.createObjectURL(blob);
-        var a = document.createElement('a');
-        a.style.display = 'none';
-        a.href = url;
-        a.download = "Download_".concat(new Date().toISOString().slice(0, 10), "_Project").concat(projectId, ".zip");
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        Swal.fire({
-          title: "Le téléchargement a démarré.",
-          icon: "success",
-          timer: 3000,
-          timerProgressBar: true
-        });
-      })["catch"](function (error) {
-        console.error("Download error:", error);
-        Swal.fire({
-          title: "Une erreur est survenue lors du téléchargement.",
-          icon: "error",
-          timer: 3000,
-          timerProgressBar: true
+      // Prépare un tableau contenant l'URL et le nom de chaque fichier
+      var fileInfos = [];
+      checkedBoxes.forEach(function (cb) {
+        var path = cb.getAttribute('data-file-path');
+        var originalName = cb.getAttribute('data-filename');
+        fileInfos.push({
+          path: path,
+          filename: originalName
         });
       });
+
+      // Affiche l'overlay
+      overlay.style.display = 'flex';
+      loader.style.display = 'block';
+      var index = 0;
+      function downloadNextFile() {
+        if (index >= fileInfos.length) {
+          // Tous les fichiers sont téléchargés
+          loader.style.display = 'none';
+          return;
+        }
+        var info = fileInfos[index++];
+        // Nettoie le nom (remove accents etc.)
+        var cleanName = info.filename.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+        // Création d'un lien invisible pour déclencher le téléchargement
+        var a = document.createElement('a');
+        a.href = encodeURI(info.path);
+        a.download = cleanName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        // Téléchargement suivant dans 1 seconde
+        setTimeout(downloadNextFile, 1000);
+      }
+
+      // Lance le premier téléchargement
+      downloadNextFile();
     });
   }
 

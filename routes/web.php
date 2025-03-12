@@ -31,6 +31,10 @@ Route::group(['middleware' => 'auth'], function () {
     // FILES IN PROJECT
     Route::post('projects/download', [ProjectController::class, 'downloadFiles'])->name('projects.download');
     Route::post('projects/distribute', [ProjectController::class, 'distributeFiles'])->name('projects.distribute');
+
+    Route::post('projects/download-multiple-page', [ProjectController::class, 'multipleDownloadPage'])
+        ->name('projects.downloadMultiplePage');
+
     // MASKS
     Route::post('projects/update-mask-validated', [ProjectController::class, 'updateMaskValidated'])->name('projects.updateMaskValidated');
     Route::post('projects/update-mask-distributed', [ProjectController::class, 'updateMaskDistributed'])->name('projects.updateMaskDistributed');

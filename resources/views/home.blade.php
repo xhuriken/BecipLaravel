@@ -65,16 +65,6 @@
                         @endif
                     </tr>
                 @empty
-                    <!-- TODO: trouver un moyen d'utiliser un ptn de colspan avec datatable-->
-                    <tr class="no-data">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        @if(auth()->user()->isBecip())
-                            <td></td>
-                            <td></td>
-                        @endif
-                    </tr>
                 @endforelse
             </tbody>
         </table>
@@ -96,6 +86,7 @@
             </div>
         @endif
     </div>
+
 
     <!-- Add Project Modal -->
     <div class="modal fade" id="addProjectModal" tabindex="-1" aria-labelledby="addProjectModalLabel" aria-hidden="true">
