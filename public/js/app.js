@@ -14863,9 +14863,13 @@ document.addEventListener('DOMContentLoaded', function () {
             return response.json();
           }).then(function (data) {
             if (data.success) {
+              var projectTable = $('#project-table').DataTable();
               data.deleted_ids.forEach(function (id) {
                 var row = document.querySelector("#project-row-".concat(id));
-                if (row) row.remove();
+                if (row) {
+                  row.remove();
+                  projectTable.row($(row)).remove().draw(false);
+                }
               });
               Swal.fire({
                 title: "Affaires vides supprimées !",

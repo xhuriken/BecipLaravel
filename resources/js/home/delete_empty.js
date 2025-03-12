@@ -25,9 +25,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
+                                let projectTable = $('#project-table').DataTable();
+
                                 data.deleted_ids.forEach(function(id) {
                                     let row = document.querySelector(`#project-row-${id}`);
-                                    if (row) row.remove();
+                                    if (row) {
+                                        row.remove();
+                                        projectTable.row($(row)).remove().draw(false);
+                                    }
                                 });
                                 Swal.fire({
                                     title: "Affaires vides supprimées !",
