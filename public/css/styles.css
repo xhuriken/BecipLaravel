@@ -323,3 +323,52 @@ h2{
 .close-overlay-btn:hover {
     background-color: #e74c3c;
 }
+
+
+/* Loader pour masquer uniquement la section en cours */
+.section-loader {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(255, 255, 255, 0.95); /* Fond semi-transparent blanc */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Empêcher les interactions pendant le chargement */
+.container-page, .container-profile {
+    position: relative; /* Important pour que le loader se place correctement */
+}
+
+/* Loader circulaire */
+.loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #0c9155;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+    color: #0c9155;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* Masquer le loader une fois chargé */
+.section-loader.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+

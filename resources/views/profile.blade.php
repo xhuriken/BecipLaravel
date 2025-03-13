@@ -2,7 +2,12 @@
 
 @section('content')
     <div class="d-flex justify-content-center mt-4">
+
         <div class="card p-4 shadow-sm text-center" style="max-width: 450px; width: 100%; min-width: 30rem">
+            <div class="section-loader">
+                <div class="loader"></div>
+                <p class="loading-text">Chargement en cours...</p>
+            </div>
             <div class="d-flex justify-content-start mb-2">
                 <a href="{{route("home")}}" class="btn-return"><i class="fa-solid fa-arrow-left"></i> Retour</a>
             </div>

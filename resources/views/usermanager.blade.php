@@ -2,7 +2,10 @@
 
 @section('content')
     <div class="container-page large">
-
+        <div class="section-loader">
+            <div class="loader"></div>
+            <p class="loading-text">Chargement en cours...</p>
+        </div>
         @if(session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}

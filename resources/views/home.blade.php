@@ -2,6 +2,10 @@
 
 @section('content')
     <div class="container-page min-width">
+        <div class="section-loader">
+            <div class="loader"></div>
+            <p class="loading-text">Chargement en cours...</p>
+        </div>
         <div class="items-container">
             @if (auth()->user()->role == 'engineer')
                 <a href='{{ route('usermanager') }}' class='btn-return'>Gérer les utilisateurs</a>

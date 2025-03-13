@@ -32,6 +32,10 @@
     </script>
 </head>
 <body>
+{{--    <div id="global-loader" class="global-loader">--}}
+{{--        <div class="loader"></div>--}}
+{{--        <p class="loading-text">Chargement en cours...</p>--}}
+{{--    </div>--}}
     <!-- Alerte universelle -->
     <div id="universal-alert" class="universal-alert" style="display:none;">
         <span id="universal-alert-message"></span>
@@ -92,6 +96,7 @@
         </nav>
 
         <main class="py-4">
+
             @yield('content')
         </main>
     </div>
