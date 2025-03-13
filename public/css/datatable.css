@@ -21,6 +21,7 @@ th.dt-orderable-none {
     cursor: default;
 }
 
+/*File table*/
 
 th[data-label="Delete"],
 td[data-label="Delete"] {
@@ -92,6 +93,12 @@ td[data-label="Distribuer"] {
 
 th[data-label="Impressions"],
 td[data-label="Impressions"] {
+    max-width: 3rem !important;
+    text-align: center;
+}
+/*Home table*/
+th[data-label="Check"],
+td[data-label="Check"] {
     max-width: 3rem !important;
     text-align: center;
 }

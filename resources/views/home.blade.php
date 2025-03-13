@@ -22,12 +22,12 @@
         <table id="project-table" class="table table-striped" style="width:100%">
             <thead>
                 <tr>
-                    <th>Entreprise</th>
-                    <th>Nom de l'affaire</th>
-                    <th data-orderable="false">Actions</th>
+                    <th data-label="Entreprise">Entreprise</th>
+                    <th data-label="Nom">Nom de l'affaire</th>
+                    <th data-orderable="false" data-label="Actions">Actions</th>
                     @if (auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
                         <th data-label="Delete" data-orderable="false"><i class="fa-solid fa-trash delete-icon"></i></th>
-                        <th data-orderable="false"><input type="checkbox" id="select-all"></th>
+                        <th data-orderable="false" data-label="Check"><input type="checkbox" id="select-all"></th>
                     @endif
                 </tr>
             </thead>
@@ -35,9 +35,9 @@
                 @forelse($projects as $project)
 {{--                    Add Project row id for DOM reload in js--}}
                     <tr id="project-row-{{ $project->id }}">
-                        <td>{{ $project->company_id ? $project->getCompanyName($project->company_id) : 'Aucune' }}</td>
-                        <td>{{ $project->name }}</td>
-                        <td>
+                        <td data-label="Entreprise">{{ $project->company_id ? $project->getCompanyName($project->company_id) : 'Aucune' }}</td>
+                        <td data-label="Nom">{{ $project->name }}</td>
+                        <td data-label="Actions">
                             <a href="{{ route('projects.project', $project) }}" class="btn-return">Voir</a>
                             @if(auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
                                 <span class="responsiveSpan">|</span>
@@ -54,12 +54,12 @@
                             @endif
                         </td>
                         @if (auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
-                            <td class="icon-cell">
+                            <td class="icon-cell" data-label="Delete">
                                 <a href="javascript:void(0);" class="delete-project-btn" data-delete-url="{{ route('projects.delete', $project) }}" data-project-id="{{ $project->id }}">
                                     <i class="fa-solid fa-trash delete-icon"></i>
                                 </a>
                             </td>
-                            <td>
+                            <td data-label="Check">
                                 <input type="checkbox" class="delete-checkbox" data-project-id="{{ $project->id }}">
                             </td>
                         @endif
