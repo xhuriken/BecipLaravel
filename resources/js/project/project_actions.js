@@ -1,16 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const downloadBtn = document.getElementById('download-btn');
     const overlay = document.getElementById('download-overlay');
-    const closeOverlayBtn = document.getElementById('close-overlay-btn');
     const loader = document.querySelector('.loader');
-
-    // Fermer manuellement l'overlay
-    if (closeOverlayBtn) {
-        closeOverlayBtn.addEventListener('click', function() {
-            overlay.style.display = 'none';
-        });
-    }
-
     if (downloadBtn) {
         downloadBtn.addEventListener('click', function(e) {
             e.preventDefault();
@@ -46,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
             function downloadNextFile() {
                 if (index >= fileInfos.length) {
                     // Tous les fichiers sont téléchargés
+                    overlay.style.display = 'none';
                     loader.style.display = 'none';
                     return;
                 }

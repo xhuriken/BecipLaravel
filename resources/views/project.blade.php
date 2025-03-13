@@ -225,7 +225,6 @@
         <h2>Veuillez patienter...</h2>
         <p>Le téléchargement de vos fichiers est en cours. Ne fermez pas la page avant la fin.</p>
         <div class="loader"></div>
-        <button id="close-overlay-btn" class="close-overlay-btn">Fermer</button>
     </div>
 </div>
     <script>
@@ -234,6 +233,5 @@
         window.distributeProjectUrl = '{{ route("projects.distribute") }}';
         window.maskValidedRoute = '{{ route("projects.updateMaskValidated") }}';
         window.maskDistributedRoute = '{{ route("projects.updateMaskDistributed") }}';
-        window.downloadMultiplePageUrl = "{{ route('projects.downloadMultiplePage') }}";
     </script>
 @endsection
