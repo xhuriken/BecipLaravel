@@ -10,7 +10,12 @@
     color: #0c9155;
 }
 
-
+label[for="dt-length-0"] {
+    display: none !important;
+}
+label[for="dt-length-1"] {
+    display: none !important;
+}
 /*cursor pointer for sorting*/
 th.dt-orderable-asc,
 th.dt-orderable-desc {

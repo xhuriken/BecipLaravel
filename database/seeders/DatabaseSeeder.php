@@ -25,27 +25,11 @@ class DatabaseSeeder extends Seeder
 
         User::create([
             'company_id' => 1,
-            'name' => 'Ingénieur Principale',
-            'email' => 'test@test.com',
-            'password' => Hash::make('1234'),
+            'name' => 'Ingénieur Principal',
+            'email' => 'celestin@honvault.com',
+            'password' => Hash::make('azertyui'),
             'role' => 'engineer',
         ]);
 
-        Project::create([
-            'name' => 'B24.001',
-            'address' => 'Test Address',
-            'is_mask_valided' => false,
-            'is_mask_distributed' => false,
-        ]);
-
-//        ProjectUser::create([
-//            'project_id' => 1,
-//            'user_id' => 1,
-//        ]);
-//
-//        ProjectUser::create([
-//            'project_id' => 2,
-//            'user_id' => 1,
-//        ]);
     }
 }

@@ -24,3 +24,27 @@
     --bs-btn-disabled-bg: #0c9155;
     --bs-btn-disabled-border-color: #0c9155;
 }
+.form-select:focus {
+    border-color: rgb(36, 154, 104);
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(36, 154, 104, 0.26);
+}
+.form-control:focus {
+    border-color: rgb(36, 154, 104);
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(36, 154, 104, 0.26);
+}
+select option:hover {
+    background-color: #0c9155;
+    color: white;
+}
+
+.form-check-input:checked {
+    background-color: #249a68;
+    border-color: #249a68;
+}
+
+.form-check-input[type=checkbox]:indeterminate {
+    background-color: #249a68;
+    border-color: #249a68;
+}

@@ -34,6 +34,7 @@ jQuery(document).ready(function($) {
         columnDefs: [
             { orderable: false, targets: getNonOrderableColumns("#project-table") }
         ]
+
     });
 
 
