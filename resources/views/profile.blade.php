@@ -1,55 +1,59 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container-profile">
-        @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
+    <div class="d-flex justify-content-center mt-4">
+        <div class="card p-4 shadow-sm text-center" style="max-width: 450px; width: 100%; min-width: 30rem">
+            <div class="d-flex justify-content-start mb-2">
+                <a href="{{route("home")}}" class="btn-return"><i class="fa-solid fa-arrow-left"></i> Retour</a>
             </div>
-        @endif
-        @if (session('status'))
-            <div class="alert alert-success" role="alert">
-                {{ session('status') }}
+
+            @if(session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
+            @if (session('status'))
+                <div class="alert alert-success" role="alert">{{ session('status') }}</div>
+            @endif
+
+            <div class="row align-items-center mb-3">
+                <div class="col-auto">
+                    <button id="name-edit-btn" class="btn btn-primary btn-square">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
+                </div>
+                <div class="col text-start">
+                    <label class="fw-bold">Votre nom :</label>
+                    <span id="name-display">{{ auth()->user()->name }}</span>
+                    <input type="text" id="name-input" class="form-control d-none mt-2" value="{{ auth()->user()->name }}">
+                </div>
             </div>
-        @endif
-        <a href="{{ route('home') }}" class="btn-return">
-            <i class="fa-solid fa-arrow-left"></i> Retour
-        </a>
 
-        <div class="field-container" id="name-container">
-            <button id="name-edit-btn">
-                <i class="fa-solid fa-pen-to-square"></i>
-            </button>
-            <p class="profileText">Votre nom :</p>
-            <span id="name-display">{{ auth()->user()->name }}</span>
-            <input type="text" id="name-input" value="{{ auth()->user()->name }}" style="display: none;">
+            <div class="row align-items-center mb-3">
+                <div class="col-auto">
+                    <button id="email-edit-btn" class="btn btn-primary btn-square">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
+                </div>
+                <div class="col text-start">
+                    <label class="fw-bold">Votre mail :</label>
+                    <span id="email-display">{{ auth()->user()->email }}</span>
+                    <input type="email" id="email-input" class="form-control d-none mt-2" value="{{ auth()->user()->email }}">
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center mb-3">
+                <button id="open-change-password" class="btn btn-success w-100">Changer le mot de passe</button>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="{{ route('logout') }}" class="text-danger fw-bold"
+                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    Déconnexion
+                </a>
+                <p class="mb-0">Entreprise : <span class="fw-bold">{{ auth()->user()->getCompanyName(auth()->user()->company_id) }}</span></p>
+            </div>
+
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
         </div>
-
-        <div class="field-container" id="email-container">
-            <button id="email-edit-btn">
-                <i class="fa-solid fa-pen-to-square"></i>
-            </button>
-            <p class="profileText">Votre mail :</p>
-            <span id="email-display">{{ auth()->user()->email }}</span>
-            <input type="text" id="email-input" value="{{ auth()->user()->email }}" style="display: none;">
-        </div>
-
-        <div class="field-container" id="password-change-container">
-            <button id="open-change-password" class="btn-filter">Changer le mot de passe</button>
-        </div>
-
-        <div class="button logout">
-            <a href="{{ route('logout') }}"
-               onclick="event.preventDefault();
-                    document.getElementById('logout-form').submit();">
-                {{ __('Logout') }}
-            </a>
-            <p>Entreprise : <span class='name'>{{ auth()->user()->getCompanyName(auth()->user()->company_id) }}</span></p>
-        </div>
-
-        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-            @csrf
-        </form>
     </div>
 
     <div id="changePasswordModal" class="modal fade">

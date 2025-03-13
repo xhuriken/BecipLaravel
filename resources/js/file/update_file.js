@@ -51,6 +51,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.addEventListener('blur', function(event) {
         let target = event.target;
+
+        if (!document.querySelector('.comment-textarea')) {
+            return;
+        }
+
         // 2) GESTION TYPE (file-type-select)
         if (target.classList.contains('comment-textarea')) {
             const row = target.closest('tr');
