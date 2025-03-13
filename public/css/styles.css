@@ -179,11 +179,11 @@ input{
 input:focus{
     outline: 0.15rem solid #0c9155;
 }
-#project_year{
-    width: 2rem;
-}
-#project_number{
+#add-project-year{
     width: 3rem;
+}
+#add-project-number{
+    width: 4rem;
 }
 a {
     color: #0c9155;

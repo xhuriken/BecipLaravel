@@ -91,17 +91,35 @@
     <div class="content">
         <p>Bonjour {{ $user->name }},</p>
 
-        @if($ownProjects->isEmpty() && $otherProjects->isEmpty())
+        @php
+            $hasAnyOwnFiles = false;
+            foreach($ownProjects as $proj) {
+                if($proj->files->isNotEmpty()) {
+                    $hasAnyOwnFiles = true;
+                    break;
+                }
+            }
+
+            $hasAnyOtherFiles = false;
+            foreach($otherProjects as $proj) {
+                if($proj->files->isNotEmpty()) {
+                    $hasAnyOtherFiles = true;
+                    break;
+                }
+            }
+        @endphp
+
+        @if(!$hasAnyOwnFiles && !$hasAnyOtherFiles)
             <p style="text-align: center; font-size: 18px; font-weight: bold; color: #0c9155;">
-                ✅ Tout va bien, aucun plan non validé. Reposez-vous bien ! 😊
+                Tout va bien, aucun plan non validé. Reposez-vous bien !
             </p>
         @else
-            @if($ownProjects->isNotEmpty())
+            @if($hasAnyOwnFiles)
                 <h3>📌 Plans où vous êtes l'ingénieur référent :</h3>
-                @php $hasOwnFiles = false; @endphp
+                @php $foundOwnFiles = false; @endphp
                 @foreach($ownProjects as $project)
                     @if($project->files->isNotEmpty())
-                        @php $hasOwnFiles = true; @endphp
+                        @php $foundOwnFiles = true; @endphp
                         <p class="project-title">
                             📁 <a href="{{ $project->passwordless_url }}">{{ $project->name }} - voir</a>
                         </p>
@@ -123,12 +141,12 @@
                         </ul>
                     @endif
                 @endforeach
-                @if(!$hasOwnFiles)
+                @if(!$foundOwnFiles)
                     <p>Aucun plan non validé dans vos projets.</p>
                 @endif
             @endif
 
-            @if($otherProjects->isNotEmpty())
+            @if($hasAnyOtherFiles)
                 <h3>📌 Plans non validés des autres affaires :</h3>
                 @foreach($otherProjects as $project)
                     @if($project->files->isNotEmpty())
