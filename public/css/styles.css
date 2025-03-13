@@ -256,6 +256,7 @@ h2{
 .button-container{
     display: flex;
     justify-content: space-around;
+    gap: 2rem;
 }
 
 .forgot-btn{

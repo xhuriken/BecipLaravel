@@ -22,9 +22,15 @@ document.addEventListener('DOMContentLoaded', function() {
             return Swal.fire({
                 icon: 'error',
                 title: 'Nom invalide',
-                text: 'Veuillez entrer un nom valide (ex: Nom Prénom).',
+                text: 'Veuillez entrer un nom valide (ex: Prénom Nom).',
             });
         }
+
+        //TODO: Requete verifier si l'email existe pas déjà
+        //TODO: Requete verifier si l'email existe pas déjà
+        //TODO: Requete verifier si l'email existe pas déjà
+        //TODO: Requete verifier si l'email existe pas déjà
+        //TODO: Requete verifier si l'email existe pas déjà
 
         if (!emailRegex.test(email)) {
             return Swal.fire({

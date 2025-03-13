@@ -16,6 +16,7 @@ class FileDistributionMail extends Mailable
     public $userName;
     public $projectName;
     public $senderName;
+    public $address;
     public $files;
     public $downloadLink;
 
@@ -23,11 +24,12 @@ class FileDistributionMail extends Mailable
      * Create a new message instance.
      */
     //mail constuctor
-    public function __construct($userName, $projectName, $senderName, $files, $downloadLink)
+    public function __construct($userName, $projectName, $senderName, $address,$files, $downloadLink)
     {
         $this->userName = $userName;
         $this->projectName = $projectName;
         $this->senderName = $senderName;
+        $this->address = $address;
         $this->files = $files;
         $this->downloadLink = $downloadLink;
     }

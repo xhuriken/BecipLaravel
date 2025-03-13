@@ -425,6 +425,7 @@ class ProjectController extends Controller
                 $secretary->name,  // Secretary name
                 $project->name,    // Project name
                 $requester->name,  // User who made the request
+                $project->address, // address
                 $fileNames,        // List of file names
                 $downloadLink      // Download link
             ));

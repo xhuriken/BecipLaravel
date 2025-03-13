@@ -26,9 +26,10 @@
         <table id="project-table" class="table table-striped" style="width:100%">
             <thead>
                 <tr>
+                    <th data-label="Nom">Nom</th>
                     <th data-label="Entreprise">Entreprise</th>
-                    <th data-label="Nom">Nom de l'affaire</th>
-                    <th data-orderable="false" data-label="Actions">Actions</th>
+                    <th data-label="Referent">Référent</th>
+                    <th data-orderable="false" data-label="ActionsH">Actions</th>
                     @if (auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
                         <th data-label="Delete" data-orderable="false"><i class="fa-solid fa-trash delete-icon"></i></th>
                         <th data-orderable="false" data-label="Check"><input type="checkbox" id="select-all"></th>
@@ -39,9 +40,10 @@
                 @forelse($projects as $project)
 {{--                    Add Project row id for DOM reload in js--}}
                     <tr id="project-row-{{ $project->id }}">
-                        <td data-label="Entreprise">{{ $project->company_id ? $project->getCompanyName($project->company_id) : 'Aucune' }}</td>
                         <td data-label="Nom">{{ $project->name }}</td>
-                        <td data-label="Actions">
+                        <td data-label="Entreprise">{{ $project->company_id ? $project->getCompanyName($project->company_id) : 'Aucune' }}</td>
+                        <td data-label="Referent">{{ $project->getReferentName($project->referent_id) }}</td>
+                        <td data-label="ActionsH">
                             <a href="{{ route('projects.project', $project) }}" class="btn-return">Voir</a>
                             @if(auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
                                 <span class="responsiveSpan">|</span>
@@ -235,6 +237,5 @@
     <script>
         window.storeProjectUrl = '{{ route("projects.store") }}';
         window.updateProjectUrl = '{{ route("projects.update") }}';
-        window.csrf_token = '{{ csrf_token() }}';
     </script>
 @endsection

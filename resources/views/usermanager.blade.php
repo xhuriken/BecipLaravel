@@ -15,14 +15,29 @@
         <a href="{{route("home")}}" class="btn-return"><i class="fa-solid fa-arrow-left"></i> Retour</a>
 
         <div class="flex">
+            {{-- Formulaire d'ajout d'entreprise --}}
+            <form action="{{ route('usermanager.addcompany') }}" method="POST" class="form-becip">
+                @csrf
+                <div class="mb-2">
+                    <h2>Ajouter une entreprise</h2>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Nom de l'entreprise</label>
+                    <input class="form-control" type="text" name="name" placeholder="SuperEntreprise" required>
+                </div>
+                <div class="mb-2">
+                    <input type="submit" value="Ajouter" class="large-btn">
+                </div>
+            </form>
+
             {{-- Formulaire d'ajout d'utilisateur --}}
-            <form action="" method="POST" class="form-becip">
+            <form action="" method="POST" class="form-becip" id="adduser">
                 @csrf
                 <h2 class="mb-2">Ajouter un utilisateur</h2>
 
                 <div class="mb-2">
-                    <label for="name" class="form-label">Nom et Prénom</label>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="Nom Prénom...">
+                    <label for="name" class="form-label">Prénom NOM</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Prénom NOM...">
                 </div>
 
                 <div class="mb-2">
@@ -59,21 +74,6 @@
                 </div>
 
                 <input type="submit" value="Ajouter" class="large-btn">
-            </form>
-
-            {{-- Formulaire d'ajout d'entreprise --}}
-            <form action="{{ route('usermanager.addcompany') }}" method="POST" class="form-becip">
-                @csrf
-                <div class="mb-2">
-                    <h2>Ajouter une entreprise</h2>
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Nom de l'entreprise</label>
-                    <input class="form-control" type="text" name="name" placeholder="SuperEntreprise" required>
-                </div>
-                <div class="mb-2">
-                    <input type="submit" value="Ajouter" class="large-btn">
-                </div>
             </form>
         </div>
 

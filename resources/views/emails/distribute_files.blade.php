@@ -99,7 +99,7 @@
 
         <p><strong>📁 Projet :</strong> {{ $projectName }}</p>
         <p><strong>📌 Demande initiée par :</strong> {{ $senderName }}</p>
-
+        <p><strong>📌 Adresse :</strong> {{ $address }}</p>
         <p><strong>📜 Liste des documents :</strong></p>
         <ul class="file-list">
             @foreach ($files as $file)
