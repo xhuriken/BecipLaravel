@@ -26,7 +26,8 @@
         <table id="project-table" class="table table-striped" style="width:100%">
             <thead>
                 <tr>
-                    <th data-label="Nom">Nom</th>
+                    <th data-label="Nom">Numéro</th>
+                    <th data-label="NomLong">Nom</th>
                     <th data-label="Entreprise">Entreprise</th>
                     <th data-label="Referent">Référent</th>
                     <th data-orderable="false" data-label="ActionsH">Actions</th>
@@ -41,6 +42,7 @@
 {{--                    Add Project row id for DOM reload in js--}}
                     <tr id="project-row-{{ $project->id }}">
                         <td data-label="Nom">{{ $project->name }}</td>
+                        <td data-label="NomLong">{{ $project->namelong ? $project->namelong : 'Pas de nom'}}</td>
                         <td data-label="Entreprise">{{ $project->company_id ? $project->getCompanyName($project->company_id) : 'Aucune' }}</td>
                         <td data-label="Referent">{{ $project->getReferentName($project->referent_id) }}</td>
                         <td data-label="ActionsH">
@@ -49,6 +51,7 @@
                                 <span class="responsiveSpan">|</span>
                                 <a href="#" class="btn-return edit-project"
                                    data-project-id="{{ $project->id }}"
+                                   data-project-namelong="{{ $project->namelong }}"
                                    data-project-name="{{ $project->name }}"
                                    data-company-id="{{ $project->company_id }}"
                                    data-referent-id="{{ $project->referent_id }}"
@@ -125,6 +128,10 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Nom de l'affaire</label>
+                            <input type="text" class="form-control" id="add-project-namelong" name="project_namelong" placeholder="Nom de l'affaire...">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Numéro</label>
                             <div class="d-flex align-items-center">
                                 <span class="me-1">B</span>
                                 <input type="text" id="add-project-year" maxlength="2" pattern="\d{2}" required placeholder="00" class="form-control me-1" style="max-width: 60px;">
@@ -166,6 +173,11 @@
                     <form id="edit-project-form">
                         @csrf
                         <input type="hidden" name="project_id" id="edit-project-id">
+
+                        <div class="mb-3">
+                            <label class="form-label">Nom de l'affaire</label>
+                            <input type="text" class="form-control" id="edit-project-namelong" name="project_namelong" placeholder="Nom de l'affaire...">
+                        </div>
 
                         <!-- Nom de l'affaire -->
                         <div class="mb-3">

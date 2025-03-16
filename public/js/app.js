@@ -15022,6 +15022,7 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
         var projectId = this.getAttribute('data-project-id');
         var projectName = this.getAttribute('data-project-name'); // "B23.045"
+        var namelong = this.getAttribute('data-project-namelong'); // "Beauvais mairie..."
         var companyId = this.getAttribute('data-company-id');
         var referentId = this.getAttribute('data-referent-id') || "";
         var address = this.getAttribute('data-address') || "";
@@ -15041,6 +15042,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('edit-project-year').value = year;
         document.getElementById('edit-project-number').value = number;
         document.getElementById('edit-project-name').value = projectName;
+        document.getElementById('edit-project-namelong').value = namelong;
         document.getElementById('edit-project-company').value = companyId;
         document.getElementById('edit-project-referent').value = referentId;
         document.getElementById('edit-project-address').value = address;
@@ -15074,13 +15076,14 @@ document.addEventListener('DOMContentLoaded', function () {
   var saveProjectBtn = document.getElementById('save-project-btn');
   if (saveProjectBtn) {
     saveProjectBtn.addEventListener('click', function () {
-      var _document$getElementB, _document$getElementB2, _document$getElementB3, _document$getElementB4, _document$getElementB5, _document$getElementB6;
+      var _document$getElementB, _document$getElementB2, _document$getElementB3, _document$getElementB4, _document$getElementB5, _document$getElementB6, _document$getElementB7;
       var projectId = ((_document$getElementB = document.getElementById('edit-project-id')) === null || _document$getElementB === void 0 ? void 0 : _document$getElementB.value) || "";
       var projectName = ((_document$getElementB2 = document.getElementById('edit-project-name')) === null || _document$getElementB2 === void 0 ? void 0 : _document$getElementB2.value) || "";
-      var companyId = ((_document$getElementB3 = document.getElementById('edit-project-company')) === null || _document$getElementB3 === void 0 ? void 0 : _document$getElementB3.value) || null;
-      var referentId = ((_document$getElementB4 = document.getElementById('edit-project-referent')) === null || _document$getElementB4 === void 0 ? void 0 : _document$getElementB4.value) || null;
-      var address = ((_document$getElementB5 = document.getElementById('edit-project-address')) === null || _document$getElementB5 === void 0 ? void 0 : _document$getElementB5.value) || null;
-      var comment = ((_document$getElementB6 = document.getElementById('edit-project-comment')) === null || _document$getElementB6 === void 0 ? void 0 : _document$getElementB6.value) || null;
+      var namelong = ((_document$getElementB3 = document.getElementById('edit-project-namelong')) === null || _document$getElementB3 === void 0 ? void 0 : _document$getElementB3.value) || "";
+      var companyId = ((_document$getElementB4 = document.getElementById('edit-project-company')) === null || _document$getElementB4 === void 0 ? void 0 : _document$getElementB4.value) || null;
+      var referentId = ((_document$getElementB5 = document.getElementById('edit-project-referent')) === null || _document$getElementB5 === void 0 ? void 0 : _document$getElementB5.value) || null;
+      var address = ((_document$getElementB6 = document.getElementById('edit-project-address')) === null || _document$getElementB6 === void 0 ? void 0 : _document$getElementB6.value) || null;
+      var comment = ((_document$getElementB7 = document.getElementById('edit-project-comment')) === null || _document$getElementB7 === void 0 ? void 0 : _document$getElementB7.value) || null;
       var clients = $('#edit-project-clients').val() || [];
 
       // Validate name
@@ -15096,6 +15099,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var data = {
         project_id: projectId,
         project_name: projectName,
+        project_namelong: namelong,
         company_id: companyId,
         referent_id: referentId,
         address: address,
@@ -15206,11 +15210,12 @@ document.addEventListener('DOMContentLoaded', function () {
   var submitAddProjectBtn = document.getElementById('submit-add-project-btn');
   if (submitAddProjectBtn) {
     submitAddProjectBtn.addEventListener('click', function () {
-      var _document$getElementB7, _document$getElementB8, _document$getElementB9, _document$getElementB10;
-      var companyId = ((_document$getElementB7 = document.getElementById('add-project-company')) === null || _document$getElementB7 === void 0 ? void 0 : _document$getElementB7.value) || "";
-      var engineerId = ((_document$getElementB8 = document.getElementById('add-project-engineer')) === null || _document$getElementB8 === void 0 ? void 0 : _document$getElementB8.value) || "";
-      var yearVal = ((_document$getElementB9 = document.getElementById('add-project-year')) === null || _document$getElementB9 === void 0 ? void 0 : _document$getElementB9.value) || "";
-      var numberVal = ((_document$getElementB10 = document.getElementById('add-project-number')) === null || _document$getElementB10 === void 0 ? void 0 : _document$getElementB10.value) || "";
+      var _document$getElementB8, _document$getElementB9, _document$getElementB10, _document$getElementB11, _document$getElementB12;
+      var companyId = ((_document$getElementB8 = document.getElementById('add-project-company')) === null || _document$getElementB8 === void 0 ? void 0 : _document$getElementB8.value) || "";
+      var engineerId = ((_document$getElementB9 = document.getElementById('add-project-engineer')) === null || _document$getElementB9 === void 0 ? void 0 : _document$getElementB9.value) || "";
+      var yearVal = ((_document$getElementB10 = document.getElementById('add-project-year')) === null || _document$getElementB10 === void 0 ? void 0 : _document$getElementB10.value) || "";
+      var numberVal = ((_document$getElementB11 = document.getElementById('add-project-number')) === null || _document$getElementB11 === void 0 ? void 0 : _document$getElementB11.value) || "";
+      var namelong = ((_document$getElementB12 = document.getElementById('add-project-namelong')) === null || _document$getElementB12 === void 0 ? void 0 : _document$getElementB12.value) || "";
       var clientsSelect = document.getElementById('add-project-clients');
       var clients = clientsSelect ? Array.from(clientsSelect.selectedOptions).map(function (opt) {
         return opt.value;
@@ -15231,6 +15236,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var data = {
         company_id: companyId,
         engineer_id: engineerId,
+        project_namelong: namelong,
         project_name: projectName,
         clients: clients,
         _token: window.csrf_token

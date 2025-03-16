@@ -119,3 +119,11 @@ td[data-label="Referent"] {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+th[data-label="NomLong"],
+td[data-label="NomLong"] {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+

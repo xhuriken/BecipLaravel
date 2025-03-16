@@ -41,12 +41,26 @@ class ProjectController extends Controller
     {
         $dateTime = Carbon::now()->setYear($year);
         $now = Carbon::now();
+
+        $smallYear = $dateTime->format('y');
+
+        // Cherche le plus grand numéro existant pour l'année demandée
+        $lastProject = Project::where('name', 'LIKE', "B$smallYear.%")
+            ->orderByRaw("CAST(SUBSTRING_INDEX(name, '.', -1) AS UNSIGNED) DESC")
+            ->first();
+
+        // Détermine le numéro de départ
+        $startIndex = 1;
+        if ($lastProject) {
+            $lastIndex = (int) substr($lastProject->name, strrpos($lastProject->name, '.') + 1);
+            $startIndex = $lastIndex + 1;
+        }
+
         $projects = [];
 
-        for ($i = 1; $i <= $quantity; $i++) {
+        for ($i = $startIndex; $i < $startIndex + $quantity; $i++) {
             $counter = str_pad($i, 3, '0', STR_PAD_LEFT);
 
-            $smallYear = $dateTime->format('y');
             $projects[] = [
                 'name' => "B$smallYear.$counter",
                 "created_at" => $now->format('Y-m-d H:i:s'),
@@ -146,6 +160,7 @@ class ProjectController extends Controller
         try {
             $validated = $request->validate([
                 'company_id' => 'nullable|exists:companies,id',
+                'project_namelong' => 'nullable|string|max:255',
                 'project_name' => 'required|string|max:255|unique:projects,name',
                 'engineer_id' => 'nullable|exists:users,id',
                 'clients' => 'nullable|array',
@@ -162,6 +177,7 @@ class ProjectController extends Controller
 
         $project = Project::create([
             'company_id' => $validated['company_id'],
+            'namelong' => $validated['project_namelong'],
             'name' => $validated['project_name'],
             'referent_id' => $validated['engineer_id'],
         ]);
@@ -259,6 +275,7 @@ class ProjectController extends Controller
     {
         $validated = $request->validate([
             'project_id'   => 'required|exists:projects,id',
+            'project_namelong' => 'nullable|string|max:255',
             'project_name' => 'required|string|max:255|unique:projects,name,' . $request->project_id,
             'company_id'   => 'nullable|exists:companies,id',
             'referent_id'  => 'nullable|exists:users,id',
@@ -270,6 +287,7 @@ class ProjectController extends Controller
 
         $project = Project::findOrFail($validated['project_id']);
         $project->update([
+            'namelong' => $validated['project_namelong'],
             'name' => $validated['project_name'],
             'company_id' => $validated['company_id'],
             'referent_id' => $validated['referent_id'],

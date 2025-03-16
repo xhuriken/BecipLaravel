@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 e.preventDefault();
                 const projectId = this.getAttribute('data-project-id');
                 const projectName = this.getAttribute('data-project-name'); // "B23.045"
+                const namelong = this.getAttribute('data-project-namelong'); // "Beauvais mairie..."
                 const companyId = this.getAttribute('data-company-id');
                 const referentId = this.getAttribute('data-referent-id') || "";
                 const address = this.getAttribute('data-address') || "";
@@ -51,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('edit-project-year').value = year;
                 document.getElementById('edit-project-number').value = number;
                 document.getElementById('edit-project-name').value = projectName;
-
+                document.getElementById('edit-project-namelong').value = namelong;
                 document.getElementById('edit-project-company').value = companyId;
                 document.getElementById('edit-project-referent').value = referentId;
                 document.getElementById('edit-project-address').value = address;
@@ -88,6 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
         saveProjectBtn.addEventListener('click', function() {
             const projectId = document.getElementById('edit-project-id')?.value || "";
             const projectName = document.getElementById('edit-project-name')?.value || "";
+            const namelong = document.getElementById('edit-project-namelong')?.value || "";
             const companyId = document.getElementById('edit-project-company')?.value || null;
             const referentId = document.getElementById('edit-project-referent')?.value || null;
             const address = document.getElementById('edit-project-address')?.value || null;
@@ -108,6 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = {
                 project_id: projectId,
                 project_name: projectName,
+                project_namelong: namelong,
                 company_id: companyId,
                 referent_id: referentId,
                 address: address,
@@ -227,6 +230,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const engineerId = document.getElementById('add-project-engineer')?.value || "";
             const yearVal = document.getElementById('add-project-year')?.value || "";
             const numberVal = document.getElementById('add-project-number')?.value || "";
+            const namelong = document.getElementById('add-project-namelong')?.value || "";
             const clientsSelect = document.getElementById('add-project-clients');
             const clients = clientsSelect ? Array.from(clientsSelect.selectedOptions).map(opt => opt.value) : [];
 
@@ -248,6 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = {
                 company_id: companyId,
                 engineer_id: engineerId,
+                project_namelong: namelong,
                 project_name: projectName,
                 clients: clients,
                 _token: window.csrf_token
