@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->id();
+            $table->string('namelong')->nullable();
             $table->string('name');
             $table->unsignedBigInteger('company_id')->nullable();
             $table->unsignedBigInteger('referent_id')->nullable();

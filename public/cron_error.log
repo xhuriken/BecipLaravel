@@ -1,0 +1,9 @@
+[11-Mar-2025 15:11:11 Europe/Paris] PHP Warning:  require(/home/beciptq/www/bootstrap/autoload.php): Failed to open stream: No such file or directory in /home/beciptq/www/public/cron.php on line 11
+[11-Mar-2025 15:11:11 Europe/Paris] PHP Fatal error:  Uncaught Error: Failed opening required '/home/beciptq/www/bootstrap/autoload.php' (include_path='.:/usr/local/php8.3/lib/php') in /home/beciptq/www/public/cron.php:11
+Stack trace:
+#0 {main}
+  thrown in /home/beciptq/www/public/cron.php on line 11
+[11-Mar-2025 15:12:24 Europe/Paris] PHP Fatal error:  Uncaught Error: Call to a member function make() on true in /home/beciptq/www/public/cron.php:16
+Stack trace:
+#0 {main}
+  thrown in /home/beciptq/www/public/cron.php on line 16

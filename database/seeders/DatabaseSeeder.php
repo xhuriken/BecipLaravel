@@ -8,6 +8,7 @@ use App\Models\ProjectUser;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
@@ -19,17 +20,23 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        Company::create([
-            'name' => 'Becip',
-        ]);
+//        Company::create([
+//            'name' => 'Becip',
+//        ]);
+//
+//        User::create([
+//            'company_id' => 1,
+//            'name' => 'Ingénieur Principal',
+//            'email' => 'celestin@honvault.com',
+//            'password' => Hash::make('azertyui'),
+//            'role' => 'engineer',
+//        ]);
 
-        User::create([
-            'company_id' => 1,
-            'name' => 'Ingénieur Principal',
-            'email' => 'celestin@honvault.com',
-            'password' => Hash::make('azertyui'),
-            'role' => 'engineer',
-        ]);
+        $file_path = resource_path('sql/seeds1.sql');
+
+        \DB::unprepared(
+            file_get_contents($file_path)
+        );
 
     }
 }
