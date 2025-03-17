@@ -36,8 +36,8 @@
                 <h2 class="mb-2">Ajouter un utilisateur</h2>
 
                 <div class="mb-2">
-                    <label for="name" class="form-label">Prénom NOM</label>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="Prénom NOM...">
+                    <label for="name" class="form-label">NOM Prénom</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="NOM Prénom...">
                 </div>
 
                 <div class="mb-2">
@@ -152,7 +152,7 @@
     </div>
 
     <script>
-        window.addUserRoute = "{{ route('usermanager.adduser') }}";
+        window.addUserRoute = "{{route('usermanager.adduser')}}";
         window.allCompanies = @json($companies);
         window.allRoles = {
             'engineer': 'Ingénieur',

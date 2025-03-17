@@ -15906,7 +15906,7 @@ document.addEventListener('DOMContentLoaded', function () {
 /***/ (() => {
 
 document.addEventListener('DOMContentLoaded', function () {
-  var form = document.querySelector('.form-becip');
+  var form = document.getElementById('adduser');
   if (!form) return;
   form.addEventListener('submit', function (event) {
     event.preventDefault();

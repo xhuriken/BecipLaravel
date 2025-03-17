@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('.form-becip');
+    const form = document.getElementById('adduser');
 
     if (!form) return;
 
