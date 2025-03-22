@@ -47,7 +47,7 @@
                         <td data-label="Referent">{{ $project->getReferentName($project->referent_id) }}</td>
                         <td data-label="ActionsH">
                             <a href="{{ route('projects.project', $project) }}" class="btn-return">Voir</a>
-                            @if(auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
+                            @if(auth()->user()->isBecip())
                                 <span class="responsiveSpan">|</span>
                                 <a href="#" class="btn-return edit-project"
                                    data-project-id="{{ $project->id }}"
@@ -179,18 +179,30 @@
                             <input type="text" class="form-control" id="edit-project-namelong" name="project_namelong" placeholder="Nom de l'affaire...">
                         </div>
 
-                        <!-- Nom de l'affaire -->
-                        <div class="mb-3">
-                            <label class="form-label">Nom de l'affaire</label>
-                            <div class="d-flex align-items-center">
-                                <span class="me-1">B</span>
-                                <input type="text" id="edit-project-year" maxlength="2" pattern="\d{2}" required placeholder="00" class="form-control me-1" style="max-width: 60px;">
-                                <span class="me-1">.</span>
-                                <input type="text" id="edit-project-number" maxlength="3" pattern="\d{3}" required placeholder="000" class="form-control" style="max-width: 80px;">
+                        @if(auth()->user()->role !== "drawer")
+                            <!-- Nom de l'affaire -->
+                            <div class="mb-3">
+                                <label class="form-label">Numéro</label>
+                                <div class="d-flex align-items-center">
+                                    <span class="me-1">B</span>
+                                    <input type="text" id="edit-project-year" maxlength="2" pattern="\d{2}" required placeholder="00" class="form-control me-1" style="max-width: 60px;">
+                                    <span class="me-1">.</span>
+                                    <input type="text" id="edit-project-number" maxlength="3" pattern="\d{3}" required placeholder="000" class="form-control" style="max-width: 80px;">
+                                </div>
+                                <input type="hidden" name="project_name" id="edit-project-name">
                             </div>
-                            <input type="hidden" name="project_name" id="edit-project-name">
-                        </div>
-
+                        @else
+                            <div class="d-none">
+                                <label class="form-label">Numéro</label>
+                                <div class="d-flex align-items-center">
+                                    <span class="me-1">B</span>
+                                    <input type="text" id="edit-project-year" maxlength="2" pattern="\d{2}" required placeholder="00" class="form-control me-1" style="max-width: 60px;">
+                                    <span class="me-1">.</span>
+                                    <input type="text" id="edit-project-number" maxlength="3" pattern="\d{3}" required placeholder="000" class="form-control" style="max-width: 80px;">
+                                </div>
+                                <input type="hidden" name="project_name" id="edit-project-name">
+                            </div>
+                        @endif
                         <!-- Entreprise -->
                         <div class="mb-3">
                             <label for="edit-project-company" class="form-label">Entreprise</label>
@@ -213,18 +225,31 @@
                             </select>
                         </div>
 
-                        <!-- Adresse -->
-                        <div class="mb-3">
-                            <label for="edit-project-address" class="form-label">Adresse</label>
-                            <input type="text" class="form-control" id="edit-project-address" name="address" placeholder="Adresse (facultatif)">
-                        </div>
+                        @if(auth()->user()->role !== "drawer")
+                            <!-- Adresse -->
+                            <div class="mb-3">
+                                <label for="edit-project-address" class="form-label">Adresse</label>
+                                <input type="text" class="form-control" id="edit-project-address" name="address" placeholder="Adresse (facultatif)">
+                            </div>
 
-                        <!-- Commentaire -->
-                        <div class="mb-3">
-                            <label for="edit-project-comment" class="form-label">Commentaire</label>
-                            <textarea class="form-control" id="edit-project-comment" name="comment" rows="3" placeholder="Commentaire (facultatif)"></textarea>
-                        </div>
+                            <!-- Commentaire -->
+                            <div class="mb-3">
+                                <label for="edit-project-comment" class="form-label">Commentaire</label>
+                                <textarea class="form-control" id="edit-project-comment" name="comment" rows="3" placeholder="Commentaire (facultatif)"></textarea>
+                            </div>
+                        @else
+                            <!-- Adresse -->
+                            <div class="d-none">
+                                <label for="edit-project-address" class="form-label">Adresse</label>
+                                <input type="text" class="form-control" id="edit-project-address" name="address" placeholder="Adresse (facultatif)">
+                            </div>
 
+                            <!-- Commentaire -->
+                            <div class="d-none">
+                                <label for="edit-project-comment" class="form-label">Commentaire</label>
+                                <textarea class="form-control" id="edit-project-comment" name="comment" rows="3" placeholder="Commentaire (facultatif)"></textarea>
+                            </div>
+                        @endif
                         <!-- Clients ayant accès -->
                         <div class="mb-3">
                             <label for="edit-project-clients" class="form-label">Clients ayant accès</label>
