@@ -145,12 +145,14 @@
                         @endif
                     </td>
                     <td  data-label="Action">
-                        <button class="btn btn-sm btn-primary edit-user" data-route="{{ route('usermanager.updateuser') }}">
-                            <i class="fa fa-pencil"></i>
-                        </button>
-                        <button class="btn btn-sm btn-danger delete-user" data-route="{{ route('usermanager.deleteuser') }}">
-                            <i class="fa fa-trash"></i>
-                        </button>
+                        @if($user->id !== auth()->user()->id)
+                            <button class="btn btn-sm btn-primary edit-user" data-route="{{ route('usermanager.updateuser') }}">
+                                <i class="fa fa-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger delete-user" data-route="{{ route('usermanager.deleteuser') }}">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        @else
                     </td>
                 </tr>
             @endforeach
