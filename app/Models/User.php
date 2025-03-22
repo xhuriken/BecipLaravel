@@ -125,4 +125,15 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Project::class, 'project_user', 'user_id', 'project_id');
     }
+
+
+    public function getPhone(): string
+    {
+        if (!$this->phone) return '';
+
+        $digitsOnly = preg_replace('/\D/', '', $this->phone);
+
+        return trim(chunk_split($digitsOnly, 2, ' '));
+    }
+
 }

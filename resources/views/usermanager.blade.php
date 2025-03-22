@@ -115,6 +115,7 @@
             <tr>
 {{--                <th>ID</th>--}}
                 <th>Nom et Prénom</th>
+                <th data-label="phone">Téléphone</th>
                 <th>Email</th>
                 <th>Rôle</th>
                 <th>Entreprise</th>
@@ -126,6 +127,7 @@
                 <tr data-user-id="{{ $user->id }}">
 {{--                    <td>{{ $user->id }}</td>--}}
                     <td class="user-name">{{ $user->name }}</td>
+                    <td data-label="phone" class="user-phone">{{ $user->phone ? $user->getPhone(): 'Aucun' }}</td>
                     <td class="user-email">{{ $user->email }}</td>
                     <td class="user-role" data-role="{{ $user->role }}">
                         {{ [

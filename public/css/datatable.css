@@ -132,3 +132,10 @@ td[data-label="Action"] {
     min-width: 5rem !important;
     text-align: center;
 }
+
+th[data-label="phone"],
+td[data-label="phone"] {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
