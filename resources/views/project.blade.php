@@ -186,7 +186,7 @@
                             <td data-label="Distribuer">
                                 <input type="checkbox" name="print_files[]" value="{{$file->id}}"
                                        class="distribution-checkbox"
-                                        {{($file->distribution_count >= 1) ? 'disabled' : '' }}
+                                        {{($file->distribution_count >= 1) || !$file->is_validated ? 'disabled' : '' }}
                                 />
                                 @if($file->distribution_count >= 1)
                                     {{--Trouver un moyen de faire des tooltip avec DataTable--}}
