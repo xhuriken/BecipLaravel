@@ -15396,6 +15396,20 @@ document.addEventListener('DOMContentLoaded', function () {
           });
           return;
         }
+
+        // Validation spécifique pour téléphone
+        if (field === 'phone') {
+          var cleanedValue = newValue.replace(/\s+/g, '');
+          if (cleanedValue.length !== 10 || !/^\d+$/.test(cleanedValue)) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Numéro de téléphone invalide',
+              text: 'Le numéro doit contenir exactement 10 chiffres sans lettre.'
+            });
+            return;
+          }
+          newValue = cleanedValue;
+        }
         editBtn.disabled = true;
         fetch(window.updateProfileUrl, {
           method: 'POST',
@@ -15453,6 +15467,10 @@ document.addEventListener('DOMContentLoaded', function () {
   var emailEditBtn = document.getElementById('email-edit-btn');
   var emailDisplay = document.getElementById('email-display');
   var emailInput = document.getElementById('email-input');
+  var phoneEditBtn = document.getElementById('phone-edit-btn');
+  var phoneDisplay = document.getElementById('phone-display');
+  var phoneInput = document.getElementById('phone-input');
+  if (phoneEditBtn) setupEditButton(phoneEditBtn, phoneDisplay, phoneInput, 'phone');
   if (nameEditBtn) setupEditButton(nameEditBtn, nameDisplay, nameInput, 'name');
   if (emailEditBtn) setupEditButton(emailEditBtn, emailDisplay, emailInput, 'email');
 });

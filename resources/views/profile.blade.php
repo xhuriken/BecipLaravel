@@ -45,6 +45,19 @@
                 </div>
             </div>
 
+            <div class="row align-items-center mb-3">
+                <div class="col-auto">
+                    <button id="phone-edit-btn" class="btn btn-primary btn-square">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
+                </div>
+                <div class="col text-start">
+                    <label class="fw-bold">Votre téléphone :</label>
+                    <span id="phone-display">{{ auth()->user()->phone ? auth()->user()->getPhone(): 'Aucun' }}</span>
+                    <input type="text" id="phone-input" class="form-control d-none mt-2" value="{{ auth()->user()->phone }}">
+                </div>
+            </div>
+
             <div class="d-flex justify-content-center mb-3">
                 <button id="open-change-password" class="btn btn-success w-100">Changer le mot de passe</button>
             </div>

@@ -18,17 +18,30 @@ class ProfileController extends Controller
      */
     public function update(Request $request)
     {
-        $data = $request->validate([
-            'field' => 'required|in:name,email',
-            'value' => 'required|string|max:255'
+        $field = $request->input('field');
+        $value = $request->input('value');
+
+        $rules = [
+            'name'  => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
+            'phone' => ['required', 'digits:10'],
+        ];
+
+        if (!array_key_exists($field, $rules)) {
+            return response()->json(['success' => false, 'message' => 'Champ invalide.'], 400);
+        }
+
+        $request->validate([
+            'field' => 'required|in:name,email,phone',
+            'value' => $rules[$field],
         ]);
 
         $user = auth()->user();
-
-        $user->{$data['field']} = $data['value'];
+        $user->{$field} = $value;
         $user->save();
 
         return response()->json(['success' => true]);
     }
+
 
 }

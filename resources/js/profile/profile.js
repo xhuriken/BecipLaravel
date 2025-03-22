@@ -4,11 +4,27 @@ document.addEventListener('DOMContentLoaded', function() {
     function setupEditButton(editBtn, displayElem, inputElem, field) {
         editBtn.addEventListener('click', function() {
             if (editBtn.classList.contains('editing')) {
-                const newValue = inputElem.value.trim();
+                let newValue = inputElem.value.trim();
+
                 if (newValue === "") {
                     Swal.fire({ title: `${field} ne peut pas être vide.`, icon: "warning" });
                     return;
                 }
+
+                // Validation spécifique pour téléphone
+                if (field === 'phone') {
+                    const cleanedValue = newValue.replace(/\s+/g, '');
+                    if (cleanedValue.length !== 10 || !/^\d+$/.test(cleanedValue)) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Numéro de téléphone invalide',
+                            text: 'Le numéro doit contenir exactement 10 chiffres sans lettre.',
+                        });
+                        return;
+                    }
+                    newValue = cleanedValue;
+                }
+
                 editBtn.disabled = true;
 
                 fetch(window.updateProfileUrl, {
@@ -32,6 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
 
     function toggleEditMode(editBtn, displayElem, inputElem, editing) {
         if (editing) {
@@ -57,6 +74,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const emailDisplay = document.getElementById('email-display');
     const emailInput = document.getElementById('email-input');
 
+    const phoneEditBtn = document.getElementById('phone-edit-btn');
+    const phoneDisplay = document.getElementById('phone-display');
+    const phoneInput = document.getElementById('phone-input');
+
+    if (phoneEditBtn) setupEditButton(phoneEditBtn, phoneDisplay, phoneInput, 'phone');
     if (nameEditBtn) setupEditButton(nameEditBtn, nameDisplay, nameInput, 'name');
     if (emailEditBtn) setupEditButton(emailEditBtn, emailDisplay, emailInput, 'email');
 });
