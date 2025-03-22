@@ -557,10 +557,3 @@ INSERT INTO `files` (`id`, `project_id`, `user_id`, `name`, `extension`, `commen
 (21, 502, 5, '100-ind-0-batiment-a-et-b-armatures-massifs-semelles-poteaux.pdf', 'pdf', NULL, 0, NULL, 'undefine', 1, 1, '2025-03-14 08:51:50', '2025-03-14 08:51:54'),
 (22, 502, 5, 'a01-ind-b-batiment-a-coffrage-fondations.pdf', 'pdf', NULL, 0, NULL, 'undefine', 1, 1, '2025-03-14 08:59:07', '2025-03-14 08:59:12'),
 (24, 501, 5, '20241230-aulnay-sous-bois-rn-2-mar-plans-a24-plan-rdc-bat-de.pdf', 'pdf', NULL, 0, NULL, 'undefine', 1, 1, '2025-03-14 11:56:32', '2025-03-14 11:56:49');
-
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
-(1, '0001_01_01_000000_create_companies_table', 1),
-(2, '0001_01_01_000001_create_users_table', 1),
-(3, '0001_01_01_000002_create_projects_table', 1),
-(4, '0001_01_01_000003_create_project_user_table', 1),
-(5, '0001_01_01_000005_create_files_table', 1);

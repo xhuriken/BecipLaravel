@@ -16412,6 +16412,8 @@ jQuery(document).ready(function ($) {
   $('#project-table').DataTable({
     destroy: true,
     responsive: true,
+    lengthMenu: [[50, 100, 500, -1], [50, 100, 500, 'All']],
+    pageLength: 100,
     language: {
       "decimal": ",",
       "thousands": ".",

@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
 //            'role' => 'engineer',
 //        ]);
 
-        $file_path = resource_path('sql/seeds1.sql');
+        $file_path = resource_path('sql/seeds3_22_03.sql');
 
         \DB::unprepared(
             file_get_contents($file_path)
