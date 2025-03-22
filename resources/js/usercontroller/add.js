@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault();
 
         const name = document.getElementById('name').value.trim();
+        const phone = document.getElementById('phone').value.trim().replace(/\s+/g, '');
         const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
         const role = document.getElementById('role').value;
@@ -47,6 +48,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 text: 'Le mot de passe doit contenir au moins 8 caractères.',
             });
         }
+
+        if (!/^\d+$/.test(phone)) {
+            return Swal.fire({
+                icon: 'error',
+                title: 'Numéro invalide',
+                text: 'Le numéro ne doit contenir que des chiffres.',
+            });
+        }
+
+        if (phone.length !== 10) {
+            return Swal.fire({
+                icon: 'error',
+                title: 'Numéro invalide',
+                text: 'Le numéro doit contenir exactement 10 chiffres.',
+            });
+        }
+
+
         //If everithing is good, SEND !
         fetch(window.addUserRoute, {
             method: 'POST',
@@ -54,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': window.csrf_token
             },
-            body: JSON.stringify({ name, email, password, role, company_id })
+            body: JSON.stringify({ name, phone, email, password, role, company_id })
         })
             .then(response => response.json())
             .then(data => {

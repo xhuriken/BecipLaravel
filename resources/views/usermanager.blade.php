@@ -46,6 +46,11 @@
                 </div>
 
                 <div class="mb-2">
+                    <label for="phone" class="form-label">Téléphone</label>
+                    <input type="text" class="form-control" id="phone" name="phone" placeholder="Numéro de téléphone...">
+                </div>
+
+                <div class="mb-2">
                     <label for="password" class="form-label">
                       Mot de passe
                     </label>

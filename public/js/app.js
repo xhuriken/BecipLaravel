@@ -15911,6 +15911,7 @@ document.addEventListener('DOMContentLoaded', function () {
   form.addEventListener('submit', function (event) {
     event.preventDefault();
     var name = document.getElementById('name').value.trim();
+    var phone = document.getElementById('phone').value.trim().replace(/\s+/g, '');
     var email = document.getElementById('email').value.trim();
     var password = document.getElementById('password').value;
     var role = document.getElementById('role').value;
@@ -15950,6 +15951,21 @@ document.addEventListener('DOMContentLoaded', function () {
         text: 'Le mot de passe doit contenir au moins 8 caractères.'
       });
     }
+    if (!/^\d+$/.test(phone)) {
+      return Swal.fire({
+        icon: 'error',
+        title: 'Numéro invalide',
+        text: 'Le numéro ne doit contenir que des chiffres.'
+      });
+    }
+    if (phone.length !== 10) {
+      return Swal.fire({
+        icon: 'error',
+        title: 'Numéro invalide',
+        text: 'Le numéro doit contenir exactement 10 chiffres.'
+      });
+    }
+
     //If everithing is good, SEND !
     fetch(window.addUserRoute, {
       method: 'POST',
@@ -15959,6 +15975,7 @@ document.addEventListener('DOMContentLoaded', function () {
       },
       body: JSON.stringify({
         name: name,
+        phone: phone,
         email: email,
         password: password,
         role: role,

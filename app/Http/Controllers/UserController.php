@@ -126,6 +126,7 @@ class UserController extends Controller
             // Vérification si c'est une requête AJAX
                 $validatedData = $request->validate([
                     'name' => 'required|string|max:255',
+                    'phone' => 'string|max:255',
                     'email' => 'required|email|unique:users,email',
                     'password' => 'required|string|min:8',
                     'role' => 'required|in:engineer,drawer,secretary,client',
@@ -135,6 +136,7 @@ class UserController extends Controller
                 // Création de l'utilisateur
                 $user = User::create([
                     'name' => $validatedData['name'],
+                    'phone' => $validatedData['phone'],
                     'email' => $validatedData['email'],
                     'password' => Hash::make($validatedData['password']),
                     'role' => $validatedData['role'],
