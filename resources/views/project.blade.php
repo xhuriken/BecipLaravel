@@ -202,9 +202,9 @@
                 @endforelse
             </tbody>
         </table>
-        <button id="download-btn" class="btn btn-primary">Download</button>
+        <button id="download-btn" class="btn btn-primary">Télécharger</button>
 
-        <button id="distribute-btn" class="btn btn-primary">Distribute</button>
+        <button id="distribute-btn" class="btn btn-primary">Demande d'impression</button>
     </header>
 
     {{--Comment 'Voir Plus' Modal--}}
