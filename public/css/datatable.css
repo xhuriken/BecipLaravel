@@ -127,3 +127,8 @@ td[data-label="NomLong"] {
     text-overflow: ellipsis;
 }
 
+th[data-label="Action"],
+td[data-label="Action"] {
+    min-width: 5rem !important;
+    text-align: center;
+}

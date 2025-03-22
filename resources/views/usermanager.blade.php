@@ -81,7 +81,7 @@
         <table id="companies-table" class="table-responsive table table-striped">
             <thead>
             <tr>
-                <th>ID</th>
+{{--                <th>ID</th>--}}
                 <th>Nom de l'entreprise</th>
                 <th>Action</th>
             </tr>
@@ -89,7 +89,7 @@
             <tbody>
             @foreach($companies as $company)
                 <tr data-company-id="{{ $company->id }}">
-                    <td>{{ $company->id }}</td>
+{{--                    <td>{{ $company->id }}</td>--}}
                     <td class="company-name">{{ $company->name }}</td>
                     <td>
                         <button class="btn btn-sm btn-primary edit-company" data-route="{{ route('usermanager.updatecompany') }}">
@@ -108,18 +108,18 @@
         <table id="users-table" class="table-responsive table table-striped">
             <thead>
             <tr>
-                <th>ID</th>
+{{--                <th>ID</th>--}}
                 <th>Nom et Prénom</th>
                 <th>Email</th>
                 <th>Rôle</th>
                 <th>Entreprise</th>
-                <th>Action</th>
+                <th data-label="Action">Action</th>
             </tr>
             </thead>
             <tbody>
             @foreach($users as $user)
                 <tr data-user-id="{{ $user->id }}">
-                    <td>{{ $user->id }}</td>
+{{--                    <td>{{ $user->id }}</td>--}}
                     <td class="user-name">{{ $user->name }}</td>
                     <td class="user-email">{{ $user->email }}</td>
                     <td class="user-role" data-role="{{ $user->role }}">
@@ -137,7 +137,7 @@
                             Aucune
                         @endif
                     </td>
-                    <td>
+                    <td  data-label="Action">
                         <button class="btn btn-sm btn-primary edit-user" data-route="{{ route('usermanager.updateuser') }}">
                             <i class="fa fa-pencil"></i>
                         </button>

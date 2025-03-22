@@ -21,7 +21,7 @@ $(document).ready(function() {
             }
         },
         columnDefs: [
-            { orderable: false, targets: 2 }
+            { orderable: false, targets: 1 }
         ]
     });
 
@@ -47,7 +47,7 @@ $(document).ready(function() {
             }
         },
         columnDefs: [
-            { orderable: false, targets: 5 }
+            { orderable: false, targets: 4 }
         ]
     });
 });

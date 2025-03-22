@@ -16025,7 +16025,7 @@ $(document).ready(function () {
     },
     columnDefs: [{
       orderable: false,
-      targets: 2
+      targets: 1
     }]
   });
   var usersTable = $('#users-table').DataTable({
@@ -16051,7 +16051,7 @@ $(document).ready(function () {
     },
     columnDefs: [{
       orderable: false,
-      targets: 5
+      targets: 4
     }]
   });
 });
