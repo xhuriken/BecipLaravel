@@ -20,3 +20,4 @@ import './project/comment_modal'
 import './profile/forgot_modal'
 import './home/delete_empty'
 import './usercontroller/add';
+import './utils/showpassword';

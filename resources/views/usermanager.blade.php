@@ -51,12 +51,16 @@
                 </div>
 
                 <div class="mb-2">
-                    <label for="password" class="form-label">
-                      Mot de passe
-                    </label>
-                    <input type="password" class="form-control" id="password" name="password"
-                           value="{{ $newPasswordGenerated }}" placeholder="SuperMot2Passe!">
+                    <label for="password" class="form-label">Mot de passe</label>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="password" name="password"
+                               value="{{ $newPasswordGenerated }}" placeholder="SuperMot2Passe!">
+                        <button class="btn btn-outline-primary" type="button" id="togglePassword">
+                            <i class="fa fa-eye" id="togglePasswordIcon"></i>
+                        </button>
+                    </div>
                 </div>
+
 
                 <div class="mb-2">
                     <label for="role" class="form-label">Rôle</label>
@@ -153,6 +157,8 @@
                                 <i class="fa fa-trash"></i>
                             </button>
                         @else
+
+                        @endif
                     </td>
                 </tr>
             @endforeach

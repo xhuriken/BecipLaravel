@@ -14555,9 +14555,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _home_delete_empty__WEBPACK_IMPORTED_MODULE_19___default = /*#__PURE__*/__webpack_require__.n(_home_delete_empty__WEBPACK_IMPORTED_MODULE_19__);
 /* harmony import */ var _usercontroller_add__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./usercontroller/add */ "./resources/js/usercontroller/add.js");
 /* harmony import */ var _usercontroller_add__WEBPACK_IMPORTED_MODULE_20___default = /*#__PURE__*/__webpack_require__.n(_usercontroller_add__WEBPACK_IMPORTED_MODULE_20__);
+/* harmony import */ var _utils_showpassword__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./utils/showpassword */ "./resources/js/utils/showpassword.js");
+/* harmony import */ var _utils_showpassword__WEBPACK_IMPORTED_MODULE_21___default = /*#__PURE__*/__webpack_require__.n(_utils_showpassword__WEBPACK_IMPORTED_MODULE_21__);
 
 
 window.bootstrap = bootstrap__WEBPACK_IMPORTED_MODULE_1__;
+
 
 
 
@@ -16515,6 +16518,26 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(function () {
       loader.classList.add('hidden');
     }, 500);
+  });
+});
+
+/***/ }),
+
+/***/ "./resources/js/utils/showpassword.js":
+/*!********************************************!*\
+  !*** ./resources/js/utils/showpassword.js ***!
+  \********************************************/
+/***/ (() => {
+
+document.addEventListener('DOMContentLoaded', function () {
+  var togglePassword = document.getElementById('togglePassword');
+  var passwordInput = document.getElementById('password');
+  var toggleIcon = document.getElementById('togglePasswordIcon');
+  togglePassword.addEventListener('click', function () {
+    var type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+    toggleIcon.classList.toggle('fa-eye');
+    toggleIcon.classList.toggle('fa-eye-slash');
   });
 });
 
