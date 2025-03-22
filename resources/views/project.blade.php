@@ -17,10 +17,9 @@
     <h1>Détails de l'affaire</h1>
     <header>
         <div class="affinfo"><!-- Pour le css plus tard -->
-            <p><strong>Entreprise : </strong>
-                {{$company}}
-            </p>
-            <p><strong>Nom de l'affaire : </strong>{{$project->name}}</p>
+            <p><strong>Entreprise : </strong>{{$company}}</p>
+            <p><strong>Nom : </strong>{{$project->namelong}}</p>
+            <p><strong>Numéro : </strong>{{$project->name}}</p>
             <p><strong>Ingénieur référent : </strong>{{$referent}}</p>
             <p><strong>Clients : </strong>{{ $clients && !$clients->isEmpty() ? $clients->pluck('name')->join(', ') : 'Aucun' }}</p>
         </div>
