@@ -7,18 +7,24 @@
             <p class="loading-text">Chargement en cours...</p>
         </div>
         <div class="items-container">
-            @if (auth()->user()->role == 'engineer')
-                <a href='{{ route('usermanager') }}' class='btn-return'>Gérer les utilisateurs</a>
-            @endif
-            @if (auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
-                <a href="{{ route('projects.generate', [500, date('Y')]) }}" class="btn-mask">
-                    Générer 500 affaires cette année
-                </a>
-                <a href="{{ route('projects.generate', [500, date('Y')+1]) }}" class="btn-mask">
-                    Générer 500 affaires l'année suivante
-                </a>
+            <div class="group">
+
+                @if (auth()->user()->role == 'engineer')
+                    <a href='{{ route('usermanager') }}' class='btn-return'>Gérer les utilisateurs</a>
+                @endif
+                @if (auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
+
                 <!-- Bouton qui ouvre le modal d'ajout -->
-                <button id="toggleButton" class="btn-mask">Ajouter une affaire manuellement</button>
+                    <button id="toggleButton" class="btn-mask">Ajouter une affaire manuellement</button>
+                </div>
+                <div class="group">
+                    <a href="{{ route('projects.generate', [500, date('Y')]) }}" class="btn-mask">
+                        Générer 500 affaires cette année
+                    </a>
+                    <a href="{{ route('projects.generate', [500, date('Y')+1]) }}" class="btn-mask">
+                        Générer 500 affaires l'année suivante
+                    </a>
+                </div>
             @endif
         </div>
 

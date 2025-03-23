@@ -226,11 +226,28 @@ button:hover {
     background-color: #10b068;
 }
 
+.project-action{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    width: 100%;
+    gap: 1rem;
+}
+
+.action{
+    width: auto;
+}
+
 .items-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.group{
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    align-items: start;
 }
 .items-container button {
     margin: inherit;
