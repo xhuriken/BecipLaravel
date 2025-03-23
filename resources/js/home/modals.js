@@ -102,7 +102,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     title: "Nom de l'affaire invalide (ex: B23.045).",
                     icon: "error",
                     timer: 3000,
-                    timerProgressBar: true
+                    timerProgressBar: true,
+                    showConfirmButton: true,
+                    confirmButtonText: "OK",
+                    customClass: {
+                        confirmButton: 'btn btn-success'
+                    },
+                    buttonsStyling: false
                 });
                 return;
             }
@@ -134,7 +140,13 @@ document.addEventListener('DOMContentLoaded', function() {
                             title: "Affaire mise à jour avec succès.",
                             icon: "success",
                             timer: 3000,
-                            timerProgressBar: true
+                            timerProgressBar: true,
+                            showConfirmButton: true,
+                            confirmButtonText: "OK",
+                            customClass: {
+                                confirmButton: 'btn btn-success'
+                            },
+                            buttonsStyling: false
                         }).then(() => {
                             if (editModal) editModal.hide();
                             location.reload();
@@ -144,7 +156,13 @@ document.addEventListener('DOMContentLoaded', function() {
                             title: "Erreur lors de la mise à jour de l'affaire.",
                             icon: "error",
                             timer: 3000,
-                            timerProgressBar: true
+                            timerProgressBar: true,
+                            showConfirmButton: true,
+                            confirmButtonText: "OK",
+                            customClass: {
+                                confirmButton: 'btn btn-success'
+                            },
+                            buttonsStyling: false
                         });
                     }
                 })
@@ -153,7 +171,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         title: "Une erreur s'est produite lors de la mise à jour de l'affaire.",
                         icon: "error",
                         timer: 3000,
-                        timerProgressBar: true
+                        timerProgressBar: true,
+                        showConfirmButton: true,
+                        confirmButtonText: "OK",
+                        customClass: {
+                            confirmButton: 'btn btn-success'
+                        },
+                        buttonsStyling: false
                     });
                 });
         });
@@ -239,7 +263,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     title: "Nom de l'affaire invalide (ex: B23.045).",
                     icon: "error",
                     timer: 3000,
-                    timerProgressBar: true
+                    timerProgressBar: true,
+                    showConfirmButton: true,
+                    confirmButtonText: "OK",
+                    customClass: {
+                        confirmButton: 'btn btn-success'
+                    },
+                    buttonsStyling: false
                 });
                 return;
             }
@@ -273,7 +303,13 @@ document.addEventListener('DOMContentLoaded', function() {
                             title: "Affaire ajoutée avec succès.",
                             icon: "success",
                             timer: 3000,
-                            timerProgressBar: true
+                            timerProgressBar: true,
+                            showConfirmButton: true,
+                            confirmButtonText: "OK",
+                            customClass: {
+                                confirmButton: 'btn btn-success'
+                            },
+                            buttonsStyling: false
                         }).then(() => {
                             if (addProjectModal) addProjectModal.hide();
                             location.reload();
@@ -284,14 +320,26 @@ document.addEventListener('DOMContentLoaded', function() {
                                 title: body.error,
                                 icon: "error",
                                 timer: 3000,
-                                timerProgressBar: true
+                                timerProgressBar: true,
+                                showConfirmButton: true,
+                                confirmButtonText: "OK",
+                                customClass: {
+                                    confirmButton: 'btn btn-success'
+                                },
+                                buttonsStyling: false
                             });
                         } else {
                             Swal.fire({
                                 title: "Erreur lors de l'ajout de l'affaire.",
                                 icon: "error",
                                 timer: 3000,
-                                timerProgressBar: true
+                                timerProgressBar: true,
+                                showConfirmButton: true,
+                                confirmButtonText: "OK",
+                                customClass: {
+                                    confirmButton: 'btn btn-success'
+                                },
+                                buttonsStyling: false
                             });
                         }
                     }
@@ -302,7 +350,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         title: "Une erreur s'est produite.",
                         icon: "error",
                         timer: 3000,
-                        timerProgressBar: true
+                        timerProgressBar: true,
+                        showConfirmButton: true,
+                        confirmButtonText: "OK",
+                        customClass: {
+                            confirmButton: 'btn btn-success'
+                        },
+                        buttonsStyling: false
                     });
                 });
         });

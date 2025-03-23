@@ -75,7 +75,13 @@ document.addEventListener('DOMContentLoaded', function() {
                             title: "Fichiers uploadés avec succès !",
                             icon: "success",
                             timer: 3000,
-                            timerProgressBar: true
+                            timerProgressBar: true,
+                            showConfirmButton: true,
+                            confirmButtonText: "OK",
+                            customClass: {
+                                confirmButton: 'btn btn-success'
+                            },
+                            buttonsStyling: false
                         }).then(() => {
                             location.reload();
                         });
@@ -94,7 +100,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         title: "Une erreur est survenue",
                         icon: "error",
                         timer: 3000,
-                        timerProgressBar: true
+                        timerProgressBar: true,
+                        showConfirmButton: true,
+                        confirmButtonText: "OK",
+                        customClass: {
+                            confirmButton: 'btn btn-success'
+                        },
+                        buttonsStyling: false
                     }).then(() => {
                         location.reload();
                     });

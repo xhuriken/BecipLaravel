@@ -13,7 +13,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     title: "Veuillez sélectionner au moins un fichier à télécharger.",
                     icon: "error",
                     timer: 3000,
-                    timerProgressBar: true
+                    timerProgressBar: true,
+                    showConfirmButton: true,
+                    confirmButtonText: "OK",
+                    customClass: {
+                        confirmButton: 'btn btn-success'
+                    },
+                    buttonsStyling: false
                 });
                 return;
             }
@@ -81,7 +87,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     title: "Veuillez sélectionner au moins un fichier à distribuer.",
                     icon: "error",
                     timer: 3000,
-                    timerProgressBar: true
+                    timerProgressBar: true,
+                    showConfirmButton: true,
+                    confirmButtonText: "OK",
+                    customClass: {
+                        confirmButton: 'btn btn-success'
+                    },
+                    buttonsStyling: false
                 });
                 return;
             }
@@ -111,7 +123,13 @@ document.addEventListener('DOMContentLoaded', function() {
                             title: "Email de distribution envoyé avec succès !",
                             icon: "success",
                             timer: 3000,
-                            timerProgressBar: true
+                            timerProgressBar: true,
+                            showConfirmButton: true,
+                            confirmButtonText: "OK",
+                            customClass: {
+                                confirmButton: 'btn btn-success'
+                            },
+                            buttonsStyling: false
                         }).then(() => {
                             location.reload();
                         });
@@ -120,7 +138,13 @@ document.addEventListener('DOMContentLoaded', function() {
                             title: response.error || "Erreur lors de la distribution.",
                             icon: "error",
                             timer: 3000,
-                            timerProgressBar: true
+                            timerProgressBar: true,
+                            showConfirmButton: true,
+                            confirmButtonText: "OK",
+                            customClass: {
+                                confirmButton: 'btn btn-success'
+                            },
+                            buttonsStyling: false
                         });
                     }
                 })
@@ -130,7 +154,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         title: "Une erreur est survenue lors de la distribution.",
                         icon: "error",
                         timer: 3000,
-                        timerProgressBar: true
+                        timerProgressBar: true,
+                        showConfirmButton: true,
+                        confirmButtonText: "OK",
+                        customClass: {
+                            confirmButton: 'btn btn-success'
+                        },
+                        buttonsStyling: false
                     });
                 });
         });

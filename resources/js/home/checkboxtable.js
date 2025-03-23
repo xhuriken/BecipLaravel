@@ -27,7 +27,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     title: "Aucune affaire sélectionnée !",
                     icon: "warning",
                     timer: 1200,
-                    timerProgressBar: true
+                    timerProgressBar: true,
+                    showConfirmButton: true,
+                    confirmButtonText: "OK",
+                    customClass: {
+                        confirmButton: 'btn btn-success'
+                    },
+                    buttonsStyling: false
                 });
                 return;
             }
@@ -68,7 +74,13 @@ document.addEventListener('DOMContentLoaded', function() {
                                 title: "Affaires supprimées !",
                                 icon: "success",
                                 timer: 1200,
-                                timerProgressBar: true
+                                timerProgressBar: true,
+                                showConfirmButton: true,
+                                confirmButtonText: "OK",
+                                customClass: {
+                                    confirmButton: 'btn btn-success'
+                                },
+                                buttonsStyling: false
                             });
                         })
                         .catch(error => {

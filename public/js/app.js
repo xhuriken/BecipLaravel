@@ -14741,7 +14741,13 @@ document.addEventListener('DOMContentLoaded', function () {
           title: "Aucune affaire sélectionnée !",
           icon: "warning",
           timer: 1200,
-          timerProgressBar: true
+          timerProgressBar: true,
+          showConfirmButton: true,
+          confirmButtonText: "OK",
+          customClass: {
+            confirmButton: 'btn btn-success'
+          },
+          buttonsStyling: false
         });
         return;
       }
@@ -14782,7 +14788,13 @@ document.addEventListener('DOMContentLoaded', function () {
               title: "Affaires supprimées !",
               icon: "success",
               timer: 1200,
-              timerProgressBar: true
+              timerProgressBar: true,
+              showConfirmButton: true,
+              confirmButtonText: "OK",
+              customClass: {
+                confirmButton: 'btn btn-success'
+              },
+              buttonsStyling: false
             });
           })["catch"](function (error) {
             console.error("Error deleting projects:", error);
@@ -14888,7 +14900,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 title: "Affaires vides supprimées !",
                 icon: "success",
                 timer: 1200,
-                timerProgressBar: true
+                timerProgressBar: true,
+                showConfirmButton: true,
+                confirmButtonText: "OK",
+                customClass: {
+                  confirmButton: 'btn btn-success'
+                },
+                buttonsStyling: false
               });
             } else {
               Swal.fire({
@@ -14965,7 +14983,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 title: "Affaire supprimée avec succès.",
                 icon: "success",
                 timer: 3000,
-                timerProgressBar: true
+                timerProgressBar: true,
+                showConfirmButton: true,
+                confirmButtonText: "OK",
+                customClass: {
+                  confirmButton: 'btn btn-success'
+                },
+                buttonsStyling: false
               });
             } else {
               Swal.fire({
@@ -15098,7 +15122,13 @@ document.addEventListener('DOMContentLoaded', function () {
           title: "Nom de l'affaire invalide (ex: B23.045).",
           icon: "error",
           timer: 3000,
-          timerProgressBar: true
+          timerProgressBar: true,
+          showConfirmButton: true,
+          confirmButtonText: "OK",
+          customClass: {
+            confirmButton: 'btn btn-success'
+          },
+          buttonsStyling: false
         });
         return;
       }
@@ -15128,7 +15158,13 @@ document.addEventListener('DOMContentLoaded', function () {
             title: "Affaire mise à jour avec succès.",
             icon: "success",
             timer: 3000,
-            timerProgressBar: true
+            timerProgressBar: true,
+            showConfirmButton: true,
+            confirmButtonText: "OK",
+            customClass: {
+              confirmButton: 'btn btn-success'
+            },
+            buttonsStyling: false
           }).then(function () {
             if (editModal) editModal.hide();
             location.reload();
@@ -15138,7 +15174,13 @@ document.addEventListener('DOMContentLoaded', function () {
             title: "Erreur lors de la mise à jour de l'affaire.",
             icon: "error",
             timer: 3000,
-            timerProgressBar: true
+            timerProgressBar: true,
+            showConfirmButton: true,
+            confirmButtonText: "OK",
+            customClass: {
+              confirmButton: 'btn btn-success'
+            },
+            buttonsStyling: false
           });
         }
       })["catch"](function () {
@@ -15146,7 +15188,13 @@ document.addEventListener('DOMContentLoaded', function () {
           title: "Une erreur s'est produite lors de la mise à jour de l'affaire.",
           icon: "error",
           timer: 3000,
-          timerProgressBar: true
+          timerProgressBar: true,
+          showConfirmButton: true,
+          confirmButtonText: "OK",
+          customClass: {
+            confirmButton: 'btn btn-success'
+          },
+          buttonsStyling: false
         });
       });
     });
@@ -15231,7 +15279,13 @@ document.addEventListener('DOMContentLoaded', function () {
           title: "Nom de l'affaire invalide (ex: B23.045).",
           icon: "error",
           timer: 3000,
-          timerProgressBar: true
+          timerProgressBar: true,
+          showConfirmButton: true,
+          confirmButtonText: "OK",
+          customClass: {
+            confirmButton: 'btn btn-success'
+          },
+          buttonsStyling: false
         });
         return;
       }
@@ -15269,7 +15323,13 @@ document.addEventListener('DOMContentLoaded', function () {
             title: "Affaire ajoutée avec succès.",
             icon: "success",
             timer: 3000,
-            timerProgressBar: true
+            timerProgressBar: true,
+            showConfirmButton: true,
+            confirmButtonText: "OK",
+            customClass: {
+              confirmButton: 'btn btn-success'
+            },
+            buttonsStyling: false
           }).then(function () {
             if (addProjectModal) addProjectModal.hide();
             location.reload();
@@ -15280,14 +15340,26 @@ document.addEventListener('DOMContentLoaded', function () {
               title: body.error,
               icon: "error",
               timer: 3000,
-              timerProgressBar: true
+              timerProgressBar: true,
+              showConfirmButton: true,
+              confirmButtonText: "OK",
+              customClass: {
+                confirmButton: 'btn btn-success'
+              },
+              buttonsStyling: false
             });
           } else {
             Swal.fire({
               title: "Erreur lors de l'ajout de l'affaire.",
               icon: "error",
               timer: 3000,
-              timerProgressBar: true
+              timerProgressBar: true,
+              showConfirmButton: true,
+              confirmButtonText: "OK",
+              customClass: {
+                confirmButton: 'btn btn-success'
+              },
+              buttonsStyling: false
             });
           }
         }
@@ -15297,7 +15369,13 @@ document.addEventListener('DOMContentLoaded', function () {
           title: "Une erreur s'est produite.",
           icon: "error",
           timer: 3000,
-          timerProgressBar: true
+          timerProgressBar: true,
+          showConfirmButton: true,
+          confirmButtonText: "OK",
+          customClass: {
+            confirmButton: 'btn btn-success'
+          },
+          buttonsStyling: false
         });
       });
     });
@@ -15552,7 +15630,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 title: "Fichier supprimé avec succès.",
                 icon: "success",
                 timer: 3000,
-                timerProgressBar: true
+                timerProgressBar: true,
+                showConfirmButton: true,
+                confirmButtonText: "OK",
+                customClass: {
+                  confirmButton: 'btn btn-success'
+                },
+                buttonsStyling: false
               });
             } else {
               Swal.fire({
@@ -15651,7 +15735,13 @@ document.addEventListener('DOMContentLoaded', function () {
             title: "Fichiers uploadés avec succès !",
             icon: "success",
             timer: 3000,
-            timerProgressBar: true
+            timerProgressBar: true,
+            showConfirmButton: true,
+            confirmButtonText: "OK",
+            customClass: {
+              confirmButton: 'btn btn-success'
+            },
+            buttonsStyling: false
           }).then(function () {
             location.reload();
           });
@@ -15669,7 +15759,13 @@ document.addEventListener('DOMContentLoaded', function () {
           title: "Une erreur est survenue",
           icon: "error",
           timer: 3000,
-          timerProgressBar: true
+          timerProgressBar: true,
+          showConfirmButton: true,
+          confirmButtonText: "OK",
+          customClass: {
+            confirmButton: 'btn btn-success'
+          },
+          buttonsStyling: false
         }).then(function () {
           location.reload();
         });
@@ -15802,7 +15898,13 @@ document.addEventListener('DOMContentLoaded', function () {
           title: "Veuillez sélectionner au moins un fichier à télécharger.",
           icon: "error",
           timer: 3000,
-          timerProgressBar: true
+          timerProgressBar: true,
+          showConfirmButton: true,
+          confirmButtonText: "OK",
+          customClass: {
+            confirmButton: 'btn btn-success'
+          },
+          buttonsStyling: false
         });
         return;
       }
@@ -15866,7 +15968,13 @@ document.addEventListener('DOMContentLoaded', function () {
           title: "Veuillez sélectionner au moins un fichier à distribuer.",
           icon: "error",
           timer: 3000,
-          timerProgressBar: true
+          timerProgressBar: true,
+          showConfirmButton: true,
+          confirmButtonText: "OK",
+          customClass: {
+            confirmButton: 'btn btn-success'
+          },
+          buttonsStyling: false
         });
         return;
       }
@@ -15896,7 +16004,13 @@ document.addEventListener('DOMContentLoaded', function () {
             title: "Email de distribution envoyé avec succès !",
             icon: "success",
             timer: 3000,
-            timerProgressBar: true
+            timerProgressBar: true,
+            showConfirmButton: true,
+            confirmButtonText: "OK",
+            customClass: {
+              confirmButton: 'btn btn-success'
+            },
+            buttonsStyling: false
           }).then(function () {
             location.reload();
           });
@@ -15905,7 +16019,13 @@ document.addEventListener('DOMContentLoaded', function () {
             title: response.error || "Erreur lors de la distribution.",
             icon: "error",
             timer: 3000,
-            timerProgressBar: true
+            timerProgressBar: true,
+            showConfirmButton: true,
+            confirmButtonText: "OK",
+            customClass: {
+              confirmButton: 'btn btn-success'
+            },
+            buttonsStyling: false
           });
         }
       })["catch"](function (error) {
@@ -15914,7 +16034,13 @@ document.addEventListener('DOMContentLoaded', function () {
           title: "Une erreur est survenue lors de la distribution.",
           icon: "error",
           timer: 3000,
-          timerProgressBar: true
+          timerProgressBar: true,
+          showConfirmButton: true,
+          confirmButtonText: "OK",
+          customClass: {
+            confirmButton: 'btn btn-success'
+          },
+          buttonsStyling: false
         });
       });
     });
@@ -16193,7 +16319,13 @@ document.addEventListener('DOMContentLoaded', function () {
             title: "Entreprise modifiée avec succès.",
             icon: "success",
             timer: 2000,
-            timerProgressBar: true
+            timerProgressBar: true,
+            showConfirmButton: true,
+            confirmButtonText: "OK",
+            customClass: {
+              confirmButton: 'btn btn-success'
+            },
+            buttonsStyling: false
           }).then(function () {
             location.reload();
           });
@@ -16253,7 +16385,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 title: "Entreprise supprimée avec succès.",
                 icon: "success",
                 timer: 2000,
-                timerProgressBar: true
+                timerProgressBar: true,
+                showConfirmButton: true,
+                confirmButtonText: "OK",
+                customClass: {
+                  confirmButton: 'btn btn-success'
+                },
+                buttonsStyling: false
               }).then(function () {
                 location.reload();
               });
@@ -16383,7 +16521,13 @@ document.addEventListener('DOMContentLoaded', function () {
             title: "Utilisateur modifié avec succès.",
             icon: "success",
             timer: 2000,
-            timerProgressBar: true
+            timerProgressBar: true,
+            showConfirmButton: true,
+            confirmButtonText: "OK",
+            customClass: {
+              confirmButton: 'btn btn-success'
+            },
+            buttonsStyling: false
           }).then(function () {
             location.reload();
           });
@@ -16443,7 +16587,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 title: "Utilisateur supprimé avec succès.",
                 icon: "success",
                 timer: 2000,
-                timerProgressBar: true
+                timerProgressBar: true,
+                showConfirmButton: true,
+                confirmButtonText: "OK",
+                customClass: {
+                  confirmButton: 'btn btn-success'
+                },
+                buttonsStyling: false
               }).then(function () {
                 location.reload();
               });

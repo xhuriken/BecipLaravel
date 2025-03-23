@@ -48,7 +48,13 @@ document.addEventListener('DOMContentLoaded', function() {
                                     title: "Affaire supprimée avec succès.",
                                     icon: "success",
                                     timer: 3000,
-                                    timerProgressBar: true
+                                    timerProgressBar: true,
+                                    showConfirmButton: true,
+                                    confirmButtonText: "OK",
+                                    customClass: {
+                                        confirmButton: 'btn btn-success'
+                                    },
+                                    buttonsStyling: false
                                 });
                             } else {
                                 Swal.fire({

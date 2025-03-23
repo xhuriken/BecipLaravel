@@ -112,7 +112,13 @@ document.addEventListener('DOMContentLoaded', function() {
                             title: "Entreprise modifiée avec succès.",
                             icon: "success",
                             timer: 2000,
-                            timerProgressBar: true
+                            timerProgressBar: true,
+                            showConfirmButton: true,
+                            confirmButtonText: "OK",
+                            customClass: {
+                                confirmButton: 'btn btn-success'
+                            },
+                            buttonsStyling: false
                         }).then(() => {
                             location.reload();
                         });
@@ -172,7 +178,13 @@ document.addEventListener('DOMContentLoaded', function() {
                                     title: "Entreprise supprimée avec succès.",
                                     icon: "success",
                                     timer: 2000,
-                                    timerProgressBar: true
+                                    timerProgressBar: true,
+                                    showConfirmButton: true,
+                                    confirmButtonText: "OK",
+                                    customClass: {
+                                        confirmButton: 'btn btn-success'
+                                    },
+                                    buttonsStyling: false
                                 }).then(() => {
                                     location.reload();
                                 });
@@ -313,7 +325,13 @@ document.addEventListener('DOMContentLoaded', function() {
                             title: "Utilisateur modifié avec succès.",
                             icon: "success",
                             timer: 2000,
-                            timerProgressBar: true
+                            timerProgressBar: true,
+                            showConfirmButton: true,
+                            confirmButtonText: "OK",
+                            customClass: {
+                                confirmButton: 'btn btn-success'
+                            },
+                            buttonsStyling: false
                         }).then(() => {
                             location.reload();
                         });
@@ -373,7 +391,13 @@ document.addEventListener('DOMContentLoaded', function() {
                                     title: "Utilisateur supprimé avec succès.",
                                     icon: "success",
                                     timer: 2000,
-                                    timerProgressBar: true
+                                    timerProgressBar: true,
+                                    showConfirmButton: true,
+                                    confirmButtonText: "OK",
+                                    customClass: {
+                                        confirmButton: 'btn btn-success'
+                                    },
+                                    buttonsStyling: false
                                 }).then(() => {
                                     location.reload();
                                 });
