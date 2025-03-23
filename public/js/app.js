@@ -16111,19 +16111,21 @@ document.addEventListener('DOMContentLoaded', function () {
         text: 'Le mot de passe doit contenir au moins 8 caractères.'
       });
     }
-    if (!/^\d+$/.test(phone)) {
-      return Swal.fire({
-        icon: 'error',
-        title: 'Numéro invalide',
-        text: 'Le numéro ne doit contenir que des chiffres.'
-      });
-    }
-    if (phone.length !== 10) {
-      return Swal.fire({
-        icon: 'error',
-        title: 'Numéro invalide',
-        text: 'Le numéro doit contenir exactement 10 chiffres.'
-      });
+    if (phone.length !== 0) {
+      if (!/^\d+$/.test(phone)) {
+        return Swal.fire({
+          icon: 'error',
+          title: 'Numéro invalide',
+          text: 'Le numéro ne doit contenir que des chiffres.'
+        });
+      }
+      if (phone.length !== 10) {
+        return Swal.fire({
+          icon: 'error',
+          title: 'Numéro invalide',
+          text: 'Le numéro doit contenir exactement 10 chiffres.'
+        });
+      }
     }
 
     //If everithing is good, SEND !

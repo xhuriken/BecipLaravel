@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\UpdatedEmailNotification;
 use App\Models\Company;
 use App\Models\User;
 use Grosv\LaravelPasswordlessLogin\LoginUrl;
@@ -67,21 +68,42 @@ class UserController extends Controller
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,'.$request->user_id,
+            'email' => 'required|email|max:255|unique:users,email,' . $request->user_id,
             'role' => 'required|in:engineer,drawer,secretary,client',
             'company_id' => 'nullable|exists:companies,id',
         ]);
 
         $user = User::findOrFail($request->user_id);
+
+        $oldEmail = $user->email;
+
         $user->name = $request->name;
         $user->email = $request->email;
         $user->role = $request->role;
         $user->company_id = $request->company_id ?: null;
         $user->save();
 
+        // Si l'email a été modifié, on renvoie un mail
+        if ($oldEmail !== $user->email) {
+            $generator = new LoginUrl($user);
+            $generator->setRedirectUrl('/');
+            $urlHome = $generator->generate();
+
+            $token = Password::createToken($user);
+            $urlPassword = url(route('password.reset', [
+                'token' => $token,
+                'email' => $user->email,
+            ]));
+
+            Mail::to($user->email)->send(new UpdatedEmailNotification(
+                $user->name,
+                $urlHome,
+                $urlPassword
+            ));
+        }
+
         return response()->json(['success' => true]);
     }
-
     /**
      * Delete with id
      * @param Request $request
@@ -126,7 +148,7 @@ class UserController extends Controller
             // Vérification si c'est une requête AJAX
                 $validatedData = $request->validate([
                     'name' => 'required|string|max:255',
-                    'phone' => 'string|max:255',
+                    'phone' => 'nullable|string|max:255',
                     'email' => 'required|email|unique:users,email',
                     'password' => 'required|string|min:8',
                     'role' => 'required|in:engineer,drawer,secretary,client',

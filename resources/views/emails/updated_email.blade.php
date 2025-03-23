@@ -85,10 +85,7 @@
     <div class="content">
         <h2>Bonjour {{$userName}},</h2>
         <p>
-            Nous avons le plaisir de vous informer que votre compte Becip a été créé avec succès.
-        </p>
-        <p>
-            Voici votre mot de passe : <strong> {{$password}} </strong>
+            Votre adresse email a été modifiée. Voici un lien pour définir votre mot de passe si besoin :
         </p>
         <div class="cta-button">
             <a href="{{$urlPassword}}">Modifier le mot de passe</a>
