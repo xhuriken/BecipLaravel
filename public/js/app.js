@@ -14583,6 +14583,16 @@ window.bootstrap = bootstrap__WEBPACK_IMPORTED_MODULE_1__;
 
 
 
+if (!window._fetchOverridden) {
+  var originalFetch = window.fetch;
+  window.fetch = function () {
+    showFetchLoader();
+    return originalFetch.apply(void 0, arguments)["finally"](function () {
+      hideFetchLoader();
+    });
+  };
+  window._fetchOverridden = true;
+}
 
 /***/ }),
 
@@ -16713,6 +16723,14 @@ jQuery(document).ready(function ($) {
 /***/ (() => {
 
 document.addEventListener('DOMContentLoaded', function () {
+  window.showFetchLoader = function () {
+    var loader = document.getElementById('fetch-loader');
+    if (loader) loader.classList.remove('d-none');
+  };
+  window.hideFetchLoader = function () {
+    var loader = document.getElementById('fetch-loader');
+    if (loader) loader.classList.add('d-none');
+  };
   var sectionLoaders = document.querySelectorAll('.section-loader');
   sectionLoaders.forEach(function (loader) {
     setTimeout(function () {

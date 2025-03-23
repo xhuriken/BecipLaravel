@@ -32,6 +32,10 @@
     </script>
 </head>
 <body>
+    <div id="fetch-loader" class="fetch-loader d-none">
+        <div class="loader"></div>
+        <p class="loading-text">Chargement en cours...</p>
+    </div>
 {{--    <div id="global-loader" class="global-loader">--}}
 {{--        <div class="loader"></div>--}}
 {{--        <p class="loading-text">Chargement en cours...</p>--}}

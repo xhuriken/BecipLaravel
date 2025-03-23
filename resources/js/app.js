@@ -1,6 +1,7 @@
 import './bootstrap';
 import * as bootstrap from 'bootstrap';
 window.bootstrap = bootstrap;
+
 import './utils/loader'
 import './utils/universal_alerts';
 import './utils/datatables';
@@ -22,3 +23,16 @@ import './home/delete_empty'
 import './usercontroller/add';
 import './utils/showpassword';
 import './usercontroller/companyselect';
+if (!window._fetchOverridden) {
+    const originalFetch = window.fetch;
+
+    window.fetch = function (...args) {
+        showFetchLoader();
+        return originalFetch(...args)
+            .finally(() => {
+                hideFetchLoader();
+            });
+    };
+
+    window._fetchOverridden = true;
+}
