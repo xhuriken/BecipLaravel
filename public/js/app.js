@@ -16046,6 +16046,9 @@ document.addEventListener('DOMContentLoaded', function () {
   var roleSelect = document.getElementById('role');
   var companySelect = document.getElementById('company_id');
   var companyField = companySelect === null || companySelect === void 0 ? void 0 : companySelect.closest('.mb-2');
+  if (!roleSelect) {
+    return;
+  }
   function toggleCompanyField() {
     if (!roleSelect || !companySelect || !companyField) return;
     var selectedRole = roleSelect.value;
@@ -16512,7 +16515,7 @@ jQuery(document).ready(function ($) {
       targets: getNonOrderableColumns("#project-table")
     }]
   });
-  $('#files-table').DataTable({
+  var filetable = $('#files-table').DataTable({
     destroy: true,
     responsive: true,
     ordering: true,
@@ -16538,6 +16541,16 @@ jQuery(document).ready(function ($) {
       orderable: false,
       targets: getNonOrderableColumns("#files-table")
     }]
+  });
+  $('#fileTypeFilter').on('change', function () {
+    var val = $(this).val();
+    // Colonne "Type" => index à adapter si besoin
+    var typeColIndex = 3; // attention : index 0-based !
+    if (val) {
+      filetable.column(typeColIndex).search('^' + val + '$', true, false).draw();
+    } else {
+      filetable.column(typeColIndex).search('').draw();
+    }
   });
 });
 

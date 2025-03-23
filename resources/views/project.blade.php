@@ -61,9 +61,14 @@
                     <th data-label="Nom">
                         Nom
                     </th>
-                    <th data-orderable="false"
-                        data-label="Type">
-                        Type
+                    <th data-orderable="false" data-label="Type">
+                        <select id="fileTypeFilter" class="form-select form-select-sm">
+                            <option value="">Type</option>
+                            <option value="coffrage">Coffrage</option>
+                            <option value="ferraillage">Ferraillage</option>
+                            <option value="divers">Divers</option>
+                            <option value="undefine">Pas définie</option>
+                        </select>
                     </th>
                     <th data-orderable="false"
                         data-label="Commentaire">
@@ -93,7 +98,6 @@
             </thead>
             <tbody>
                 @forelse($files as $file)
-                    {{--j'en fait une fonction ?--}}
                     @php
                         $hideFile = auth()->user()->role === 'client' && $project->is_mask_valided && !$file->is_validated;
                     @endphp
@@ -123,16 +127,16 @@
                             @endif
                         </td>
                         <td data-label="Nom">{{$file->name}}</td>
-                        <td data-label="Type">
+                        <td data-label="Type" data-search="{{ $file->type }}">
                             @if(auth()->user()->role == 'drawer' || auth()->user()->role == 'engineer')
                                 <select class="file-type-select form-control">
-                                    <option value="undefine"        {{ $file->type === 'undefine' ? 'selected' : ''}}>      Pas définie</option>
-                                    <option value="coffrage"        {{ $file->type === 'coffrage' ? 'selected' : ''}}>      Coffrage</option>
-                                    <option value="ferraillage"     {{ $file->type === 'ferraillage' ? 'selected' : ''}}>   Ferraillage</option>
-                                    <option value="divers"          {{ $file->type === 'divers' ? 'selected' : ''}}>        Divers</option>
+                                    <option value="undefine" {{ $file->type === 'undefine' ? 'selected' : ''}}>Pas définie</option>
+                                    <option value="coffrage" {{ $file->type === 'coffrage' ? 'selected' : ''}}>Coffrage</option>
+                                    <option value="ferraillage" {{ $file->type === 'ferraillage' ? 'selected' : ''}}>Ferraillage</option>
+                                    <option value="divers" {{ $file->type === 'divers' ? 'selected' : ''}}>Divers</option>
                                 </select>
                             @else
-                                {{$file->type}}
+                                {{ $file->type }}
                             @endif
                         </td>
                         <td data-label="Commentaire">

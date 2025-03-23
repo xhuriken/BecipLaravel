@@ -43,7 +43,7 @@ jQuery(document).ready(function($) {
     });
 
 
-    $('#files-table').DataTable({
+    const filetable = $('#files-table').DataTable({
         destroy: true,
         responsive: true,
         ordering: true,
@@ -68,5 +68,16 @@ jQuery(document).ready(function($) {
         columnDefs: [
             { orderable: false, targets: getNonOrderableColumns("#files-table") }
         ]
+    });
+
+    $('#fileTypeFilter').on('change', function () {
+        const val = $(this).val();
+        // Colonne "Type" => index à adapter si besoin
+        const typeColIndex = 3; // attention : index 0-based !
+        if (val) {
+            filetable.column(typeColIndex).search('^' + val + '$', true, false).draw();
+        } else {
+            filetable.column(typeColIndex).search('').draw();
+        }
     });
 });

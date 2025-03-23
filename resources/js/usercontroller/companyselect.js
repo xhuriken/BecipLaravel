@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const companySelect = document.getElementById('company_id');
     const companyField = companySelect?.closest('.mb-2');
 
+    if(!roleSelect){return}
     function toggleCompanyField() {
         if (!roleSelect || !companySelect || !companyField) return;
 
