@@ -14557,9 +14557,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _usercontroller_add__WEBPACK_IMPORTED_MODULE_20___default = /*#__PURE__*/__webpack_require__.n(_usercontroller_add__WEBPACK_IMPORTED_MODULE_20__);
 /* harmony import */ var _utils_showpassword__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./utils/showpassword */ "./resources/js/utils/showpassword.js");
 /* harmony import */ var _utils_showpassword__WEBPACK_IMPORTED_MODULE_21___default = /*#__PURE__*/__webpack_require__.n(_utils_showpassword__WEBPACK_IMPORTED_MODULE_21__);
+/* harmony import */ var _usercontroller_companyselect__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./usercontroller/companyselect */ "./resources/js/usercontroller/companyselect.js");
+/* harmony import */ var _usercontroller_companyselect__WEBPACK_IMPORTED_MODULE_22___default = /*#__PURE__*/__webpack_require__.n(_usercontroller_companyselect__WEBPACK_IMPORTED_MODULE_22__);
 
 
 window.bootstrap = bootstrap__WEBPACK_IMPORTED_MODULE_1__;
+
 
 
 
@@ -16029,6 +16032,40 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
   });
+});
+
+/***/ }),
+
+/***/ "./resources/js/usercontroller/companyselect.js":
+/*!******************************************************!*\
+  !*** ./resources/js/usercontroller/companyselect.js ***!
+  \******************************************************/
+/***/ (() => {
+
+document.addEventListener('DOMContentLoaded', function () {
+  var roleSelect = document.getElementById('role');
+  var companySelect = document.getElementById('company_id');
+  var companyField = companySelect === null || companySelect === void 0 ? void 0 : companySelect.closest('.mb-2');
+  function toggleCompanyField() {
+    if (!roleSelect || !companySelect || !companyField) return;
+    var selectedRole = roleSelect.value;
+    if (selectedRole === 'client') {
+      companyField.style.display = '';
+      companySelect.value = ''; // Aucune
+    } else {
+      companyField.style.display = 'none';
+      // Sélectionne BECIP
+      var becipOption = Array.from(companySelect.options).find(function (opt) {
+        return opt.text.toLowerCase().includes('becip');
+      } //To lower case assure si jamais c'est Becip, ou BECIP, ou beCIP...
+      );
+      if (becipOption) {
+        companySelect.value = becipOption.value;
+      }
+    }
+  }
+  toggleCompanyField();
+  roleSelect.addEventListener('change', toggleCompanyField);
 });
 
 /***/ }),

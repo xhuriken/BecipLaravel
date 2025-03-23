@@ -21,3 +21,4 @@ import './profile/forgot_modal'
 import './home/delete_empty'
 import './usercontroller/add';
 import './utils/showpassword';
+import './usercontroller/companyselect';

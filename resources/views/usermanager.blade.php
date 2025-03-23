@@ -68,7 +68,7 @@
                         <option value="engineer">Ingénieur</option>
                         <option value="drawer">Dessinateur</option>
                         <option value="secretary">Secrétaire</option>
-                        <option value="client">Client</option>
+                        <option value="client" selected>Client</option>
                     </select>
                 </div>
 
