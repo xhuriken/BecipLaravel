@@ -42,8 +42,16 @@
 {{--                    Add Project row id for DOM reload in js--}}
                     <tr id="project-row-{{ $project->id }}">
                         <td data-label="Nom">{{ $project->name }}</td>
-                        <td data-label="NomLong">{{ $project->namelong ? $project->namelong : 'Pas de nom'}}</td>
-                        <td data-label="Entreprise">{{ $project->company_id ? $project->getCompanyName($project->company_id) : 'Aucune' }}</td>
+                        <td data-label="NomLong"
+                            {{--Pour trié en dernier si la valeur n'a rien--}}
+                            data-order="{{ $project->namelong ? $project->namelong : 'zzz' }}">
+                            {{ $project->namelong ? $project->namelong : 'Pas de nom'}}
+                        </td>
+                        <td data-label="Entreprise"
+                            {{--Pour trié en dernier si la valeur n'a rien--}}
+                            data-order="{{ $project->company_id ? $project->getCompanyName($project->company_id) : 'zzz' }}">
+                            {{ $project->company_id ? $project->getCompanyName($project->company_id) : 'Aucune' }}
+                        </td>
                         <td data-label="Referent">{{ $project->getReferentName($project->referent_id) }}</td>
                         <td data-label="ActionsH">
                             <a href="{{ route('projects.project', $project) }}" class="btn-return">Voir</a>

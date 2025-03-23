@@ -16533,6 +16533,9 @@ document.addEventListener('DOMContentLoaded', function () {
   var togglePassword = document.getElementById('togglePassword');
   var passwordInput = document.getElementById('password');
   var toggleIcon = document.getElementById('togglePasswordIcon');
+  if (!togglePassword) {
+    return;
+  }
   togglePassword.addEventListener('click', function () {
     var type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
     passwordInput.setAttribute('type', type);

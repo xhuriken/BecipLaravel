@@ -131,7 +131,9 @@
                 <tr data-user-id="{{ $user->id }}">
 {{--                    <td>{{ $user->id }}</td>--}}
                     <td class="user-name">{{ $user->name }}</td>
-                    <td data-label="phone" class="user-phone">{{ $user->phone ? $user->getPhone(): 'Aucun' }}</td>
+                    <td data-label="phone" class="user-phone"
+                        data-order="{{ $user->phone ? $user->getPhone(): 'zzz' }}">
+                        {{ $user->phone ? $user->getPhone(): 'Aucun' }}</td>
                     <td class="user-email">{{ $user->email }}</td>
                     <td class="user-role" data-role="{{ $user->role }}">
                         {{ [
@@ -141,12 +143,9 @@
                             'client' => 'Client'
                         ][$user->role] ?? $user->role }}
                     </td>
-                    <td class="user-company">
-                        @if($user->company_id)
-                            {{ $user->getCompanyName($user->company_id) }}
-                        @else
-                            Aucune
-                        @endif
+                    <td class="user-company"
+                        data-order="{{ $user->company_id ? $user->getCompanyName($user->company_id) : 'zzz' }}">
+                        {{ $user->company_id ? $user->getCompanyName($user->company_id) : 'Aucune' }}
                     </td>
                     <td  data-label="Action">
                         @if($user->id !== auth()->user()->id)
