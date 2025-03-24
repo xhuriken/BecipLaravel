@@ -15584,6 +15584,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var commentText = document.getElementById('commentModalText');
     document.querySelectorAll('.view-comment').forEach(function (link) {
       link.addEventListener('click', function (event) {
+        event.preventDefault();
         commentText.textContent = this.getAttribute('data-comment');
         commentModal.show();
       });
@@ -16652,7 +16653,9 @@ jQuery(document).ready(function ($) {
   $('#project-table').DataTable({
     destroy: true,
     responsive: true,
-    lengthMenu: [[50, 100, 500, -1], [50, 100, 500, 'All']],
+    scrollX: true,
+    autoWidth: false,
+    lengthMenu: [[10, 50, 100, 500, -1], [10, 50, 100, 500, 'All']],
     pageLength: 100,
     language: {
       "decimal": ",",
@@ -16675,12 +16678,20 @@ jQuery(document).ready(function ($) {
     columnDefs: [{
       orderable: false,
       targets: getNonOrderableColumns("#project-table")
-    }]
+    }],
+    fnInitComplete: function fnInitComplete() {
+      $("tfoot").next().hide();
+    },
+    fnDrawCallback: function fnDrawCallback(oSettings) {
+      $("tfoot").next().hide();
+    }
   });
   var filetable = $('#files-table').DataTable({
     destroy: true,
     responsive: true,
     ordering: true,
+    scrollX: true,
+    autoWidth: false,
     language: {
       "decimal": ",",
       "thousands": ".",

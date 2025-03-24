@@ -13,9 +13,11 @@ jQuery(document).ready(function($) {
     $('#project-table').DataTable({
         destroy: true,
         responsive: true,
+        scrollX: true,
+        autoWidth: false,
         lengthMenu: [
-            [50, 100, 500, -1],
-            [50, 100, 500, 'All']
+            [10, 50, 100, 500, -1],
+            [10, 50, 100, 500, 'All']
         ],
         pageLength: 100,
         language: {
@@ -38,7 +40,13 @@ jQuery(document).ready(function($) {
         },
         columnDefs: [
             { orderable: false, targets: getNonOrderableColumns("#project-table") }
-        ]
+        ],
+        fnInitComplete: function () {
+            $("tfoot").next().hide();
+        },
+        fnDrawCallback: function (oSettings) {
+            $("tfoot").next().hide();
+        }
 
     });
 
@@ -47,6 +55,8 @@ jQuery(document).ready(function($) {
         destroy: true,
         responsive: true,
         ordering: true,
+        scrollX: true,
+        autoWidth: false,
         language: {
             "decimal": ",",
             "thousands": ".",

@@ -27,6 +27,7 @@
 
     <link href="{{ asset('css/datatable.css') }}" rel="stylesheet">
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/responsive.css') }}" rel="stylesheet">
     <script>
         window.csrf_token = "{{ csrf_token() }}";
     </script>

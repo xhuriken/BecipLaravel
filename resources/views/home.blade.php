@@ -17,7 +17,7 @@
                 <!-- Bouton qui ouvre le modal d'ajout -->
                     <button id="toggleButton" class="btn-mask">Ajouter une affaire manuellement</button>
                 </div>
-                <div class="group">
+                <div class="group generate">
                     <a href="{{ route('projects.generate', [500, date('Y')]) }}" class="btn-mask">
                         Générer 500 affaires cette année
                     </a>
@@ -29,69 +29,69 @@
         </div>
 
         <h2>Liste des affaires</h2>
-        <table id="project-table" class="table table-striped" style="width:100%">
-            <thead>
-                <tr>
-                    <th data-label="Nom">Numéro</th>
-                    <th data-label="NomLong">Nom</th>
-                    <th data-label="Entreprise">Entreprise</th>
-                    <th data-label="Referent">Référent</th>
-                    <th data-orderable="false" data-label="ActionsH">Actions</th>
-                    @if (auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
-                        <th data-label="Delete" data-orderable="false"><i class="fa-solid fa-trash delete-icon"></i></th>
-                        <th data-orderable="false" data-label="Check"><input type="checkbox" id="select-all"></th>
-                    @endif
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($projects as $project)
-{{--                    Add Project row id for DOM reload in js--}}
-                    <tr id="project-row-{{ $project->id }}">
-                        <td data-label="Nom">{{ $project->name }}</td>
-                        <td data-label="NomLong"
-                            {{--Pour trié en dernier si la valeur n'a rien--}}
-                            data-order="{{ $project->namelong ? $project->namelong : 'zzz' }}">
-                            {{ $project->namelong ? $project->namelong : 'Pas de nom'}}
-                        </td>
-                        <td data-label="Entreprise"
-                            {{--Pour trié en dernier si la valeur n'a rien--}}
-                            data-order="{{ $project->company_id ? $project->getCompanyName($project->company_id) : 'zzz' }}">
-                            {{ $project->company_id ? $project->getCompanyName($project->company_id) : 'Aucune' }}
-                        </td>
-                        <td data-label="Referent">{{ $project->getReferentName($project->referent_id) }}</td>
-                        <td data-label="ActionsH">
-                            <a href="{{ route('projects.project', $project) }}" class="btn-return">Voir</a>
-                            @if(auth()->user()->isBecip())
-                                <span class="responsiveSpan">|</span>
-                                <a href="#" class="btn-return edit-project"
-                                   data-project-id="{{ $project->id }}"
-                                   data-project-namelong="{{ $project->namelong }}"
-                                   data-project-name="{{ $project->name }}"
-                                   data-company-id="{{ $project->company_id }}"
-                                   data-referent-id="{{ $project->referent_id }}"
-                                   data-address="{{ $project->address }}"
-                                   data-comment="{{ $project->comment }}"
-                                   data-clients="{{ json_encode($project->clients->pluck('id')->toArray()) }}">
-                                    Modifier
-                                </a>
-                            @endif
-                        </td>
+            <table id="project-table" class="table table-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th data-label="Nom">Numéro</th>
+                        <th data-label="NomLong">Nom</th>
+                        <th data-label="Entreprise">Entreprise</th>
+                        <th data-label="Referent">Référent</th>
+                        <th data-orderable="false" data-label="ActionsH">Actions</th>
                         @if (auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
-                            <td class="icon-cell" data-label="Delete">
-                                <a href="javascript:void(0);" class="delete-project-btn" data-delete-url="{{ route('projects.delete', $project) }}" data-project-id="{{ $project->id }}">
-                                    <i class="fa-solid fa-trash delete-icon"></i>
-                                </a>
-                            </td>
-                            <td data-label="Check">
-                                <input type="checkbox" class="delete-checkbox" data-project-id="{{ $project->id }}">
-                            </td>
+                            <th data-label="Delete" data-orderable="false"><i class="fa-solid fa-trash delete-icon"></i></th>
+                            <th data-orderable="false" data-label="Check"><input type="checkbox" id="select-all"></th>
                         @endif
                     </tr>
-                @empty
-                @endforelse
-            </tbody>
-        </table>
-
+                </thead>
+                <tbody>
+                    @forelse($projects as $project)
+{{--                        Add Project row id for DOM reload in js--}}
+                        <tr id="project-row-{{ $project->id }}">
+                            <td data-label="Nom">{{ $project->name }}</td>
+                            <td data-label="NomLong"
+{{--                                Pour trié en dernier si la valeur n'a rien  --}}
+                                data-order="{{ $project->namelong ? $project->namelong : 'zzz' }}">
+                                {{ $project->namelong ? $project->namelong : 'Pas de nom'}}
+                            </td>
+                            <td data-label="Entreprise"
+{{--                                Pour trié en dernier si la valeur n'a rien  --}}
+                                data-order="{{ $project->company_id ? $project->getCompanyName($project->company_id) : 'zzz' }}">
+                                {{ $project->company_id ? $project->getCompanyName($project->company_id) : 'Aucune' }}
+                            </td>
+                            <td data-label="Referent">{{ $project->getReferentName($project->referent_id) }}</td>
+                            <td data-label="ActionsH">
+                                <a href="{{ route('projects.project', $project) }}" class="btn-return">Voir</a>
+                                @if(auth()->user()->isBecip())
+                                    <span class="responsiveSpan">|</span>
+                                    <a href="#" class="btn-return edit-project"
+                                       data-project-id="{{ $project->id }}"
+                                       data-project-namelong="{{ $project->namelong }}"
+                                       data-project-name="{{ $project->name }}"
+                                       data-company-id="{{ $project->company_id }}"
+                                       data-referent-id="{{ $project->referent_id }}"
+                                       data-address="{{ $project->address }}"
+                                       data-comment="{{ $project->comment }}"
+                                       data-clients="{{ json_encode($project->clients->pluck('id')->toArray()) }}">
+                                        Modifier
+                                    </a>
+                                @endif
+                            </td>
+                            @if (auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
+                                <td class="icon-cell" data-label="Delete">
+                                    <a href="javascript:void(0);" class="delete-project-btn" data-delete-url="{{ route('projects.delete', $project) }}" data-project-id="{{ $project->id }}">
+                                        <i class="fa-solid fa-trash delete-icon"></i>
+                                    </a>
+                                </td>
+                                <td data-label="Check">
+                                    <input type="checkbox" class="delete-checkbox" data-project-id="{{ $project->id }}">
+                                </td>
+                            @endif
+                        </tr>
+                    @empty
+                    @endforelse
+                </tbody>
+                <tfoot style="display:none;"></tfoot>
+            </table>
         @if (auth()->user()->role == 'engineer' || auth()->user()->role == 'secretary')
             <div class="button-container">
                 <button

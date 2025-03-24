@@ -36,10 +36,8 @@ td[data-label="Delete"] {
 
 th[data-label="Rev"],
 td[data-label="Rev"] {
-    max-width: 5rem !important;
-    /*white-space: nowrap; !* Empêche le retour à la ligne *!*/
-    /*overflow: hidden; !* Cache tout dépassement *!*/
-    /*text-overflow: ellipsis; !* Ajoute ... si besoin *!*/
+    min-width: 3rem !important;
+    width: 3rem;
     text-align: center;
 }
 th[data-label="Type"],
@@ -47,14 +45,15 @@ td[data-label="Type"] {
     /*white-space: nowrap; !* Empêche le retour à la ligne *!*/
     /*overflow: hidden; !* Cache tout dépassement *!*/
     /*text-overflow: ellipsis; !* Ajoute ... si besoin *!*/
-    width: 8rem !important;
+    min-width: 8rem !important;
 }
 
 
 th[data-label="Validé"],
 td[data-label="Validé"] {
-    max-width: 5rem !important;
+    /*max-width: 5rem !important;*/
     text-align: center;
+    width: 2rem;
 }
 th[data-label="Commentaire"],
 td[data-label="Commentaire"] {
@@ -65,7 +64,7 @@ td[data-label="Commentaire"] {
 
 th[data-label="Date"],
 td[data-label="Date"] {
-    max-width: 3rem !important;
+    max-width: 7rem !important;
 }
 
 th[data-label="Déposé par"],
@@ -79,6 +78,7 @@ td[data-label="Déposé par"] {
 th[data-label="Nom"],
 td[data-label="Nom"] {
     max-width: 40rem !important;
+    width: auto;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -87,18 +87,18 @@ td[data-label="Nom"] {
 
 th[data-label="Télécharger"],
 td[data-label="Télécharger"] {
-    max-width: 4rem !important;
+    min-width: 2.5rem !important;
     text-align: center;
 }
 th[data-label="Distribuer"],
 td[data-label="Distribuer"] {
-    max-width: 3rem !important;
+    min-width: 2.5rem !important;
     text-align: center;
 }
 
 th[data-label="Impressions"],
 td[data-label="Impressions"] {
-    max-width: 3rem !important;
+    min-width: 2.5rem !important;
     text-align: center;
 }
 /*Home table*/

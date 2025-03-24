@@ -81,7 +81,7 @@
                         Date
                     </th>
                     <th data-label="Validé">
-                        Validé
+                        <i class="fa-solid fa-check"></i>
                     </th>
                     <th data-label="Télécharger" data-orderable="false">
                         <i class="fa-solid fa-download"></i>

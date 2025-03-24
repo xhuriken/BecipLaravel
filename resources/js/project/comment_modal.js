@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         document.querySelectorAll('.view-comment').forEach(link => {
             link.addEventListener('click', function(event) {
+                event.preventDefault();
                 commentText.textContent = this.getAttribute('data-comment');
                 commentModal.show();
             });
