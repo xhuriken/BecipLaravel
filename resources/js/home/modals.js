@@ -23,46 +23,45 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Add click event to all edit buttons if they exist
-    const editButtons = document.querySelectorAll('.edit-project');
-    if (editButtons) {
-        editButtons.forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                const projectId = this.getAttribute('data-project-id');
-                const projectName = this.getAttribute('data-project-name'); // "B23.045"
-                const namelong = this.getAttribute('data-project-namelong'); // "Beauvais mairie..."
-                const companyId = this.getAttribute('data-company-id');
-                const referentId = this.getAttribute('data-referent-id') || "";
-                const address = this.getAttribute('data-address') || "";
-                const comment = this.getAttribute('data-comment') || "";
+    document.addEventListener('click', function (e) {
+        const btn = e.target.closest('.edit-project');
+        if (!btn) return;
 
-                let clients = [];
-                try {
-                    clients = JSON.parse(this.getAttribute('data-clients')) || [];
-                } catch(e) {
-                    clients = [];
-                }
+        e.preventDefault();
+        e.stopPropagation();
 
-                // Split project name BXX.XXX
-                let match = projectName.match(/^B(\d{2})\.(\d{3})$/);
-                let year = match ? match[1] : "";
-                let number = match ? match[2] : "";
+        const projectId = btn.getAttribute('data-project-id');
+        const projectName = btn.getAttribute('data-project-name');
+        const namelong = btn.getAttribute('data-project-namelong');
+        const companyId = btn.getAttribute('data-company-id');
+        const referentId = btn.getAttribute('data-referent-id') || "";
+        const address = btn.getAttribute('data-address') || "";
+        const comment = btn.getAttribute('data-comment') || "";
 
-                document.getElementById('edit-project-id').value = projectId;
-                document.getElementById('edit-project-year').value = year;
-                document.getElementById('edit-project-number').value = number;
-                document.getElementById('edit-project-name').value = projectName;
-                document.getElementById('edit-project-namelong').value = namelong;
-                document.getElementById('edit-project-company').value = companyId;
-                document.getElementById('edit-project-referent').value = referentId;
-                document.getElementById('edit-project-address').value = address;
-                document.getElementById('edit-project-comment').value = comment;
+        let clients = [];
+        try {
+            clients = JSON.parse(btn.getAttribute('data-clients')) || [];
+        } catch (err) {
+            clients = [];
+        }
 
-                $('#edit-project-clients').val(clients).trigger('change');
-                editModal.show();
-            });
-        });
-    }
+        const match = projectName.match(/^B(\d{2})\.(\d{3})$/);
+        const year = match ? match[1] : "";
+        const number = match ? match[2] : "";
+
+        document.getElementById('edit-project-id').value = projectId;
+        document.getElementById('edit-project-year').value = year;
+        document.getElementById('edit-project-number').value = number;
+        document.getElementById('edit-project-name').value = projectName;
+        document.getElementById('edit-project-namelong').value = namelong;
+        document.getElementById('edit-project-company').value = companyId;
+        document.getElementById('edit-project-referent').value = referentId;
+        document.getElementById('edit-project-address').value = address;
+        document.getElementById('edit-project-comment').value = comment;
+
+        $('#edit-project-clients').val(clients).trigger('change');
+        if (editModal) editModal.show();
+    });
 
     // Update project name in edit modal
     function updateProjectName() {
@@ -149,7 +148,25 @@ document.addEventListener('DOMContentLoaded', function() {
                             buttonsStyling: false
                         }).then(() => {
                             if (editModal) editModal.hide();
-                            location.reload();
+                            let table = $('#project-table').DataTable();
+                            let row = document.querySelector(`#project-row-${projectId}`);
+
+                            if (row) {
+                                row.querySelector('td[data-label="Nom"]').textContent = projectName;
+                                row.querySelector('td[data-label="NomLong"]').textContent = namelong || 'Pas de nom';
+
+                                const company = allCompanies.find(c => c.id == companyId);
+                                const referent = allEngineers.find(e => e.id == referentId);
+
+                                row.querySelector('td[data-label="Entreprise"]').textContent = company ? company.name : 'Aucune';
+                                row.querySelector('td[data-label="Referent"]').textContent = referent ? referent.name : '';
+
+                                // Re-synchronise DataTables
+                                table.row(row).invalidate().draw(false);
+                            } else{
+                                console.error("Row not found, reload now");
+                                location.reload();
+                            }
                         });
                     } else {
                         Swal.fire({
@@ -312,7 +329,46 @@ document.addEventListener('DOMContentLoaded', function() {
                             buttonsStyling: false
                         }).then(() => {
                             if (addProjectModal) addProjectModal.hide();
-                            location.reload();
+
+                            const table = $('#project-table').DataTable();
+
+                            const $newRow = $(`
+                                <tr id="project-row-${body.project_id}">
+                                    <td data-label="Nom">${projectName}</td>
+                                    <td data-label="NomLong" data-order="${namelong || 'zzz'}">${namelong || 'Pas de nom'}</td>
+                                    <td data-label="Entreprise" data-order="${body.company_name || 'zzz'}">${body.company_name || 'Aucune'}</td>
+                                    <td data-label="Référent">${body.referent_name || 'Aucun'}</td>
+                                    <td data-label="ActionsH">
+                                        <a href="${body.project_url}" class="btn-return">Voir</a>
+                                        ${body.editable ? `
+                                            <span class="responsiveSpan">|</span>
+                                            <a href="#" class="btn-return edit-project"
+                                                data-project-id="${body.project_id}"
+                                                data-project-namelong="${namelong}"
+                                                data-project-name="${projectName}"
+                                                data-company-id="${companyId}"
+                                                data-referent-id="${engineerId}"
+                                                data-address=""
+                                                data-comment=""
+                                                data-clients='${JSON.stringify(clients)}'>
+                                                Modifier
+                                            </a>` : ''}
+                                    </td>
+                                    ${body.can_edit ? `
+                                        <td data-label="Delete" class="icon-cell">
+                                            <a href="javascript:void(0);" class="delete-project-btn" data-delete-url="${body.delete_url}" data-project-id="${body.project_id}">
+                                                <i class="fa-solid fa-trash delete-icon"></i>
+                                            </a>
+                                        </td>
+                                        <td data-label="Check">
+                                            <input type="checkbox" class="delete-checkbox" data-project-id="${body.project_id}">
+                                        </td>
+                                    ` : ''}
+                                </tr>
+                            `);
+
+                            const newRow = table.row.add($newRow).draw(false).node();
+                            console.log("✅ Ligne HTML ajoutée avec DataTables !");
                         });
                     } else {
                         if (body.error) {

@@ -99,6 +99,12 @@ class User extends Authenticatable
         return in_array(auth()->user()->role, ['engineer', 'drawer', 'secretary']);
     }
 
+    public function isEngineerOrSecretary()
+    {
+        return in_array(auth()->user()->role, ['engineer', 'secretary']);
+    }
+
+
     /**
      *
      * @return mixed

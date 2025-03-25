@@ -14948,76 +14948,76 @@ document.addEventListener('DOMContentLoaded', function () {
 /***/ (() => {
 
 document.addEventListener('DOMContentLoaded', function () {
-  document.querySelectorAll('.delete-project-btn').forEach(function (btn) {
-    btn.addEventListener('click', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      var deleteUrl = this.getAttribute('data-delete-url');
-      var projectId = this.getAttribute('data-project-id');
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('.delete-project-btn');
+    if (!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    var deleteUrl = btn.getAttribute('data-delete-url');
+    var projectId = btn.getAttribute('data-project-id');
 
-      // SweetAlert de confirmation
-      Swal.fire({
-        title: "Êtes-vous sûr de vouloir supprimer cette affaire ?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#0c9155",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Oui",
-        cancelButtonText: "Non"
-      }).then(function (result) {
-        if (result.isConfirmed) {
-          // Requête fetch pour supprimer l'affaire
-          fetch(deleteUrl, {
-            method: 'DELETE',
-            headers: {
-              'X-CSRF-TOKEN': window.csrf_token,
-              'Content-Type': 'application/json'
-            }
-          }).then(function (response) {
-            if (!response.ok) {
-              throw new Error("Erreur HTTP " + response.status);
-            }
-            return response.json();
-          }).then(function (data) {
-            if (data.success) {
-              // SweetAlert de succès
-              var projectTable = $('#project-table').DataTable();
-              var row = document.querySelector("#project-row-".concat(projectId));
-              if (row) {
-                console.log("Suppression de la ligne: project-row-".concat(projectId));
-                projectTable.row($(row)).remove().draw(false);
-              } else {
-                console.warn("Ligne non trouv\xE9e pour projectId: ".concat(projectId));
-              }
-              Swal.fire({
-                title: "Affaire supprimée avec succès.",
-                icon: "success",
-                timer: 3000,
-                timerProgressBar: true,
-                showConfirmButton: true,
-                confirmButtonText: "OK",
-                customClass: {
-                  confirmButton: 'btn btn-success'
-                },
-                buttonsStyling: false
-              });
+    // SweetAlert de confirmation
+    Swal.fire({
+      title: "Êtes-vous sûr de vouloir supprimer cette affaire ?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#0c9155",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Oui",
+      cancelButtonText: "Non"
+    }).then(function (result) {
+      if (result.isConfirmed) {
+        // Requête fetch pour supprimer l'affaire
+        fetch(deleteUrl, {
+          method: 'DELETE',
+          headers: {
+            'X-CSRF-TOKEN': window.csrf_token,
+            'Content-Type': 'application/json'
+          }
+        }).then(function (response) {
+          if (!response.ok) {
+            throw new Error("Erreur HTTP " + response.status);
+          }
+          return response.json();
+        }).then(function (data) {
+          if (data.success) {
+            // SweetAlert de succès
+            var projectTable = $('#project-table').DataTable();
+            var row = document.querySelector("#project-row-".concat(projectId));
+            if (row) {
+              console.log("Suppression de la ligne: project-row-".concat(projectId));
+              projectTable.row($(row)).remove().draw(false);
             } else {
-              Swal.fire({
-                title: "Erreur lors de la suppression",
-                text: data.error || "Cause inconnue",
-                icon: "error"
-              });
+              console.warn("Ligne non trouv\xE9e pour projectId: ".concat(projectId));
             }
-          })["catch"](function (error) {
-            console.error("Erreur fetch:", error);
             Swal.fire({
-              title: "Erreur",
-              text: "Une erreur est survenue. Vérifiez votre connexion.",
+              title: "Affaire supprimée avec succès.",
+              icon: "success",
+              timer: 3000,
+              timerProgressBar: true,
+              showConfirmButton: true,
+              confirmButtonText: "OK",
+              customClass: {
+                confirmButton: 'btn btn-success'
+              },
+              buttonsStyling: false
+            });
+          } else {
+            Swal.fire({
+              title: "Erreur lors de la suppression",
+              text: data.error || "Cause inconnue",
               icon: "error"
             });
+          }
+        })["catch"](function (error) {
+          console.error("Erreur fetch:", error);
+          Swal.fire({
+            title: "Erreur",
+            text: "Une erreur est survenue. Vérifiez votre connexion.",
+            icon: "error"
           });
-        }
-      });
+        });
+      }
     });
   });
 });
@@ -15055,43 +15055,39 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // Add click event to all edit buttons if they exist
-  var editButtons = document.querySelectorAll('.edit-project');
-  if (editButtons) {
-    editButtons.forEach(function (btn) {
-      btn.addEventListener('click', function (e) {
-        e.preventDefault();
-        var projectId = this.getAttribute('data-project-id');
-        var projectName = this.getAttribute('data-project-name'); // "B23.045"
-        var namelong = this.getAttribute('data-project-namelong'); // "Beauvais mairie..."
-        var companyId = this.getAttribute('data-company-id');
-        var referentId = this.getAttribute('data-referent-id') || "";
-        var address = this.getAttribute('data-address') || "";
-        var comment = this.getAttribute('data-comment') || "";
-        var clients = [];
-        try {
-          clients = JSON.parse(this.getAttribute('data-clients')) || [];
-        } catch (e) {
-          clients = [];
-        }
-
-        // Split project name BXX.XXX
-        var match = projectName.match(/^B(\d{2})\.(\d{3})$/);
-        var year = match ? match[1] : "";
-        var number = match ? match[2] : "";
-        document.getElementById('edit-project-id').value = projectId;
-        document.getElementById('edit-project-year').value = year;
-        document.getElementById('edit-project-number').value = number;
-        document.getElementById('edit-project-name').value = projectName;
-        document.getElementById('edit-project-namelong').value = namelong;
-        document.getElementById('edit-project-company').value = companyId;
-        document.getElementById('edit-project-referent').value = referentId;
-        document.getElementById('edit-project-address').value = address;
-        document.getElementById('edit-project-comment').value = comment;
-        $('#edit-project-clients').val(clients).trigger('change');
-        editModal.show();
-      });
-    });
-  }
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('.edit-project');
+    if (!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    var projectId = btn.getAttribute('data-project-id');
+    var projectName = btn.getAttribute('data-project-name');
+    var namelong = btn.getAttribute('data-project-namelong');
+    var companyId = btn.getAttribute('data-company-id');
+    var referentId = btn.getAttribute('data-referent-id') || "";
+    var address = btn.getAttribute('data-address') || "";
+    var comment = btn.getAttribute('data-comment') || "";
+    var clients = [];
+    try {
+      clients = JSON.parse(btn.getAttribute('data-clients')) || [];
+    } catch (err) {
+      clients = [];
+    }
+    var match = projectName.match(/^B(\d{2})\.(\d{3})$/);
+    var year = match ? match[1] : "";
+    var number = match ? match[2] : "";
+    document.getElementById('edit-project-id').value = projectId;
+    document.getElementById('edit-project-year').value = year;
+    document.getElementById('edit-project-number').value = number;
+    document.getElementById('edit-project-name').value = projectName;
+    document.getElementById('edit-project-namelong').value = namelong;
+    document.getElementById('edit-project-company').value = companyId;
+    document.getElementById('edit-project-referent').value = referentId;
+    document.getElementById('edit-project-address').value = address;
+    document.getElementById('edit-project-comment').value = comment;
+    $('#edit-project-clients').val(clients).trigger('change');
+    if (editModal) editModal.show();
+  });
 
   // Update project name in edit modal
   function updateProjectName() {
@@ -15177,7 +15173,26 @@ document.addEventListener('DOMContentLoaded', function () {
             buttonsStyling: false
           }).then(function () {
             if (editModal) editModal.hide();
-            location.reload();
+            var table = $('#project-table').DataTable();
+            var row = document.querySelector("#project-row-".concat(projectId));
+            if (row) {
+              row.querySelector('td[data-label="Nom"]').textContent = projectName;
+              row.querySelector('td[data-label="NomLong"]').textContent = namelong || 'Pas de nom';
+              var company = allCompanies.find(function (c) {
+                return c.id == companyId;
+              });
+              var referent = allEngineers.find(function (e) {
+                return e.id == referentId;
+              });
+              row.querySelector('td[data-label="Entreprise"]').textContent = company ? company.name : 'Aucune';
+              row.querySelector('td[data-label="Referent"]').textContent = referent ? referent.name : '';
+
+              // Re-synchronise DataTables
+              table.row(row).invalidate().draw(false);
+            } else {
+              console.error("Row not found, reload now");
+              location.reload();
+            }
           });
         } else {
           Swal.fire({
@@ -15342,7 +15357,10 @@ document.addEventListener('DOMContentLoaded', function () {
             buttonsStyling: false
           }).then(function () {
             if (addProjectModal) addProjectModal.hide();
-            location.reload();
+            var table = $('#project-table').DataTable();
+            var $newRow = $("\n                                <tr id=\"project-row-".concat(body.project_id, "\">\n                                    <td data-label=\"Nom\">").concat(projectName, "</td>\n                                    <td data-label=\"NomLong\" data-order=\"").concat(namelong || 'zzz', "\">").concat(namelong || 'Pas de nom', "</td>\n                                    <td data-label=\"Entreprise\" data-order=\"").concat(body.company_name || 'zzz', "\">").concat(body.company_name || 'Aucune', "</td>\n                                    <td data-label=\"R\xE9f\xE9rent\">").concat(body.referent_name || 'Aucun', "</td>\n                                    <td data-label=\"ActionsH\">\n                                        <a href=\"").concat(body.project_url, "\" class=\"btn-return\">Voir</a>\n                                        ").concat(body.editable ? "\n                                            <span class=\"responsiveSpan\">|</span>\n                                            <a href=\"#\" class=\"btn-return edit-project\"\n                                                data-project-id=\"".concat(body.project_id, "\"\n                                                data-project-namelong=\"").concat(namelong, "\"\n                                                data-project-name=\"").concat(projectName, "\"\n                                                data-company-id=\"").concat(companyId, "\"\n                                                data-referent-id=\"").concat(engineerId, "\"\n                                                data-address=\"\"\n                                                data-comment=\"\"\n                                                data-clients='").concat(JSON.stringify(clients), "'>\n                                                Modifier\n                                            </a>") : '', "\n                                    </td>\n                                    ").concat(body.can_edit ? "\n                                        <td data-label=\"Delete\" class=\"icon-cell\">\n                                            <a href=\"javascript:void(0);\" class=\"delete-project-btn\" data-delete-url=\"".concat(body.delete_url, "\" data-project-id=\"").concat(body.project_id, "\">\n                                                <i class=\"fa-solid fa-trash delete-icon\"></i>\n                                            </a>\n                                        </td>\n                                        <td data-label=\"Check\">\n                                            <input type=\"checkbox\" class=\"delete-checkbox\" data-project-id=\"").concat(body.project_id, "\">\n                                        </td>\n                                    ") : '', "\n                                </tr>\n                            "));
+            var newRow = table.row.add($newRow).draw(false).node();
+            console.log("✅ Ligne HTML ajoutée avec DataTables !");
           });
         } else {
           if (body.error) {

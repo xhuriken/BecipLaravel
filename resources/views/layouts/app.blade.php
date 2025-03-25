@@ -101,28 +101,27 @@
         </nav>
 
         <main class="py-4">
-
             @yield('content')
         </main>
     </div>
 
     <!-- Modal de confirmation universel -->
-    <div class="modal fade" id="universal-confirm-modal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="confirmModalLabel">Confirmation</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-                </div>
-                <div class="modal-body" id="confirm-modal-message">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-primary" id="confirm-ok-btn">Confirmer</button>
-                </div>
-            </div>
-        </div>
-    </div>
+{{--    <div class="modal fade" id="universal-confirm-modal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel">--}}
+{{--        <div class="modal-dialog modal-dialog-centered" role="document">--}}
+{{--            <div class="modal-content">--}}
+{{--                <div class="modal-header">--}}
+{{--                    <h5 class="modal-title" id="confirmModalLabel">Confirmation</h5>--}}
+{{--                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>--}}
+{{--                </div>--}}
+{{--                <div class="modal-body" id="confirm-modal-message">--}}
+{{--                </div>--}}
+{{--                <div class="modal-footer">--}}
+{{--                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>--}}
+{{--                    <button type="button" class="btn btn-primary" id="confirm-ok-btn">Confirmer</button>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </div>--}}
 
 
     <script

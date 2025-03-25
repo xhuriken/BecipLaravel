@@ -188,7 +188,16 @@ class ProjectController extends Controller
 
         \Log::info("Projet créé avec ID : {$project->id}");
 
-        return response()->json(['success' => true, 'project_id' => $project->id]);
+        return response()->json([
+            'success' => true,
+            'project_id' => $project->id,
+            'project_url' => route('projects.project', $project),
+            'delete_url' => route('projects.delete', $project),
+            'company_name' => $project->company_id ? $project->getCompanyName($project->company_id) : 'Aucune',
+            'referent_name' => $project->getReferentName($project->referent_id),
+            'editable' => auth()->user()->isBecip(),
+            'can_edit' => auth()->user()->isEngineerOrSecretary(),
+        ]);
     }
 
     /**
