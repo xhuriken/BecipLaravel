@@ -122,7 +122,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             },
                             buttonsStyling: false
                         }).then(() => {
-                            location.reload();
+                            let companiesTable = $('#companies-table').DataTable();
+                            companiesTable.row($row).invalidate().draw(false);
                         });
                     } else {
                         Swal.fire({
@@ -174,8 +175,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                const companiesTable = $('#companies-table').DataTable();
-                                companiesTable.row($row).remove().draw();
                                 Swal.fire({
                                     title: "Entreprise supprimée avec succès.",
                                     icon: "success",
@@ -188,7 +187,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                     },
                                     buttonsStyling: false
                                 }).then(() => {
-                                    location.reload();
+                                    let companiesTable = $('#companies-table').DataTable();
+                                    companiesTable.row($row).remove().draw(false);
                                 });
                             } else {
                                 Swal.fire({
@@ -351,7 +351,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             },
                             buttonsStyling: false
                         }).then(() => {
-                            location.reload();
+                            let table = $('#users-table').DataTable();
+                            table.row($row).invalidate().draw(false);
                         });
                     } else {
                         Swal.fire({
@@ -417,7 +418,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                     },
                                     buttonsStyling: false
                                 }).then(() => {
-                                    location.reload();
+                                    let table = $('#users-table').DataTable();
+                                    table.row($row).remove().draw(false);
                                 });
                             } else {
                                 Swal.fire({

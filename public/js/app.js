@@ -16342,7 +16342,8 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             buttonsStyling: false
           }).then(function () {
-            location.reload();
+            var companiesTable = $('#companies-table').DataTable();
+            companiesTable.row($row).invalidate().draw(false);
           });
         } else {
           Swal.fire({
@@ -16394,8 +16395,6 @@ document.addEventListener('DOMContentLoaded', function () {
             return response.json();
           }).then(function (data) {
             if (data.success) {
-              var companiesTable = $('#companies-table').DataTable();
-              companiesTable.row($row).remove().draw();
               Swal.fire({
                 title: "Entreprise supprimée avec succès.",
                 icon: "success",
@@ -16408,7 +16407,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 buttonsStyling: false
               }).then(function () {
-                location.reload();
+                var companiesTable = $('#companies-table').DataTable();
+                companiesTable.row($row).remove().draw(false);
               });
             } else {
               Swal.fire({
@@ -16560,7 +16560,8 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             buttonsStyling: false
           }).then(function () {
-            location.reload();
+            var table = $('#users-table').DataTable();
+            table.row($row).invalidate().draw(false);
           });
         } else {
           Swal.fire({
@@ -16626,7 +16627,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 buttonsStyling: false
               }).then(function () {
-                location.reload();
+                var table = $('#users-table').DataTable();
+                table.row($row).remove().draw(false);
               });
             } else {
               Swal.fire({
