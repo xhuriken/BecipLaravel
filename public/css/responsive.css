@@ -38,6 +38,10 @@ div.dt-scroll-body table {
 
 @media (max-width: 768px) {
 
+    .flex{
+        flex-direction: column;
+    }
+
     body{
         font-size: 13px !important;
     }

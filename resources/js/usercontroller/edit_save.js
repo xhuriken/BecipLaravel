@@ -28,6 +28,8 @@ $(document).ready(function() {
     let usersTable = $('#users-table').DataTable({
         destroy: true,
         responsive: true,
+        scrollX: true,
+        autoWidth: false,
         language: {
             "decimal": ",",
             "thousands": ".",
