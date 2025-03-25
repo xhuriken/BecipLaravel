@@ -16441,6 +16441,8 @@ document.addEventListener('DOMContentLoaded', function () {
       var $emailCell = $row.find('.user-email');
       var $roleCell = $row.find('.user-role');
       var $companyCell = $row.find('.user-company');
+      var $phoneCell = $row.find('.user-phone');
+      var currentPhone = $phoneCell.text().trim() === 'Aucun' ? '' : $phoneCell.text().trim();
       var currentName = $nameCell.text().trim();
       var currentEmail = $emailCell.text().trim();
       var currentRole = $roleCell.attr('data-role'); // Get current role (in english)
@@ -16452,6 +16454,7 @@ document.addEventListener('DOMContentLoaded', function () {
       // Change to edit input mode
       $nameCell.html("<input type=\"text\" class=\"form-control\" value=\"".concat(currentName, "\" />"));
       $emailCell.html("<input type=\"text\" class=\"form-control\" value=\"".concat(currentEmail, "\" />"));
+      $phoneCell.html("<input type=\"text\" class=\"form-control\" value=\"".concat(currentPhone, "\" />"));
 
       // Replace with Select and pre-select current role
       var roleOptions = Object.keys(window.allRoles).map(function (role) {
@@ -16485,7 +16488,18 @@ document.addEventListener('DOMContentLoaded', function () {
       var newEmail = $row.find('.user-email input').val().trim();
       var newRole = $row.find('.user-role select').val();
       var newCompanyId = $row.find('.user-company select').val();
-
+      var newPhone = $row.find('.user-phone input').val().trim();
+      newPhone = newPhone.replace(/\s+/g, '');
+      if (newPhone === '') {
+        newPhone = null;
+      } else if (!/^\d{10}$/.test(newPhone)) {
+        Swal.fire({
+          title: "Numéro invalide",
+          text: "Le numéro doit contenir exactement 10 chiffres.",
+          icon: "warning"
+        });
+        return;
+      }
       // verify if name isnt empty
       if (newName === "") {
         Swal.fire({
@@ -16509,7 +16523,8 @@ document.addEventListener('DOMContentLoaded', function () {
         name: newName,
         email: newEmail,
         role: newRole,
-        company_id: newCompanyId
+        company_id: newCompanyId,
+        phone: newPhone
       };
       fetch(route, {
         method: 'POST',
@@ -16529,6 +16544,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return c.id == newCompanyId;
           });
           $row.find('.user-company').text(selectedCompany ? selectedCompany.name : 'Aucune');
+          $row.find('.user-phone').text(newPhone ? newPhone : 'Aucun');
           btn.classList.remove('save-user', 'btn-warning');
           btn.classList.add('edit-user', 'btn-primary');
           btn.innerHTML = '<i class="fa fa-pencil"></i>';

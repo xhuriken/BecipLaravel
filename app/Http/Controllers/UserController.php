@@ -71,12 +71,13 @@ class UserController extends Controller
             'email' => 'required|email|max:255|unique:users,email,' . $request->user_id,
             'role' => 'required|in:engineer,drawer,secretary,client',
             'company_id' => 'nullable|exists:companies,id',
+            'phone' => 'nullable|digits:10',
         ]);
 
         $user = User::findOrFail($request->user_id);
 
         $oldEmail = $user->email;
-
+        $user->phone = $request->phone ?? null;
         $user->name = $request->name;
         $user->email = $request->email;
         $user->role = $request->role;

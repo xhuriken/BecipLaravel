@@ -224,7 +224,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const $emailCell = $row.find('.user-email');
             const $roleCell = $row.find('.user-role');
             const $companyCell = $row.find('.user-company');
+            const $phoneCell = $row.find('.user-phone');
 
+            const currentPhone = $phoneCell.text().trim() === 'Aucun' ? '' : $phoneCell.text().trim();
             const currentName = $nameCell.text().trim();
             const currentEmail = $emailCell.text().trim();
             const currentRole = $roleCell.attr('data-role'); // Get current role (in english)
@@ -237,6 +239,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Change to edit input mode
             $nameCell.html(`<input type="text" class="form-control" value="${currentName}" />`);
             $emailCell.html(`<input type="text" class="form-control" value="${currentEmail}" />`);
+            $phoneCell.html(`<input type="text" class="form-control" value="${currentPhone}" />`);
 
             // Replace with Select and pre-select current role
             const roleOptions = Object.keys(window.allRoles).map(role =>
@@ -272,7 +275,19 @@ document.addEventListener('DOMContentLoaded', function() {
             const newEmail = $row.find('.user-email input').val().trim();
             const newRole = $row.find('.user-role select').val();
             const newCompanyId = $row.find('.user-company select').val();
+            let newPhone = $row.find('.user-phone input').val().trim();
+            newPhone = newPhone.replace(/\s+/g, '');
 
+            if (newPhone === '') {
+                newPhone = null;
+            } else if (!/^\d{10}$/.test(newPhone)) {
+                Swal.fire({
+                    title: "Numéro invalide",
+                    text: "Le numéro doit contenir exactement 10 chiffres.",
+                    icon: "warning"
+                });
+                return;
+            }
             // verify if name isnt empty
             if (newName === "") {
                 Swal.fire({
@@ -297,7 +312,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 name: newName,
                 email: newEmail,
                 role: newRole,
-                company_id: newCompanyId
+                company_id: newCompanyId,
+                phone: newPhone
             };
 
             fetch(route, {
@@ -318,7 +334,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             .attr('data-role', newRole);
                         const selectedCompany = allCompanies.find(c => c.id == newCompanyId);
                         $row.find('.user-company').text(selectedCompany ? selectedCompany.name : 'Aucune');
-
+                        $row.find('.user-phone').text(newPhone ? newPhone : 'Aucun');
                         btn.classList.remove('save-user', 'btn-warning');
                         btn.classList.add('edit-user', 'btn-primary');
                         btn.innerHTML = '<i class="fa fa-pencil"></i>';
