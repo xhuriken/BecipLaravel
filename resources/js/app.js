@@ -3,7 +3,6 @@ import * as bootstrap from 'bootstrap';
 window.bootstrap = bootstrap;
 
 import './utils/loader'
-import './utils/universal_alerts';
 import './utils/datatables';
 import './usercontroller/edit_save';
 import './usercontroller/add_company';

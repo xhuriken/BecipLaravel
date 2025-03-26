@@ -59,7 +59,6 @@ th[data-label="Commentaire"],
 td[data-label="Commentaire"] {
     min-width: 10rem !important;
     max-width: 15rem !important;
-    text-align: center;
 }
 
 th[data-label="Date"],
@@ -139,3 +138,10 @@ td[data-label="phone"] {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+th{
+    transition: 0.2s ease;
+}
+th.dt-orderable-asc:hover, th.dt-orderable-desc:hover{
+    color: #0a7a48;
+}
+

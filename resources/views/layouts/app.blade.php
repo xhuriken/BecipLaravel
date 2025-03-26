@@ -22,12 +22,15 @@
     <!-- Scripts -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="https://cdn.datatables.net/2.2.2/css/dataTables.bootstrap5.min.css">
-    {{--    multiselect2--}}
+    {{--multiselect2--}}
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
     <link href="{{ asset('css/datatable.css') }}" rel="stylesheet">
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
     <link href="{{ asset('css/responsive.css') }}" rel="stylesheet">
+{{--    Ce css rajoute les sorting icon, mais casse le css du tableau--}}
+{{--    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css">--}}
+
     <script>
         window.csrf_token = "{{ csrf_token() }}";
     </script>
