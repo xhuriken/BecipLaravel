@@ -16,14 +16,14 @@
 
         <div class="flex">
             {{-- Formulaire d'ajout d'entreprise --}}
-            <form action="{{ route('usermanager.addcompany') }}" method="POST" class="form-becip">
+            <form action="" method="POST" class="form-becip" id="add-company-form">
                 @csrf
                 <div class="mb-2">
                     <h2>Ajouter une entreprise</h2>
                 </div>
                 <div class="mb-2">
                     <label class="form-label">Nom de l'entreprise</label>
-                    <input class="form-control" type="text" name="name" placeholder="SuperEntreprise" required>
+                    <input class="form-control" type="text" name="name" placeholder="SuperEntreprise">
                 </div>
                 <div class="mb-2">
                     <input type="submit" value="Ajouter" class="large-btn">
@@ -167,6 +167,7 @@
 
     <script>
         window.addUserRoute = "{{route('usermanager.adduser')}}";
+        window.addCompanyRoute = "{{route('usermanager.addcompany')}}";
         window.allCompanies = @json($companies);
         window.allRoles = {
             'engineer': 'Ingénieur',

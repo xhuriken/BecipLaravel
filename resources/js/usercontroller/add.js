@@ -84,7 +84,34 @@ document.addEventListener('DOMContentLoaded', function() {
                         title: 'Utilisateur ajouté !',
                         text: 'L\'utilisateur a bien été ajouté.',
                     }).then(() => {
-                        window.location.reload();
+                        const table = $('#users-table').DataTable();
+
+                        const company = window.allCompanies.find(c => c.id == company_id);
+                        const companyName = company ? company.name : 'Aucune';
+
+                        const roleLabel = window.allRoles[role] || role;
+
+                        const $newRow = $(`
+                            <tr data-user-id="${data.user_id}">
+                                <td class="user-name">${name}</td>
+                                <td class="user-phone" data-order="${phone || 'zzz'}">${phone || 'Aucun'}</td>
+                                <td class="user-email">${email}</td>
+                                <td class="user-role" data-role="${role}">${roleLabel}</td>
+                                <td class="user-company" data-order="${companyName || 'zzz'}">${companyName}</td>
+                                <td data-label="Action">
+                                    <button class="btn btn-sm btn-primary edit-user" data-route="${data.edit_url}">
+                                        <i class="fa fa-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger delete-user" data-route="${data.delete_url}">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `);
+
+                        table.row.add($newRow).draw(false);
+
+                        console.log("✅ Nouvelle ligne utilisateur ajoutée !");
                     });
                 } else {
                     Swal.fire({

@@ -190,8 +190,12 @@ class UserController extends Controller
                 // Réponse JSON pour l'AJAX
                 return response()->json([
                     'success' => true,
-                    'message' => 'Utilisateur ajouté avec succès.'
+                    'message' => 'Utilisateur ajouté avec succès.',
+                    'user_id' => $user->id,
+                    'edit_url' => route('usermanager.updateuser'),
+                    'delete_url' => route('usermanager.deleteuser'),
                 ]);
+
         }
 
         $companies = Company::all();
@@ -203,15 +207,31 @@ class UserController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Http\RedirectResponse|object
      */
-    public function addcompany(Request $request){
+    public function addcompany(Request $request)
+    {
         if ($request->isMethod('post')) {
-            $request->validate(['name' => 'required|string|max:255',]);
+            $request->validate([
+                'name' => 'required|string|max:255',
+            ]);
 
-            Company::create([
+            $company = Company::create([
                 'name' => $request['name'],
             ]);
-            return redirect()->back()->with('success', 'Entreprise ajouté avec succès.');
+
+            // Vérifie si c’est AJAX (fetch)
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'company' => $company,
+                    'update_route' => route('usermanager.updatecompany'),
+                    'delete_route' => route('usermanager.deletecompany')
+                ]);
+            }
+
+            // Sinon, fallback vers la redirection
+            return redirect()->back()->with('success', 'Entreprise ajoutée avec succès.');
         }
+
         return view('usermanager.addcompany');
     }
 }

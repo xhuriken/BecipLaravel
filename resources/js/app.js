@@ -6,6 +6,7 @@ import './utils/loader'
 import './utils/universal_alerts';
 import './utils/datatables';
 import './usercontroller/edit_save';
+import './usercontroller/add_company';
 import './home/checkboxtable';
 import './project/dropzone';
 import './profile/profile'
@@ -23,6 +24,8 @@ import './home/delete_empty'
 import './usercontroller/add';
 import './utils/showpassword';
 import './usercontroller/companyselect';
+
+
 if (!window._fetchOverridden) {
     const originalFetch = window.fetch;
 
