@@ -145,3 +145,6 @@ th.dt-orderable-asc:hover, th.dt-orderable-desc:hover{
     color: #0a7a48;
 }
 
+.repaint-fix {
+    display: none !important;
+}
